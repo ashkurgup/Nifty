@@ -70,3 +70,18 @@ body {
   font-style: italic;
   margin-top: 4px;
 }
+/* MARKET STATUS AT TOP */
+.market-status {
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.market-status.live {
+  color: #16a34a;
+}
+
+.market-status.closed {
+  color: #6b7280;
+}
