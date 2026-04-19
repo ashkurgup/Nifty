@@ -5,112 +5,96 @@
   <title>Market Dashboard</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
   <!-- TOP SECTION -->
   <div class="row top-row">
-    <div class="box green large" id="niftyLive">Nifty Live</div>
+    
+    <!-- ✅ NIFTY LIVE BOX -->
+    <div class="box green large" id="niftyLive">
+      <div class="nifty-header">
+        <span class="status-dot closed" id="niftyStatus"></span>
+        <span class="title">NIFTY</span>
+      </div>
+
+      <div class="nifty-price" id="niftyPrice">--</div>
+      <div class="nifty-change" id="niftyChange">--</div>
+
+      <div class="small" id="niftyTime">Updated: --</div>
+    </div>
+    <!-- ✅ END -->
 
     <div class="column flex-1">
-      <div class="box green full" id="bias">BIAS</div>
+      <div class="box green full">BIAS</div>
       <div class="row">
-        <div class="box" id="gap">Gap / Closed By</div>
-        <div class="box" id="marketOpen">Market Open</div>
+        <div class="box">Gap / Closed By</div>
+        <div class="box">Market Open</div>
       </div>
     </div>
 
     <div class="column">
-      <div class="box green" id="globalMeter">Global Meter</div>
-      <div class="box" id="niftyMeter">Nifty Meter</div>
-      <div class="box" id="trendProbability">Trend Probability</div>
+      <div class="box green">Global Meter</div>
+      <div class="box">Nifty Meter</div>
+      <div class="box">Trend Probability</div>
     </div>
   </div>
 
-  <div class="separator"></div>
-
-  <!-- MARKET CONTEXT -->
-  <div class="section-title">Market Context</div>
-
-  <div class="row">
-    <div class="box" id="pdhOrh">Situation of PDH / ORH</div>
-    <div class="box green" id="vwap">VWAP</div>
-    <div class="box green" id="volatility">Volatility</div>
-
-    <div class="column side-panel">
-      <div class="box">Key Levels</div>
-      <div class="box green" id="pcr">PCR</div>
-      <div class="box">Greeks</div>
-      <div class="box">FII / DII</div>
-    </div>
-
-    <div class="column side-panel">
-      <div class="box large">Nifty Indices</div>
-      <div class="box green large">Global Indices</div>
-    </div>
-  </div>
-
-  <div class="separator"></div>
-
-  <!-- CANDLE FORMATION -->
-  <div class="section-title">Candle Formation</div>
-
-  <div class="row">
-    <div class="box green" id="sessionHL">Session High / Low</div>
-    <div class="box green">BOS / ChoCH<br><small>change if LL formed</small></div>
-    <div class="box green">Momentum Events</div>
-  </div>
-
-  <div class="separator"></div>
-
-  <!-- SETUP FORMATION -->
-  <div class="section-title">Setup Formation Block</div>
-
-  <div class="row">
-    <div class="box green">Architect @ 11 AM</div>
-    <div class="box green">Architect @ 1 PM</div>
-    <div class="box">Trend / Reversal Time</div>
-    <div class="box">Log</div>
-  </div>
-
-  <div class="row">
-    <div class="box wide">Next Page | Setup Performance Matrix</div>
-  </div>
-
-  <!-- DATA LOADER -->
+  <!-- ✅ SCRIPT -->
   <script>
-    fetch("data.json")
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("niftyLive").innerText =
-          "Nifty: " + data.nifty_live;
+    function isMarketLive() {
+      const now = new Date();
+      const day = now.getDay(); // 0 = Sunday
+      const hour = now.getHours();
+      const minute = now.getMinutes();
 
-        document.getElementById("bias").innerText =
-          "BIAS: " + data.bias;
+      const isWeekday = day >= 1 && day <= 5;
+      const isMarketTime =
+        (hour > 9 || (hour === 9 && minute >= 0)) &&
+        (hour < 15 || (hour === 15 && minute <= 30));
 
-        document.getElementById("gap").innerText =
-          "Gap: " + data.gap;
+      return isWeekday && isMarketTime;
+    }
 
-        document.getElementById("marketOpen").innerText =
-          "Open: " + data.market_open;
+    function renderNifty(data) {
+      const live = isMarketLive();
+      const statusDot = document.getElementById("niftyStatus");
 
-        document.getElementById("trendProbability").innerText =
-          data.trend_probability;
+      statusDot.className = "status-dot " + (live ? "live" : "closed");
 
-        document.getElementById("vwap").innerText =
-          "VWAP: " + data.vwap;
+      document.getElementById("niftyPrice").innerText =
+        Number(data.price).toFixed(2);
 
-        document.getElementById("volatility").innerText =
-          "Volatility: " + data.volatility;
+      const changeEl = document.getElementById("niftyChange");
+      const sign = data.change >= 0 ? "+" : "";
+      changeEl.innerText =
+        sign + data.change + " (" + data.percent + "%)";
+      changeEl.className =
+        "nifty-change " + (data.change >= 0 ? "positive" : "negative");
 
-        document.getElementById("pcr").innerText =
-          "PCR: " + data.pcr;
+      document.getElementById("niftyTime").innerText =
+        "Updated: " + new Date().toLocaleTimeString("en-IN", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit"
+        });
+    }
 
-        document.getElementById("sessionHL").innerText =
-          "H: " + data.session_high + " | L: " + data.session_low;
-      })
-      .catch(err => {
-        console.error("Data load failed", err);
+    /* ✅ MOCK DATA (Replace with YFinance API later) */
+    renderNifty({
+      price: 24366.90,
+      change: 178.5,
+      percent: 0.74
+    });
+
+    /* ✅ Auto refresh every 5 min */
+    setInterval(() => {
+      renderNifty({
+        price: 24366.90,
+        change: 178.5,
+        percent: 0.74
       });
+    }, 300000);
   </script>
 
 </body>
