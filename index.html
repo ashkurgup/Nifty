@@ -9,20 +9,20 @@
 
   <!-- TOP SECTION -->
   <div class="row top-row">
-    <div class="box green large">Nifty Live</div>
+    <div class="box green large" id="niftyLive">Nifty Live</div>
 
     <div class="column flex-1">
-      <div class="box green full">BIAS</div>
+      <div class="box green full" id="bias">BIAS</div>
       <div class="row">
-        <div class="box">Gap / Closed By</div>
-        <div class="box">Market Open</div>
+        <div class="box" id="gap">Gap / Closed By</div>
+        <div class="box" id="marketOpen">Market Open</div>
       </div>
     </div>
 
     <div class="column">
-      <div class="box green">Global Meter</div>
-      <div class="box">Nifty Meter</div>
-      <div class="box">Trend Probability</div>
+      <div class="box green" id="globalMeter">Global Meter</div>
+      <div class="box" id="niftyMeter">Nifty Meter</div>
+      <div class="box" id="trendProbability">Trend Probability</div>
     </div>
   </div>
 
@@ -32,13 +32,13 @@
   <div class="section-title">Market Context</div>
 
   <div class="row">
-    <div class="box">Situation of PDH / ORH</div>
-    <div class="box green">VWAP</div>
-    <div class="box green">Volatility</div>
+    <div class="box" id="pdhOrh">Situation of PDH / ORH</div>
+    <div class="box green" id="vwap">VWAP</div>
+    <div class="box green" id="volatility">Volatility</div>
 
     <div class="column side-panel">
       <div class="box">Key Levels</div>
-      <div class="box green">PCR</div>
+      <div class="box green" id="pcr">PCR</div>
       <div class="box">Greeks</div>
       <div class="box">FII / DII</div>
     </div>
@@ -55,11 +55,8 @@
   <div class="section-title">Candle Formation</div>
 
   <div class="row">
-    <div class="box green">Session High / Low</div>
-    <div class="box green">
-      BOS / ChoCH<br>
-      <small>change if LL formed</small>
-    </div>
+    <div class="box green" id="sessionHL">Session High / Low</div>
+    <div class="box green">BOS / ChoCH<br><small>change if LL formed</small></div>
     <div class="box green">Momentum Events</div>
   </div>
 
@@ -78,6 +75,43 @@
   <div class="row">
     <div class="box wide">Next Page | Setup Performance Matrix</div>
   </div>
+
+  <!-- DATA LOADER -->
+  <script>
+    fetch("data.json")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("niftyLive").innerText =
+          "Nifty: " + data.nifty_live;
+
+        document.getElementById("bias").innerText =
+          "BIAS: " + data.bias;
+
+        document.getElementById("gap").innerText =
+          "Gap: " + data.gap;
+
+        document.getElementById("marketOpen").innerText =
+          "Open: " + data.market_open;
+
+        document.getElementById("trendProbability").innerText =
+          data.trend_probability;
+
+        document.getElementById("vwap").innerText =
+          "VWAP: " + data.vwap;
+
+        document.getElementById("volatility").innerText =
+          "Volatility: " + data.volatility;
+
+        document.getElementById("pcr").innerText =
+          "PCR: " + data.pcr;
+
+        document.getElementById("sessionHL").innerText =
+          "H: " + data.session_high + " | L: " + data.session_low;
+      })
+      .catch(err => {
+        console.error("Data load failed", err);
+      });
+  </script>
 
 </body>
 </html>
