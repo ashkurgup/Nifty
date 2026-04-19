@@ -1,29 +1,27 @@
+import yfinance as yf
 import json
-from datetime import datetime
-import random
+import datetime
+import yaml
 
-DATA_FILE = "data.json"
+with open("config.yml") as f:
+    config = yaml.safe_load(f)
 
-def fetch_market_data():
-    return {
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "nifty_live": round(random.uniform(22000, 23500), 2),
-        "bias": random.choice(["Bullish", "Bearish", "Sideways"]),
-        "gap": random.choice(["Gap Up", "Gap Down", "Flat"]),
-        "market_open": random.choice(["Strong", "Weak", "Neutral"]),
-        "vwap": round(random.uniform(22100, 23400), 2),
-        "volatility": round(random.uniform(12, 28), 2),
-        "pcr": round(random.uniform(0.7, 1.4), 2),
-        "trend_probability": f"{random.randint(40, 80)}%",
-        "session_high": round(random.uniform(23000, 23500), 2),
-        "session_low": round(random.uniform(22000, 22500), 2)
-    }
+nifty = yf.Ticker(config["symbol"])
+data = nifty.history(period="1d", interval="1m")
 
-def main():
-    data = fetch_market_data()
-    with open(DATA_FILE, "w") as f:
-        json.dump(data, f, indent=2)
-    print("Data updated:", data["timestamp"])
+last = data.iloc[-1]
+prev_close = nifty.info["previousClose"]
 
-if __name__ == "__main__":
-    main()
+price = round(last["Close"], 2)
+change = round(price - prev_close, 2)
+percent = round((change / prev_close) * 100, 2)
+
+output = {
+    "price": price,
+    "change": change,
+    "percent": percent,
+    "updated": datetime.datetime.now().strftime("%H:%M:%S IST")
+}
+
+with open(config["output_file"], "w") as f:
+    json.dump(output, f)
