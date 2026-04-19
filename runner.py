@@ -1,18 +1,10 @@
 import json
-import time
 from datetime import datetime
 import random
 
 DATA_FILE = "data.json"
-INTERVAL = 300  # 5 minutes
 
 def fetch_market_data():
-    """
-    Replace this with real logic later:
-    - Broker API
-    - NSE data
-    - Websocket
-    """
     return {
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "nifty_live": round(random.uniform(22000, 23500), 2),
@@ -27,20 +19,11 @@ def fetch_market_data():
         "session_low": round(random.uniform(22000, 22500), 2)
     }
 
-def write_data(data):
+def main():
+    data = fetch_market_data()
     with open(DATA_FILE, "w") as f:
         json.dump(data, f, indent=2)
-
-def job():
-    data = fetch_market_data()
-    write_data(data)
-    print(f"[{data['timestamp']}] Data updated")
+    print("Data updated:", data["timestamp"])
 
 if __name__ == "__main__":
-    print("Market data service started (every 5 minutes)")
-    while True:
-        try:
-            job()
-        except Exception as e:
-            print("Error:", e)
-        time.sleep(INTERVAL)
+    main()
