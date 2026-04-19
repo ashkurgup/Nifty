@@ -1,9 +1,16 @@
+/* -------------------------
+   GLOBAL
+-------------------------- */
 body {
   font-family: Arial, sans-serif;
   background: #ffffff;
   margin: 20px;
+  color: #111827;
 }
 
+/* -------------------------
+   LAYOUT
+-------------------------- */
 .row {
   display: flex;
   gap: 15px;
@@ -24,14 +31,21 @@ body {
   align-items: stretch;
 }
 
+.side-panel {
+  min-width: 180px;
+}
+
+/* -------------------------
+   BOX / CARD (IMAGE STYLE)
+-------------------------- */
 .box {
   background: #ffffff;
   border-radius: 14px;
   padding: 18px 20px;
   min-width: 160px;
 
-  border: 1px solid #e5e7eb;          /* light border */
-  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  border: 1px solid #e5e7eb; /* soft border like reference */
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
 
   font-size: 15px;
   font-weight: 500;
@@ -42,11 +56,13 @@ body {
   justify-content: center;
 }
 
+/* Green populated boxes */
 .green {
-  background: #ecfdf5;                /* soft green like image */
+  background: #ecfdf5;
   border-color: #a7f3d0;
 }
 
+/* Size variants */
 .large {
   min-height: 120px;
 }
@@ -59,15 +75,9 @@ body {
   flex: 1;
 }
 
-.side-panel {
-  min-width: 180px;
-}
-
-.separator {
-  border-top: 3px solid #1f6fb2;
-  margin: 25px 0;
-}
-
+/* -------------------------
+   SECTION TITLES
+-------------------------- */
 .section-title {
   border: 2px solid #0b3954;
   padding: 8px;
@@ -75,4 +85,74 @@ body {
   font-weight: bold;
   margin-bottom: 15px;
   border-radius: 8px;
+  background: #ffffff;
 }
+
+/* -------------------------
+   SEPARATORS (BLUE LINE)
+-------------------------- */
+.separator {
+  border-top: 3px solid #1f6fb2;
+  margin: 25px 0;
+}
+
+/* -------------------------
+   OPTIONAL CONTENT STYLES
+   (use later if needed)
+-------------------------- */
+.box-title {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.box-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Progress bar (image-style) */
+.progress-bar {
+  display: flex;
+  height: 10px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 14px 0;
+  background: #e5e7eb;
+}
+
+.progress {
+  height: 100%;
+}
+
+.resolved {
+  background: #3b82f6;
+}
+
+.in-progress {
+  background: #9ca3af;
+}
+
+.escalated {
+  background: #ef4444;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.blue { background: #3b82f6; }
+.gray { background: #9ca3af; }
+.red { background: #ef4444; }
