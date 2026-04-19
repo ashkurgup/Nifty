@@ -3,12 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <title>Market Dashboard</title>
-  style.css
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
   <div class="box green large" id="niftyLive">
+
+    <!-- ✅ MARKET STATUS AT TOP -->
+    <div class="market-status" id="niftyStatusText">--</div>
+
     <div class="nifty-header">
       <span class="status-dot closed" id="niftyStatus"></span>
       <span>NIFTY</span>
@@ -17,8 +21,9 @@
     <div class="nifty-price" id="niftyPrice">--</div>
     <div class="nifty-change" id="niftyChange">--</div>
     <div class="small" id="niftyTime">Updated: --</div>
+
   </div>
 
-  app.js
+  <script src="app.js"></script>
 </body>
 </html>
