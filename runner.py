@@ -1,27 +1,42 @@
 import yfinance as yf
 import json
-import datetime
-import yaml
+from datetime import datetime
+import pytz
 
-with open("config.yml") as f:
-    config = yaml.safe_load(f)
+IST = pytz.timezone("Asia/Kolkata")
 
-nifty = yf.Ticker(config["symbol"])
-data = nifty.history(period="1d", interval="1m")
+def is_market_live(now):
+    if now.weekday() >= 5:  # Saturday, Sunday
+        return False
+    market_open = now.replace(hour=9, minute=0, second=0)
+    market_close = now.replace(hour=15, minute=30, second=0)
+    return market_open <= now <= market_close
 
-last = data.iloc[-1]
-prev_close = nifty.info["previousClose"]
+def fetch_nifty():
+    ticker = yf.Ticker("^NSEI")
+    hist = ticker.history(period="2d", interval="1m")
 
-price = round(last["Close"], 2)
-change = round(price - prev_close, 2)
-percent = round((change / prev_close) * 100, 2)
+    last = hist.iloc[-1]
+    prev_close = hist.iloc[-2]["Close"]
 
-output = {
-    "price": price,
-    "change": change,
-    "percent": percent,
-    "updated": datetime.datetime.now().strftime("%H:%M:%S IST")
-}
+    price = round(last["Close"], 2)
+    change = round(price - prev_close, 2)
+    percent = round((change / prev_close) * 100, 2)
 
-with open(config["output_file"], "w") as f:
-    json.dump(output, f)
+    now = datetime.now(IST)
+
+    return {
+        "symbol": "NIFTY",
+        "price": price,
+        "change": change,
+        "percent": percent,
+        "market_status": "LIVE" if is_market_live(now) else "CLOSED",
+        "updated": now.strftime("%H:%M:%S IST")
+    }
+
+if __name__ == "__main__":
+    data = fetch_nifty()
+    with open("data/nifty.json", "w") as f:
+        json.dump(data, f, indent=2)
+
+    print("✅ NIFTY data updated")
