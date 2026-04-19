@@ -1,6 +1,6 @@
-/* -------------------------
+/* =========================
    GLOBAL
--------------------------- */
+========================= */
 body {
   font-family: Arial, sans-serif;
   background: #ffffff;
@@ -8,19 +8,19 @@ body {
   color: #111827;
 }
 
-/* -------------------------
-   LAYOUT
--------------------------- */
+/* =========================
+   LAYOUT HELPERS
+========================= */
 .row {
   display: flex;
-  gap: 15px;
-  margin-bottom: 15px;
+  gap: 16px;
+  margin-bottom: 18px;
 }
 
 .column {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
 }
 
 .flex-1 {
@@ -32,37 +32,31 @@ body {
 }
 
 .side-panel {
-  min-width: 180px;
+  min-width: 190px;
 }
 
-/* -------------------------
-   BOX / CARD (IMAGE STYLE)
--------------------------- */
+/* =========================
+   CARD / BOX (IMAGE STYLE)
+========================= */
 .box {
-  background: #ffffff;
+  background: #ffffff;                 /* ALWAYS white */
   border-radius: 14px;
-  padding: 18px 20px;
-  min-width: 160px;
+  padding: 18px 22px;
 
-  border: 1px solid #e5e7eb; /* soft border like reference */
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;            /* soft light border */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 
   font-size: 15px;
   font-weight: 500;
   color: #111827;
 
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  text-align: center;
 }
 
-/* Green populated boxes */
-.green {
-  background: #ecfdf5;
-  border-color: #a7f3d0;
-}
-
-/* Size variants */
+/* Size modifiers */
 .large {
   min-height: 120px;
 }
@@ -75,84 +69,27 @@ body {
   flex: 1;
 }
 
-/* -------------------------
+/* =========================
    SECTION TITLES
--------------------------- */
+========================= */
 .section-title {
-  border: 2px solid #0b3954;
-  padding: 8px;
-  text-align: center;
-  font-weight: bold;
-  margin-bottom: 15px;
-  border-radius: 8px;
   background: #ffffff;
+  border-radius: 14px;
+  padding: 14px;
+
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 16px;
 }
 
-/* -------------------------
-   SEPARATORS (BLUE LINE)
--------------------------- */
+/* =========================
+   BLUE SEPARATORS (AS IMAGE)
+========================= */
 .separator {
-  border-top: 3px solid #1f6fb2;
-  margin: 25px 0;
+  height: 2px;
+  background: #1f6fb2;
+  margin: 26px 0;
 }
-
-/* -------------------------
-   OPTIONAL CONTENT STYLES
-   (use later if needed)
--------------------------- */
-.box-title {
-  font-size: 14px;
-  color: #6b7280;
-  margin-bottom: 6px;
-}
-
-.box-value {
-  font-size: 32px;
-  font-weight: 700;
-  color: #0f172a;
-}
-
-/* Progress bar (image-style) */
-.progress-bar {
-  display: flex;
-  height: 10px;
-  border-radius: 8px;
-  overflow: hidden;
-  margin: 14px 0;
-  background: #e5e7eb;
-}
-
-.progress {
-  height: 100%;
-}
-
-.resolved {
-  background: #3b82f6;
-}
-
-.in-progress {
-  background: #9ca3af;
-}
-
-.escalated {
-  background: #ef4444;
-}
-
-/* Legend */
-.legend {
-  display: flex;
-  gap: 20px;
-  font-size: 14px;
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 3px;
-  display: inline-block;
-  margin-right: 6px;
-}
-
-.blue { background: #3b82f6; }
-.gray { background: #9ca3af; }
-.red { background: #ef4444; }
