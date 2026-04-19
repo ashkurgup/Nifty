@@ -1,4 +1,3 @@
-/* BASIC LAYOUT (your existing styles assumed) */
 body {
   font-family: Arial, sans-serif;
 }
@@ -8,15 +7,9 @@ body {
   gap: 10px;
 }
 
-.column {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
 .box {
   border: 1px solid #ddd;
-  padding: 10px;
+  padding: 12px;
   background: #fff;
 }
 
@@ -28,7 +21,7 @@ body {
   width: 260px;
 }
 
-/* ✅ NIFTY LIVE STYLES */
+/* NIFTY BOX */
 .nifty-header {
   display: flex;
   align-items: center;
@@ -63,11 +56,11 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-.nifty-change.positive {
+.positive {
   color: #16a34a;
 }
 
-.nifty-change.negative {
+.negative {
   color: #dc2626;
 }
 
@@ -77,4 +70,3 @@ body {
   font-style: italic;
   margin-top: 4px;
 }
-``
