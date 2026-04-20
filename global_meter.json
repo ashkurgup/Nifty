@@ -1,9 +1,0 @@
-{
-  "score": 5.2,
-  "indices": {
-    "dow": { "change": -0.01, "multiplier": 1.0 },
-    "dax": { "change": -0.20, "multiplier": 1.0 },
-    "nikkei": { "change": -0.16, "multiplier": 0.5 },
-    "hang": { "change": 0.18, "multiplier": 1.0 }
-  }
-}
