@@ -1,82 +1,124 @@
-let lastPrice = null;
-let refreshTimer = null;
+/* =====================================================
+   UTILITIES
+===================================================== */
+const nowSec = () => Math.floor(Date.now() / 1000);
 
-function pulse(el) {
-  el.classList.remove("pulse");
-  void el.offsetWidth;
-  el.classList.add("pulse");
+function ago(ts) {
+  const s = nowSec() - ts;
+  if (s < 60) return `Updated ${s} sec ago`;
+  if (s < 3600) return `Updated ${Math.floor(s/60)} min ago`;
+  return `Updated ${Math.floor(s/3600)} hr ago`;
 }
 
-function ageSeconds(ts) {
-  return Math.floor(Date.now()/1000 - ts);
+/* =====================================================
+   MARKET SESSION (NSE)
+===================================================== */
+function isMarketOpenIST() {
+  const now = new Date();
+  const ist = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+  const h = ist.getHours(), m = ist.getMinutes();
+  const day = ist.getDay(); // 0 Sun
+  if (day === 0 || day === 6) return false;
+  if (h < 9 || h > 15) return false;
+  if (h === 9 && m < 15) return false;
+  if (h === 15 && m > 30) return false;
+  return true;
 }
 
-function adaptiveRefresh(age) {
-  if (refreshTimer) clearTimeout(refreshTimer);
-
-  let next = 60000;
-  if (age > 180) next = 10000;
-  else if (age > 60) next = 30000;
-
-  refreshTimer = setTimeout(fetchAll, next);
-}
+/* =====================================================
+   NIFTY
+===================================================== */
+let lastNifty = null;
 
 function renderNifty(d) {
-  const price = document.getElementById("niftyPrice");
-  const change = document.getElementById("niftyChange");
-  const time = document.getElementById("niftyTime");
-  const badge = document.getElementById("dataStatus");
+  const priceEl = document.getElementById("niftyPrice");
+  const changeEl = document.getElementById("niftyChange");
+  const updEl = document.getElementById("niftyUpdated");
+  const sphere = document.getElementById("marketSphere");
 
-  price.innerText = d.price.toFixed(2);
-  change.innerText = `${d.change >= 0 ? "+" : ""}${d.change} (${d.percent}%)`;
-  change.style.color = d.change >= 0 ? "green" : "red";
+  if (d.price && d.price !== 0) lastNifty = d;
 
-  const age = ageSeconds(d.updated_ts);
-  time.innerText = `Updated: ${d.updated}`;
-  time.title = `Exact age: ${age} seconds`;
+  if (lastNifty) {
+    priceEl.innerText = lastNifty.price.toFixed(2);
+    const sign = lastNifty.change >= 0 ? "+" : "";
+    changeEl.innerText = `${sign}${lastNifty.change} (${lastNifty.percent}%)`;
+    changeEl.style.color = lastNifty.change >= 0 ? "#16a34a" : "#dc2626";
+  }
 
-  badge.className = "status " + (age < 60 ? "live" : age < 180 ? "delayed" : "stale");
-  badge.innerText = badge.classList.contains("live") ? "LIVE" : "STALE";
+  updEl.innerText = ago(d.updated_ts);
+  sphere.className = "sphere " + (isMarketOpenIST() ? "green" : "grey");
+}
 
-  if (lastPrice !== null && lastPrice !== d.price) pulse(price);
-  lastPrice = d.price;
+/* =====================================================
+   STRUCTURAL BIAS
+===================================================== */
+function biasColor(val) {
+  if (val === "BULLISH") return "green";
+  if (val === "BEARISH") return "red";
+  return "";
+}
 
-  adaptiveRefresh(age);
+function biasMessage(b) {
+  const a = b["4H"], c = b["1H"], d = b["15M"];
+  if (!a && !c && !d) return "Unavailable";
+  if (a && c && !d) return "Waiting for intraday structure";
+  if (a === c && c === d && a)
+    return a === "BULLISH" ? "Bullish continuation" : "Bearish continuation";
+  if (a === c && a === "BULLISH" && d === "BEARISH")
+    return "Pullback within bullish structure";
+  if (a === c && a === "BEARISH" && d === "BULLISH")
+    return "Pullback within bearish structure";
+  if (a !== c) return "Structural conflict";
+  return "Intraday bias forming";
 }
 
 function renderBias(d) {
-  ["4H","1H","15M"].forEach(t => {
-    const el = document.getElementById("bias"+t.replace("M","M"));
-    el.className = "sq " + (d.bias[t] === "BULLISH" ? "green" : "red");
+  ["4H","1H","15M"].forEach(tf => {
+    const el = document.getElementById("bias"+tf);
+    el.className = "sq " + biasColor(d.bias?.[tf]);
   });
-  document.getElementById("biasPhase").innerText = d.phase;
+  document.getElementById("biasMessage").innerText =
+    biasMessage(d.bias || {});
 }
 
+/* =====================================================
+   GLOBAL METER (35 / 25 / 25 / 15)
+===================================================== */
 function renderGlobal(d) {
+  const weights = { DowF:0.35, DAX:0.25, Nikkei:0.25, HSI:0.15 };
+  let score = 0;
+
+  for (const k in weights) {
+    const pct = d.indices?.[k]?.change_30m ?? 0;
+    score += (pct > 0 ? 1 : pct < 0 ? -1 : 0) * weights[k];
+    document.getElementById(k === "DowF" ? "dowVal" : k.toLowerCase()+"Val").innerText = pct;
+  }
+
+  const meter = 5 + score * 5;
   const fill = document.getElementById("globalMeterFill");
-  fill.style.width = (d.meter * 10) + "%";
-  fill.className = "meter-fill " + (d.meter > 6 ? "green" : d.meter < 4 ? "red" : "neutral");
-
-  pulse(fill);
-
-  dowVal.innerText = d.indices.DowF.change_30m;
-  daxVal.innerText = d.indices.DAX.change_30m;
-  nikkeiVal.innerText = d.indices.Nikkei.change_30m;
-  hangVal.innerText = d.indices.HSI.change_30m;
+  fill.style.width = Math.max(0,Math.min(10,meter))*10 + "%";
+  fill.className = "meter-fill " + (meter>6?"green":meter<4?"red":"");
+  document.getElementById("globalUpdated").innerText = ago(d.updated_ts);
 }
 
+/* =====================================================
+   BREADTH
+===================================================== */
 function renderBreadth(d) {
-  const fill = document.getElementById("niftyBreadthFill");
-  fill.style.width = (d.meter * 10) + "%";
-  fill.className = "meter-fill neutral";
-  pulse(fill);
+  const fill = document.getElementById("breadthFill");
+  fill.style.width = d.meter*10+"%";
+  document.getElementById("breadthUpdated").innerText = ago(d.updated_ts);
 }
 
+/* =====================================================
+   FETCH LOOP
+===================================================== */
 function fetchAll() {
-  fetch("data/nifty.json").then(r=>r.json()).then(renderNifty);
-  fetch("data/nifty_bias.json").then(r=>r.json()).then(renderBias);
-  fetch("data/global_meter.json").then(r=>r.json()).then(renderGlobal);
-  fetch("data/nifty_breadth.json").then(r=>r.json()).then(renderBreadth);
+  fetch("data/nifty.json?ts="+Date.now()).then(r=>r.json()).then(renderNifty);
+  fetch("data/nifty_bias.json?ts="+Date.now()).then(r=>r.json()).then(renderBias);
+  fetch("data/global_meter.json?ts="+Date.now()).then(r=>r.json()).then(renderGlobal);
+  fetch("data/nifty_breadth.json?ts="+Date.now()).then(r=>r.json()).then(renderBreadth);
 }
 
 fetchAll();
+setInterval(fetchAll, 60000);
