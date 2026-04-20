@@ -65,7 +65,7 @@ function renderBias(d) {
 }
 
 /* =====================================================
-   GLOBAL MARKET
+   GLOBAL MARKET (FIXED DowF ✅)
 ===================================================== */
 function marketStateGlobal(name) {
   const utc = new Date();
@@ -74,60 +74,67 @@ function marketStateGlobal(name) {
 
   if (wd === 0 || wd === 6) return "CLOSED";
 
-  const s = {
+  const sessions = {
     Dow: [810,1200],
     DAX: [420,930],
     Nikkei: [0,360],
     HSI: [90,480]
   };
 
-  if (!s[name]) return "CLOSED";
+  if (!sessions[name]) return "CLOSED";
 
-  if (min >= s[name][0] && min <= s[name][1]) return "OPEN";
+  if (min >= sessions[name][0] && min <= sessions[name][1]) return "OPEN";
   return "CLOSED";
 }
 
 function renderGlobal(d) {
   globalMeterFill.style.width = (d.meter * 10) + "%";
-  globalMeterFill.className =
-    "meter-fill " +
-    (d.meter > 6 ? "green" : d.meter < 4 ? "red" : "neutral");
-
   globalUpdated.innerText = ago(d.updated_ts);
 
-  const lines = [];
-  for (const k in d.indices) {
-    const pct = d.indices[k].change_30m;
-    const cls =
-      pct > 0 ? "#16a34a" : pct < 0 ? "#dc2626" : "#374151";
-    const sq =
-      marketStateGlobal(k) === "OPEN" ? "green" : "grey";
+  const rows = [];
 
-    lines.push(
+  Object.entries(d.indices).forEach(([key, obj]) => {
+    // ✅ FIX: map DowF → Dow for session check
+    const sessionKey = key === "DowF" ? "Dow" : key;
+
+    const pct = obj.change_30m;
+    const color =
+      pct > 0 ? "#16a34a" :
+      pct < 0 ? "#dc2626" :
+      "#374151";
+
+    const sq =
+      marketStateGlobal(sessionKey) === "OPEN" ? "green" : "grey";
+
+    rows.push(
       `<span>
         <span class="sq ${sq}"></span>
-        ${k} <span style="color:${cls}">${pct}%</span>
+        ${sessionKey} <span style="color:${color}">${pct}%</span>
       </span>`
     );
-  }
+  });
 
-  globalMarkets.innerHTML = lines.join(" | ");
+  globalMarkets.innerHTML = rows.join(" | ");
 }
 
 /* =====================================================
-   NIFTY BREADTH
+   NIFTY BREADTH (FIXED SECTOR LOOP ✅)
 ===================================================== */
 function renderBreadth(d) {
   breadthFill.style.width = (d.meter * 10) + "%";
 
-  const sectors = [];
-  for (const k in d.sectors) {
-    const pct = d.sectors[k];
+  const rows = [];
+
+  Object.entries(d.sectors).forEach(([sector, pct]) => {
     const color =
-      pct > 0 ? "#16a34a" : pct < 0 ? "#dc2626" : "#374151";
-    sectors.push(`<span style="color:${color}">${k}</span>`);
-  }
-  breadthSectors.innerHTML = sectors.join(" | ");
+      pct > 0 ? "#16a34a" :
+      pct < 0 ? "#dc2626" :
+      "#374151";
+
+    rows.push(`<span style="color:${color}">${sector}</span>`);
+  });
+
+  breadthSectors.innerHTML = rows.join(" | ");
   breadthUpdated.innerText = ago(d.updated_ts);
 }
 
@@ -142,4 +149,5 @@ function fetchAll() {
 }
 
 fetchAll();
-setInterval(fetchAll, 60_000);
+setInterval(fetchAll, 60000);
+``
