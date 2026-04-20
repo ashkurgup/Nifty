@@ -4,6 +4,7 @@
 const nowSec = () => Math.floor(Date.now() / 1000);
 
 function ago(ts) {
+  if (!ts || isNaN(ts)) return "";   // ✅ prevent NaN
   const s = nowSec() - ts;
   if (s < 60) return `Updated ${s} sec ago`;
   if (s < 3600) return `Updated ${Math.floor(s/60)} min ago`;
@@ -26,7 +27,7 @@ function isMarketOpenIST() {
 }
 
 /* =====================================================
-   NIFTY
+   NIFTY (✅ keep Updated text here)
 ===================================================== */
 let lastNifty = null;
 
@@ -42,7 +43,8 @@ function renderNifty(d) {
       lastNifty.change >= 0 ? "#16a34a" : "#dc2626";
   }
 
-  niftyUpdated.innerText = ago(d.updated_ts);
+  // ✅ handle both ts & updated_ts safely
+  niftyUpdated.innerText = ago(d.updated_ts || d.ts);
   marketSphere.className =
     "sphere " + (isMarketOpenIST() ? "green" : "grey");
 }
@@ -65,7 +67,7 @@ function renderBias(d) {
 }
 
 /* =====================================================
-   GLOBAL MARKET (FIXED DowF ✅)
+   GLOBAL MARKET (❌ NO Updated text anymore)
 ===================================================== */
 function marketStateGlobal(name) {
   const utc = new Date();
@@ -82,22 +84,19 @@ function marketStateGlobal(name) {
   };
 
   if (!sessions[name]) return "CLOSED";
-
-  if (min >= sessions[name][0] && min <= sessions[name][1]) return "OPEN";
-  return "CLOSED";
+  return (min >= sessions[name][0] && min <= sessions[name][1])
+    ? "OPEN" : "CLOSED";
 }
 
 function renderGlobal(d) {
   globalMeterFill.style.width = (d.meter * 10) + "%";
-  globalUpdated.innerText = ago(d.updated_ts);
 
   const rows = [];
 
   Object.entries(d.indices).forEach(([key, obj]) => {
-    // ✅ FIX: map DowF → Dow for session check
     const sessionKey = key === "DowF" ? "Dow" : key;
-
     const pct = obj.change_30m;
+
     const color =
       pct > 0 ? "#16a34a" :
       pct < 0 ? "#dc2626" :
@@ -118,7 +117,7 @@ function renderGlobal(d) {
 }
 
 /* =====================================================
-   NIFTY BREADTH (FIXED SECTOR LOOP ✅)
+   NIFTY BREADTH (❌ NO Updated text anymore)
 ===================================================== */
 function renderBreadth(d) {
   breadthFill.style.width = (d.meter * 10) + "%";
@@ -135,7 +134,6 @@ function renderBreadth(d) {
   });
 
   breadthSectors.innerHTML = rows.join(" | ");
-  breadthUpdated.innerText = ago(d.updated_ts);
 }
 
 /* =====================================================
@@ -150,4 +148,3 @@ function fetchAll() {
 
 fetchAll();
 setInterval(fetchAll, 60000);
-``
