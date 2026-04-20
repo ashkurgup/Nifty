@@ -1,18 +1,19 @@
 {
-  "updated": "20 Apr 2026, 15:09 IST",
-  "meter": 3.75,
+  "updated": "20 Apr 2026, 16:04 IST",
+  "updated_ts": 1776681268,
+  "meter": 5,
   "indices": {
     "DowF": {
-      "change_30m": 0.0
+      "change_30m": 0
     },
     "DAX": {
-      "change_30m": -0.82
+      "change_30m": 0
     },
     "Nikkei": {
-      "change_30m": 0.0
+      "change_30m": 0
     },
     "HSI": {
-      "change_30m": 0.0
+      "change_30m": 0
     }
   }
 }

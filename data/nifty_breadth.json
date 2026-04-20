@@ -1,31 +1,12 @@
 {
-  "updated": "20 Apr 2026, 15:09 IST",
-  "meter": 5.0,
+  "updated": "20 Apr 2026, 16:04 IST",
+  "updated_ts": 1776681268,
+  "meter": 5,
   "sectors": [
-    {
-      "key": "BANK",
-      "change_30m": 0.0,
-      "weight": 0.35
-    },
-    {
-      "key": "FIN",
-      "change_30m": 0.0,
-      "weight": 0.25
-    },
-    {
-      "key": "IT",
-      "change_30m": 0.0,
-      "weight": 0.15
-    },
-    {
-      "key": "METAL",
-      "change_30m": 0.0,
-      "weight": 0.15
-    },
-    {
-      "key": "FMCG",
-      "change_30m": 0.0,
-      "weight": 0.1
-    }
+    "BANK",
+    "FIN",
+    "IT",
+    "METAL",
+    "FMCG"
   ]
 }
