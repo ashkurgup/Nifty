@@ -1,10 +1,4 @@
 function renderNifty(data) {
-  // Market status text (TOP)
-  const statusText = document.getElementById("niftyStatusText");
-  statusText.innerText = data.market_status;
-  statusText.className =
-    "market-status " +
-    (data.market_status === "LIVE" ? "live" : "closed");
 
   // Status dot
   const statusDot = document.getElementById("niftyStatus");
