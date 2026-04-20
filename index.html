@@ -5,10 +5,19 @@
   <title>Market Dashboard</title>
 
   <!-- Google Fonts -->
-  <link rel="preconnect" href="httpsnk rel="preconnect" href="https://fonts.gstatic.com"oogleapis.com/css2?family=Lato:wght@400;700;800&display=swap" rel="stylesheet TAG -->
-  <link rel="stylesheet" href="style.css"dashboard-row">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <!-- ================= NIFTY ================= -->
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="dashboard-row">
+
+  <!-- NIFTY -->
   <div class="box box-nifty">
     <div class="nifty-header">
       <span id="marketSphere" class="sphere grey"></span>
@@ -21,10 +30,10 @@
     <div id="niftyUpdated" class="small"></div>
   </div>
 
-  <!-- ================= RIGHT COLUMN ================= -->
+  <!-- RIGHT COLUMN -->
   <div class="right-column">
 
-    <!-- ================= STRUCTURAL BIAS ================= -->
+    <!-- BIAS -->
     <div class="box">
       <div class="bias-line">
         Structural Bias →
@@ -36,9 +45,9 @@
       </div>
     </div>
 
-    <!-- ================= GLOBAL MARKET ================= -->
+    <!-- GLOBAL -->
     <div class="box">
-      <div class="meter-line">
+      <a class="meter-line">
         <div class="meter">
           <div id="globalMeterFill" class="meter-fill"></div>
         </div>
@@ -47,7 +56,7 @@
       </div>
     </div>
 
-    <!-- ================= NIFTY BREADTH ================= -->
+    <!-- BREADTH -->
     <div class="box">
       <div class="meter-line">
         <div class="meter">
@@ -61,7 +70,8 @@
   </div>
 </div>
 
-<!-- ✅ SCRIPT MUST BE A SCRIPT TAG -->
-app.js</script>
+<!-- ✅ THIS MUST BE EXACT -->
+<script src="app.js"></script>
+
 </body>
 </html>
