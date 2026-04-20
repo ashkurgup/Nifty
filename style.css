@@ -27,7 +27,7 @@ body {
    ===================================================== */
 
 .box {
-  width: 180px;
+  width: 220px;
   border: 1px solid #d1d5db;
   border-radius: 14px;
   padding: 16px;       /* 🔽 reduce padding to shrink box */
