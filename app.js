@@ -2,9 +2,16 @@ function colorFor(v) {
   return v > 0 ? "#16a34a" : v < 0 ? "#dc2626" : "#374151";
 }
 
+/* ✅ NORMALIZED CONTEXT COLOR (ENVIRONMENT, NOT DIRECTION) */
+function meterContextClass(v) {
+  if (v >= 6.5) return "green";   // supportive context
+  if (v < 4) return "red";        // fragile context
+  return "";                      // neutral / mixed (grey)
+}
+
 function isDowFuturesOpen() {
   const d = new Date().getUTCDay();
-  return d !== 0; // Dow futures open Sun–Fri
+  return d !== 0;
 }
 
 // -------- NIFTY --------
@@ -36,7 +43,7 @@ function renderNifty(d) {
 function renderGlobal(d) {
   globalMeterFill.style.width = (d.meter * 10) + "%";
   globalMeterFill.className =
-    "meter-fill " + (d.meter > 6 ? "green" : d.meter < 4 ? "red" : "");
+    "meter-fill " + meterContextClass(d.meter);
   globalMeterValue.innerText = d.meter;
 
   const rows = [];
@@ -64,7 +71,7 @@ function renderGlobal(d) {
 function renderBreadth(d) {
   breadthFill.style.width = (d.meter * 10) + "%";
   breadthFill.className =
-    "meter-fill " + (d.meter > 6 ? "green" : d.meter < 4 ? "red" : "");
+    "meter-fill " + meterContextClass(d.meter);
   breadthMeterValue.innerText = d.meter;
 
   const rows = [];
@@ -87,10 +94,7 @@ function renderBreadth(d) {
 
 // -------- BIAS --------
 function renderBias(d) {
-  const map = {
-    BULLISH: "green",
-    BEARISH: "red"
-  };
+  const map = { BULLISH: "green", BEARISH: "red" };
 
   bias4H.className = `sq ${map[d.bias?.["4H"]] || ""}`;
   bias1H.className = `sq ${map[d.bias?.["1H"]] || ""}`;
@@ -100,19 +104,8 @@ function renderBias(d) {
 }
 
 // -------- FETCH --------
-fetch("data/nifty.json")
-  .then(r => r.json())
-  .then(renderNifty);
-
-fetch("data/global_meter.json")
-  .then(r => r.json())
-  .then(renderGlobal);
-
-fetch("data/nifty_breadth.json")
-  .then(r => r.json())
-  .then(renderBreadth);
-
-fetch("data/nifty_bias.json")
-  .then(r => r.json())
-  .then(renderBias);
+fetch("data/nifty.json").then(r => r.json()).then(renderNifty);
+fetch("data/global_meter.json").then(r => r.json()).then(renderGlobal);
+fetch("data/nifty_breadth.json").then(r => r.json()).then(renderBreadth);
+fetch("data/nifty_bias.json").then(r => r.json()).then(renderBias);
 ``
