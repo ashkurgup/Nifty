@@ -125,3 +125,7 @@ body {
   color: #6b7280;
   white-space: nowrap;
 }
+/* ===== FIX: Prevent dots from shrinking ===== */
+.bias-dot {
+  flex-shrink: 0;       /* ✅ THIS keeps spheres visible */
+}
