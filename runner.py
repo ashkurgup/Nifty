@@ -192,4 +192,3 @@ if __name__ == "__main__":
     json.dump(fetch_bias(), open(f"{DATA_DIR}/nifty_bias.json", "w"), indent=2)
     json.dump(fetch_global_meter(), open(f"{DATA_DIR}/global_meter.json", "w"), indent=2)
     print("✅ All dashboard data updated safely")
-``
