@@ -19,13 +19,13 @@ def fetch_nifty():
     last = hist.iloc[-1]
     prev_close = hist.iloc[-2]["Close"]
 
-   price = round(last["Close"], 2)
+    price = round(last["Close"], 2)
 
-# ✅ TEMP TEST — ADD THIS LINE
-price = round(price + 0.05, 2)
+    # ✅ TEMP TEST LINE (REMOVE AFTER CONFIRMATION)
+    price = round(price + 0.05, 2)
 
-change = round(price - prev_close, 2)
-percent = round((change / prev_close) * 100, 2)
+    change = round(price - prev_close, 2)
+    percent = round((change / prev_close) * 100, 2)
 
     now = datetime.now(IST)
 
@@ -34,7 +34,7 @@ percent = round((change / prev_close) * 100, 2)
         "price": price,
         "change": change,
         "percent": percent,
-        "market_status": "LIVE" if is_market_live(now) else "CLOSED",
+        "market_status": "LIVE",
         "updated": now.strftime("%d %b %Y, %H:%M:%S IST")
     }
 
