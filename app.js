@@ -21,49 +21,65 @@ function renderNifty(d) {
   }
 
   const ts = d.updated_ts || d.ts;
-if (ts) {
-  const mins = Math.floor((Date.now() / 1000 - ts) / 60);
-  niftyUpdated.innerText = `Updated ${mins} min ago`;
-} else {
-  niftyUpdated.innerText = "";
-}
-  marketSphere.className = "sphere " + (d.market === "LIVE" ? "green" : "grey");
+  if (ts) {
+    const mins = Math.floor((Date.now() / 1000 - ts) / 60);
+    niftyUpdated.innerText = `Updated ${mins} min ago`;
+  } else {
+    niftyUpdated.innerText = "";
+  }
+
+  marketSphere.className =
+    "sphere " + (d.market === "LIVE" ? "green" : "grey");
 }
 
 // -------- GLOBAL --------
 function renderGlobal(d) {
   globalMeterFill.style.width = (d.meter * 10) + "%";
-  globalMeterFill.className = "meter-fill " + (d.meter > 6 ? "green" : d.meter < 4 ? "red" : "");
+  globalMeterFill.className =
+    "meter-fill " + (d.meter > 6 ? "green" : d.meter < 4 ? "red" : "");
   globalMeterValue.innerText = d.meter;
 
   const rows = [];
+
   Object.entries(d.indices).forEach(([key, v]) => {
     const label = key === "DowF" ? "Dow" : key;
     const open = key === "DowF" ? isDowFuturesOpen() : false;
+    const color = colorFor(v.change_30m);
 
-    rows.push(
-      `<span>
-        <span class="sq ${open ? "green":"grey"}"></span>
-        ${label} <span style="color:${colorFor(v.change_30m)}">${v.change_30m}%</span>
-      </span>`
-    );
+    rows.push(`
+      <span class="market-item">
+        <span class="sq ${open ? "green" : "grey"}"></span>
+        <span class="market-name">${label}</span>
+        <span class="market-pct" style="color:${color}">
+          ${v.change_30m >= 0 ? "+" : ""}${v.change_30m}%
+        </span>
+      </span>
+    `);
   });
+
   globalMarkets.innerHTML = rows.join(" | ");
 }
 
 // -------- BREADTH --------
 function renderBreadth(d) {
   breadthFill.style.width = (d.meter * 10) + "%";
-  breadthFill.className = "meter-fill " + (d.meter > 6 ? "green" : d.meter < 4 ? "red" : "");
+  breadthFill.className =
+    "meter-fill " + (d.meter > 6 ? "green" : d.meter < 4 ? "red" : "");
   breadthMeterValue.innerText = d.meter;
 
   const rows = [];
+
   Object.entries(d.sectors).forEach(([sector, pct]) => {
-    rows.push(
-      `<span>
-        ${sector} <span style="color:${colorFor(pct)}">${pct >= 0 ? "+" : ""}${pct}%</span>
-      </span>`
-    );
+    const color = colorFor(pct);
+
+    rows.push(`
+      <span class="sector-item">
+        <span class="sector-name">${sector}</span>
+        <span class="sector-pct" style="color:${color}">
+          ${pct >= 0 ? "+" : ""}${pct}%
+        </span>
+      </span>
+    `);
   });
 
   breadthSectors.innerHTML = rows.join(" | ");
@@ -71,14 +87,32 @@ function renderBreadth(d) {
 
 // -------- BIAS --------
 function renderBias(d) {
-  ["4H","1H","15M"].forEach(tf => {
-    bias4H.className = "sq green";
-  });
-  biasMessage.innerText = d.message;
+  const map = {
+    BULLISH: "green",
+    BEARISH: "red"
+  };
+
+  bias4H.className = `sq ${map[d.bias?.["4H"]] || ""}`;
+  bias1H.className = `sq ${map[d.bias?.["1H"]] || ""}`;
+  bias15M.className = `sq ${map[d.bias?.["15M"]] || ""}`;
+
+  biasMessage.innerText = d.message || "";
 }
 
 // -------- FETCH --------
-fetch("data/nifty.json").then(r=>r.json()).then(renderNifty);
-fetch("data/global_meter.json").then(r=>r.json()).then(renderGlobal);
-fetch("data/nifty_breadth.json").then(r=>r.json()).then(renderBreadth);
-fetch("data/nifty_bias.json").then(r=>r.json()).then(renderBias);
+fetch("data/nifty.json")
+  .then(r => r.json())
+  .then(renderNifty);
+
+fetch("data/global_meter.json")
+  .then(r => r.json())
+  .then(renderGlobal);
+
+fetch("data/nifty_breadth.json")
+  .then(r => r.json())
+  .then(renderBreadth);
+
+fetch("data/nifty_bias.json")
+  .then(r => r.json())
+  .then(renderBias);
+``
