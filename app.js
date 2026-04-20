@@ -20,7 +20,13 @@ function renderNifty(d) {
     niftyChange.style.color = colorFor(lastNifty.change);
   }
 
-  niftyUpdated.innerText = "Updated " + Math.floor((Date.now()/1000 - d.updated_ts)/60) + " min ago";
+  const ts = d.updated_ts || d.ts;
+if (ts) {
+  const mins = Math.floor((Date.now() / 1000 - ts) / 60);
+  niftyUpdated.innerText = `Updated ${mins} min ago`;
+} else {
+  niftyUpdated.innerText = "";
+}
   marketSphere.className = "sphere " + (d.market === "LIVE" ? "green" : "grey");
 }
 
