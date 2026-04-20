@@ -112,20 +112,30 @@ def fetch_global():
 # ---------- BREADTH ----------
 def fetch_breadth():
     total = 0
-    out = {}
+    sectors = {}
     ts = now_ts()
 
-    for k, w in SECTORS.items():
-        cl = closes_5m(SECTOR_SYMBOLS[k], 3)
-        pct = rolling_30m_pct(cl)
+    for sector, weight in SECTORS.items():
+        closes = closes_5m(SECTOR_SYMBOLS[sector], 3)
+        pct = rolling_30m_pct(closes)
+
         if pct is None:
             continue
-        score = 1 if pct > 0 else -1 if pct < 0 else 0
-        total += score * w
-        out[k] = pct
+
+        sectors[sector] = pct
+
+        if pct > 0:
+            total += weight
+        elif pct < 0:
+            total -= weight
 
     meter = max(0, min(10, round(5 + total * 5)))
-    return {"meter": meter, "sectors": out, "ts": ts}
+
+    return {
+        "updated_ts": ts,
+        "meter": meter,
+        "sectors": sectors
+    }
 
 # ---------- BIAS ----------
 def ema(cl, n):
