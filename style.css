@@ -99,44 +99,29 @@ body {
 
 
 /* =====================================================
-   STRUCTURAL BIAS BOX
+   STRUCTURAL BIAS – SINGLE LINE
    ===================================================== */
 
-.bias-row {
-  margin-top: 6px;
-  font-size: 14px;
-  font-weight: 700;
-  color: #374151;
+.bias-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;        /* 🔽 reduce for tighter line */
+  font-size: 13px;
+  flex-wrap: wrap; /* safe on small screens */
 }
 
-.tf {
+.bias-title {
   font-weight: 800;
 }
 
-.bias-dot {
-  display: inline-block;
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  margin: 0 4px;
-  vertical-align: middle;
+.bias-arrow {
+  color: #9ca3af;  /* subtle grey */
+  font-weight: 700;
+  margin: 0 2px;
 }
 
-.bias-dot.bullish {
-  background: #16a34a;
-}
-
-.bias-dot.bearish {
-  background: #dc2626;
-}
-
-.bias-dot.pullback {
-  background: #a855f7;
-}
-
-.bias-phase {
-  margin-top: 6px;
-  font-size: 13px;
+.bias-phase-inline {
   font-style: italic;
   color: #6b7280;
+  white-space: nowrap;
 }
