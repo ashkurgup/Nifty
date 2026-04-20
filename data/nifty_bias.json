@@ -1,10 +1,9 @@
 {
   "bias": {
     "4H": "BULLISH",
-    "1H": "BULLISH",
+    "1H": "BEARISH",
     "15M": "BEARISH"
   },
-  "phase": "Pullback within bullish structure",
-  "updated": "20 Apr 2026, 17:04 IST",
-  "updated_ts": 1776684889
+  "message": "Structural conflict",
+  "updated_ts": 1776689800
 }

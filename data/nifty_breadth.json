@@ -1,12 +1,11 @@
 {
-  "updated": "20 Apr 2026, 17:04 IST",
-  "updated_ts": 1776684889,
-  "meter": 5,
-  "sectors": [
-    "BANK",
-    "FIN",
-    "IT",
-    "METAL",
-    "FMCG"
-  ]
+  "meter": 0,
+  "sectors": {
+    "BANK": -0.13,
+    "FIN": -0.17,
+    "IT": -0.9,
+    "METAL": -0.45,
+    "FMCG": -0.26
+  },
+  "updated_ts": 1776689799
 }
