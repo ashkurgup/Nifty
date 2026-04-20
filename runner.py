@@ -20,10 +20,6 @@ def fetch_nifty():
     prev_close = hist.iloc[-2]["Close"]
 
     price = round(last["Close"], 2)
-
-    # ✅ TEMP TEST LINE (REMOVE AFTER CONFIRMATION)
-    price = round(price + 0.05, 2)
-
     change = round(price - prev_close, 2)
     percent = round((change / prev_close) * 100, 2)
 
