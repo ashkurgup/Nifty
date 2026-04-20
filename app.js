@@ -1,10 +1,7 @@
-/* =====================================================
-   NIFTY PRICE BOX
-   ===================================================== */
+/* ================= NIFTY ================= */
 
 function renderNifty(data) {
-  const statusDot = document.getElementById("niftyStatus");
-  statusDot.className =
+  document.getElementById("niftyStatus").className =
     "status-dot " + (data.market_status === "LIVE" ? "live" : "closed");
 
   document.getElementById("niftyPrice").innerText =
@@ -12,11 +9,9 @@ function renderNifty(data) {
 
   const changeEl = document.getElementById("niftyChange");
   const sign = data.change >= 0 ? "+" : "";
-  changeEl.innerText =
-    `${sign}${data.change} (${data.percent}%)`;
-
-  changeEl.className =
-    "nifty-change " + (data.change >= 0 ? "positive" : "negative");
+  changeEl.innerText = `${sign}${data.change} (${data.percent}%)`;
+  changeEl.className = "nifty-change " +
+    (data.change >= 0 ? "positive" : "negative");
 
   document.getElementById("niftyTime").innerText =
     "Updated: " + data.updated;
@@ -24,44 +19,29 @@ function renderNifty(data) {
 
 function loadNifty() {
   fetch("data/nifty.json?ts=" + Date.now())
-    .then(res => res.json())
-    .then(renderNifty)
-    .catch(err => console.error("NIFTY load failed", err));
+    .then(r => r.json())
+    .then(renderNifty);
 }
 
 loadNifty();
 setInterval(loadNifty, 60000);
 
-
-/* =====================================================
-   STRUCTURAL BIAS BOX
-   ===================================================== */
+/* ================= BIAS ================= */
 
 function renderBias(data) {
-  const map = {
-    "BULLISH": "bullish",
-    "BEARISH": "bearish",
-    "PULLBACK": "pullback"
-  };
+  const map = { BULLISH: "bullish", BEARISH: "bearish", PULLBACK: "pullback" };
 
-  document.getElementById("bias4H").className =
-    "bias-dot " + map[data.bias["4H"]];
+  document.getElementById("bias4H").className = "bias-dot " + map[data.bias["4H"]];
+  document.getElementById("bias1H").className = "bias-dot " + map[data.bias["1H"]];
+  document.getElementById("bias15M").className = "bias-dot " + map[data.bias["15M"]];
 
-  document.getElementById("bias1H").className =
-    "bias-dot " + map[data.bias["1H"]];
-
-  document.getElementById("bias15M").className =
-    "bias-dot " + map[data.bias["15M"]];
-
-  document.getElementById("biasPhase").innerText =
-    data.phase;
+  document.getElementById("biasPhase").innerText = data.phase;
 }
 
 function loadBias() {
   fetch("data/nifty_bias.json?ts=" + Date.now())
     .then(r => r.json())
-    .then(renderBias)
-    .catch(e => console.error("Bias load failed", e));
+    .then(renderBias);
 }
 
 loadBias();
