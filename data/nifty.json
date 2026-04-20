@@ -1,9 +1,7 @@
 {
-  "symbol": "NIFTY",
   "price": 24330.9,
-  "change": 1.35,
-  "percent": 0.01,
-  "market_status": "LIVE",
-  "updated": "20 Apr 2026, 17:04:48 IST",
-  "updated_ts": 1776684888
+  "change": 10.3,
+  "percent": 0.04,
+  "market": "LIVE",
+  "ts": 1776687852
 }
