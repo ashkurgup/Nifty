@@ -18,7 +18,7 @@ def safe_write(path, data):
     with open(path, "w") as f:
         json.dump(data, f, indent=2)
 
-def fetch_ohlc(symbol, interval="1min", bars=60):
+def fetch_ohlc(symbol, interval, bars):
     r = requests.get(
         f"{BASE_URL}/time_series",
         params={
@@ -27,26 +27,21 @@ def fetch_ohlc(symbol, interval="1min", bars=60):
             "outputsize": bars,
             "apikey": API_KEY
         },
-        timeout=15
+        timeout=20
     )
     data = r.json()
     if "values" not in data:
-        return None
+        return []
     return sorted(data["values"], key=lambda x: x["datetime"])
 
-def rolling_change(values):
-    if not values or len(values) < 2:
-        return None
-    start = float(values[0]["close"])
-    end = float(values[-1]["close"])
-    return round((end - start) / start * 100, 2) if start else None
+# ================= NIFTY PRICE =================
 
 def fetch_nifty():
-    values = fetch_ohlc("NIFTY_50")
+    values = fetch_ohlc("NIFTY_50", "1min", 10)
     now = now_ist()
     ts = int(time.time())
 
-    if not values:
+    if len(values) < 2:
         return {
             "symbol": "NIFTY",
             "price": 0,
@@ -64,18 +59,44 @@ def fetch_nifty():
         "symbol": "NIFTY",
         "price": round(last, 2),
         "change": round(last - prev, 2),
-        "percent": rolling_change(values) or 0,
+        "percent": round((last - prev) / prev * 100, 2) if prev else 0,
         "market_status": "LIVE",
         "updated": now.strftime("%d %b %Y, %H:%M:%S IST"),
         "updated_ts": ts
     }
 
+# ================= STRUCTURAL BIAS =================
+
+def ema_bias(values, period):
+    closes = [float(v["close"]) for v in values]
+    if len(closes) < period:
+        return None
+    k = 2 / (period + 1)
+    ema = closes[0]
+    for p in closes[1:]:
+        ema = p * k + ema * (1 - k)
+    return "BULLISH" if closes[-1] > ema else "BEARISH"
+
 def fetch_bias():
-    values = fetch_ohlc("NIFTY_50", "15min", 80)
     now = now_ist()
     ts = int(time.time())
 
-    if not values:
+    # ✅ 4H → ~10 trading days (daily candles)
+    values_4h = fetch_ohlc("NIFTY_50", "1day", 12)
+
+    # ✅ 1H → ~3 trading days (hourly candles)
+    values_1h = fetch_ohlc("NIFTY_50", "1h", 24)
+
+    # ✅ 15M → intraday
+    values_15m = fetch_ohlc("NIFTY_50", "15min", 20)
+
+    bias = {
+        "4H": ema_bias(values_4h, 10),
+        "1H": ema_bias(values_1h, 20),
+        "15M": ema_bias(values_15m, 10)
+    }
+
+    if not bias["4H"] and not bias["1H"] and not bias["15M"]:
         return {
             "bias": {},
             "phase": "Unavailable",
@@ -83,25 +104,14 @@ def fetch_bias():
             "updated_ts": ts
         }
 
-    def ema_bias(period):
-        closes = [float(v["close"]) for v in values]
-        if len(closes) < period:
-            return "NEUTRAL"
-        k = 2 / (period + 1)
-        ema = closes[0]
-        for p in closes[1:]:
-            ema = p * k + ema * (1 - k)
-        return "BULLISH" if closes[-1] > ema else "BEARISH"
-
-    bias = {
-        "4H": ema_bias(50),
-        "1H": ema_bias(20),
-        "15M": ema_bias(10)
-    }
-
-    phase = "Trend consolidation"
     if bias["4H"] == bias["1H"] == bias["15M"]:
         phase = f"{bias['4H'].capitalize()} continuation"
+    elif bias["4H"] == bias["1H"] and bias["15M"]:
+        phase = f"Pullback within {bias['4H'].lower()} structure"
+    elif bias["4H"] != bias["1H"]:
+        phase = "Structural conflict"
+    else:
+        phase = "Intraday bias forming"
 
     return {
         "bias": bias,
@@ -110,15 +120,16 @@ def fetch_bias():
         "updated_ts": ts
     }
 
+# ================= GLOBAL METER =================
+
 def fetch_global_meter():
     now = now_ist()
     ts = int(time.time())
-    meter = 5
 
     return {
         "updated": now.strftime("%d %b %Y, %H:%M IST"),
         "updated_ts": ts,
-        "meter": meter,
+        "meter": 5,
         "indices": {
             "DowF": {"change_30m": 0},
             "DAX": {"change_30m": 0},
@@ -126,6 +137,8 @@ def fetch_global_meter():
             "HSI": {"change_30m": 0}
         }
     }
+
+# ================= NIFTY BREADTH =================
 
 def fetch_nifty_breadth():
     now = now_ist()
@@ -135,8 +148,10 @@ def fetch_nifty_breadth():
         "updated": now.strftime("%d %b %Y, %H:%M IST"),
         "updated_ts": ts,
         "meter": 5,
-        "sectors": ["BANK","FIN","IT","METAL","FMCG"]
+        "sectors": ["BANK", "FIN", "IT", "METAL", "FMCG"]
     }
+
+# ================= MAIN =================
 
 if __name__ == "__main__":
     safe_write("data/nifty.json", fetch_nifty())
