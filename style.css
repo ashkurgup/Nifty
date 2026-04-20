@@ -1,71 +1,108 @@
-/* -----------------------------
-   PERSISTENCE & LAYOUT STABILITY
------------------------------- */
-
-.aligned-stream {
-  display: inline-flex;
-  flex-wrap: nowrap;
-  gap: 14px;
+body {
+  font-family: 'Lato', Arial, sans-serif;
+  background: #fff;
+  padding: 8px;
 }
 
-/* Each item behaves like a terminal column */
-.market-item,
-.sector-item {
-  display: inline-flex;
+.dashboard-row {
+  display: flex;
+  gap: 12px;
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.box {
+  border: 1px solid #d1d5db;
+  border-radius: 14px;
+  padding: 12px;
+  background: #fff;
+  box-shadow: 0 6px 14px rgba(0,0,0,.08);
+}
+
+.box-nifty { width: 240px; }
+
+.nifty-header {
+  display: flex;
   align-items: center;
-  min-width: 140px;   /* prevents flicker / reflow */
+  gap: 6px;
 }
 
-/* Fixed label column */
-.market-name,
-.sector-name {
+.nifty-title {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.sphere {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.sphere.green { background: #16a34a; }
+.sphere.grey { background: #9ca3af; }
+
+.nifty-price {
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+.nifty-change {
+  font-size: 12px;
+  font-weight: 700;
+}
+.divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 8px 0;
+}
+.small {
+  font-size: 10.5px;
+  color: #64748b;
+  font-style: italic;
+}
+
+/* Bias */
+.bias-line {
+  font-size: 13px;
+  white-space: nowrap;
+}
+.bias-phase {
+  font-style: italic;
+  color: #6b7280;
+}
+.sq {
+  width: 10px;
+  height: 10px;
   display: inline-block;
-  width: 60px;
-  text-align: left;
-  margin-left: 4px;
-  margin-right: 12px;
+  background: #e5e7eb;
+  margin: 0 4px;
 }
+.sq.green { background: #16a34a; }
+.sq.red { background: #dc2626; }
 
-/* Percentage column */
-.market-pct,
-.sector-pct {
-  font-weight: 700;    /* bold percentage */
-  min-width: 64px;
-  text-align: right;
+/* Meters */
+.meter-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  white-space: nowrap;
 }
-
-/* -----------------------------
-   METER COLOUR NORMALIZATION
------------------------------- */
-
-/* Neutral default */
+.meter {
+  width: 80px;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
 .meter-fill {
+  height: 100%;
+  width: 0%;
   background: #9ca3af;
 }
-
-/* Supportive environment */
-.meter-fill.green {
-  background: #16a34a;
-}
-
-/* Fragile / hostile environment */
-.meter-fill.red {
-  background: #dc2626;
-}
-
-/* =========================
-   NORMALIZED METER CONTEXT
-   (ENVIRONMENT, NOT DIRECTION)
-========================= */
-
-.meter-fill {
-  background: #9ca3af;      /* neutral / mixed */
-}
-
-.meter-fill.green {
-  background: #16a34a;      /* supportive environment */
-}
-
-.meter-fill.red {
-  background: #dc2626;      /* fragile environment */
-}
+.meter-fill.green { background: #16a34a; }
+.meter-fill.red { background: #dc2626; }
+``
