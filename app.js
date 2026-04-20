@@ -1,154 +1,82 @@
-/* =====================================================
-   CONFIG
-===================================================== */
+let lastPrice = null;
+let refreshTimer = null;
 
-const REFRESH_INTERVAL = 60 * 1000; // 60 sec
+function pulse(el) {
+  el.classList.remove("pulse");
+  void el.offsetWidth;
+  el.classList.add("pulse");
+}
 
-/* =====================================================
-   NIFTY
-===================================================== */
+function ageSeconds(ts) {
+  return Math.floor(Date.now()/1000 - ts);
+}
 
-function renderNifty(data) {
-  const priceEl = document.getElementById("niftyPrice");
-  const changeEl = document.getElementById("niftyChange");
-  const timeEl = document.getElementById("niftyTime");
+function adaptiveRefresh(age) {
+  if (refreshTimer) clearTimeout(refreshTimer);
+
+  let next = 60000;
+  if (age > 180) next = 10000;
+  else if (age > 60) next = 30000;
+
+  refreshTimer = setTimeout(fetchAll, next);
+}
+
+function renderNifty(d) {
+  const price = document.getElementById("niftyPrice");
+  const change = document.getElementById("niftyChange");
+  const time = document.getElementById("niftyTime");
   const badge = document.getElementById("dataStatus");
 
-  if (!priceEl || !changeEl || !timeEl) return;
+  price.innerText = d.price.toFixed(2);
+  change.innerText = `${d.change >= 0 ? "+" : ""}${d.change} (${d.percent}%)`;
+  change.style.color = d.change >= 0 ? "green" : "red";
 
-  priceEl.innerText = data.price.toFixed(2);
+  const age = ageSeconds(d.updated_ts);
+  time.innerText = `Updated: ${d.updated}`;
+  time.title = `Exact age: ${age} seconds`;
 
-  const sign = data.change >= 0 ? "+" : "";
-  changeEl.innerText = `${sign}${data.change} (${data.percent}%)`;
-  changeEl.style.color = data.change >= 0 ? "#16a34a" : "#dc2626";
+  badge.className = "status " + (age < 60 ? "live" : age < 180 ? "delayed" : "stale");
+  badge.innerText = badge.classList.contains("live") ? "LIVE" : "STALE";
 
-  timeEl.innerText = "Updated: " + data.updated;
+  if (lastPrice !== null && lastPrice !== d.price) pulse(price);
+  lastPrice = d.price;
 
-  // ---- stale data logic ----
-  const updatedTime = new Date(data.updated.replace(" IST", ""));
-  const now = new Date();
-  const ageMin = (now - updatedTime) / 60000;
-
-  if (badge) {
-    badge.classList.remove("hidden", "stale-ok", "stale-warn", "stale-bad");
-
-    if (ageMin <= 2) {
-      badge.classList.add("stale-ok");
-      badge.innerText = "Live";
-    } else if (ageMin <= 5) {
-      badge.classList.add("stale-warn");
-      badge.innerText = "Delayed";
-    } else {
-      badge.classList.add("stale-bad");
-      badge.innerText = "Stale";
-    }
-  }
+  adaptiveRefresh(age);
 }
-
-function fetchNifty() {
-  fetch("data/nifty.json?ts=" + Date.now())
-    .then(r => r.json())
-    .then(renderNifty)
-    .catch(() => {});
-}
-
-/* =====================================================
-   STRUCTURAL BIAS
-===================================================== */
 
 function renderBias(d) {
-  const set = (id, val) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.className = "sq " + (val === "BULLISH" ? "green" : "red");
-  };
-
-  set("bias4H", d.bias["4H"]);
-  set("bias1H", d.bias["1H"]);
-  set("bias15M", d.bias["15M"]);
-
-  const phase = document.getElementById("biasPhase");
-  if (phase) phase.innerText = d.phase;
+  ["4H","1H","15M"].forEach(t => {
+    const el = document.getElementById("bias"+t.replace("M","M"));
+    el.className = "sq " + (d.bias[t] === "BULLISH" ? "green" : "red");
+  });
+  document.getElementById("biasPhase").innerText = d.phase;
 }
 
-function fetchBias() {
-  fetch("data/nifty_bias.json?ts=" + Date.now())
-    .then(r => r.json())
-    .then(renderBias)
-    .catch(() => {});
-}
-
-/* =====================================================
-   GLOBAL METER
-===================================================== */
-
-function renderGlobalMeter(d) {
+function renderGlobal(d) {
   const fill = document.getElementById("globalMeterFill");
-  if (!fill) return;
+  fill.style.width = (d.meter * 10) + "%";
+  fill.className = "meter-fill " + (d.meter > 6 ? "green" : d.meter < 4 ? "red" : "neutral");
 
-  const pct = Math.round(d.meter * 10);
-  fill.style.width = pct + "%";
+  pulse(fill);
 
-  fill.className =
-    "meter-fill " +
-    (d.meter > 6 ? "green" : d.meter < 4 ? "red" : "neutral");
-
-  document.getElementById("dowVal").innerText =
-    d.indices.DowF.change_30m + "%";
-  document.getElementById("daxVal").innerText =
-    d.indices.DAX.change_30m + "%";
-  document.getElementById("nikkeiVal").innerText =
-    d.indices.Nikkei.change_30m + "%";
-  document.getElementById("hangVal").innerText =
-    d.indices.HSI.change_30m + "%";
+  dowVal.innerText = d.indices.DowF.change_30m;
+  daxVal.innerText = d.indices.DAX.change_30m;
+  nikkeiVal.innerText = d.indices.Nikkei.change_30m;
+  hangVal.innerText = d.indices.HSI.change_30m;
 }
 
-function fetchGlobalMeter() {
-  fetch("data/global_meter.json?ts=" + Date.now())
-    .then(r => r.json())
-    .then(renderGlobalMeter)
-    .catch(() => {});
-}
-
-/* =====================================================
-   NIFTY BREADTH
-===================================================== */
-
-function renderNiftyBreadth(d) {
+function renderBreadth(d) {
   const fill = document.getElementById("niftyBreadthFill");
-  if (!fill) return;
-
-  const pct = Math.round(d.meter * 10);
-  fill.style.width = pct + "%";
-
-  fill.className =
-    "meter-fill " +
-    (d.meter > 6 ? "green" : d.meter < 4 ? "red" : "neutral");
+  fill.style.width = (d.meter * 10) + "%";
+  fill.className = "meter-fill neutral";
+  pulse(fill);
 }
 
-function fetchNiftyBreadth() {
-  fetch("data/nifty_breadth.json?ts=" + Date.now())
-    .then(r => r.json())
-    .then(renderNiftyBreadth)
-    .catch(() => {});
+function fetchAll() {
+  fetch("data/nifty.json").then(r=>r.json()).then(renderNifty);
+  fetch("data/nifty_bias.json").then(r=>r.json()).then(renderBias);
+  fetch("data/global_meter.json").then(r=>r.json()).then(renderGlobal);
+  fetch("data/nifty_breadth.json").then(r=>r.json()).then(renderBreadth);
 }
 
-/* =====================================================
-   INITIAL LOAD
-===================================================== */
-
-fetchNifty();
-fetchBias();
-fetchGlobalMeter();
-fetchNiftyBreadth();
-
-/* =====================================================
-   AUTO REFRESH
-===================================================== */
-
-setInterval(() => {
-  fetchNifty();
-  fetchBias();
-  fetchGlobalMeter();
-  fetchNiftyBreadth();
-}, REFRESH_INTERVAL);
+fetchAll();
