@@ -200,4 +200,3 @@ if __name__ == "__main__":
     safe_write(f"{DATA_DIR}/nifty_breadth.json", fetch_nifty_breadth())
 
     print("✅ Dashboard updated via Twelve Data")
-``
