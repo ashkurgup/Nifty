@@ -1,0 +1,31 @@
+{
+  "updated": "20 Apr 2026, 14:55 IST",
+  "meter": 5.0,
+  "sectors": [
+    {
+      "key": "BANK",
+      "change_30m": 0.0,
+      "weight": 0.35
+    },
+    {
+      "key": "FIN",
+      "change_30m": 0.0,
+      "weight": 0.25
+    },
+    {
+      "key": "IT",
+      "change_30m": 0.0,
+      "weight": 0.15
+    },
+    {
+      "key": "METAL",
+      "change_30m": 0.0,
+      "weight": 0.15
+    },
+    {
+      "key": "FMCG",
+      "change_30m": 0.0,
+      "weight": 0.1
+    }
+  ]
+}

@@ -1,10 +1,6 @@
 {
   "symbol": "NIFTY",
-  "bias": {
-    "4H": "PULLBACK",
-    "1H": "PULLBACK",
-    "15M": "PULLBACK"
-  },
-  "phase": "Pullback continuation",
-  "updated": "20 Apr 2026, 14:43 IST"
+  "bias": {},
+  "phase": "Unavailable",
+  "updated": "20 Apr 2026, 14:55 IST"
 }
