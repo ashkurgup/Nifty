@@ -4,23 +4,21 @@
   <meta charset="UTF-8" />
   <title>Market Dashboard</title>
 
-  <!-- Google Font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  https://fonts.googleapis.com
+  https://fonts.gstatic.com
+  https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;800&display=swap
 
-  <link rel="stylesheet" href="style.css">
+  style.css
 </head>
 
 <body>
 
-  <!-- =====================================================
-       DASHBOARD ROW 1 : NIFTY + STRUCTURAL BIAS
-       ===================================================== -->
+  <!-- ================= ROW 1 ================= -->
   <div class="dashboard-row">
 
-    <!-- ✅ BOX 1 : NIFTY PRICE (FROZEN) -->
-    <div class="box large">
+    <!-- NIFTY BOX (LEFT / SMALLER WIDTH) -->
+    <div class="box box-nifty">
 
       <div class="nifty-header">
         <span id="niftyStatus" class="status-dot closed"></span>
@@ -33,50 +31,44 @@
 
     </div>
 
-    <!-- ✅ BOX 2 : STRUCTURAL BIAS -->
-  <div class="box">
+    <!-- STRUCTURAL BIAS BOX (RIGHT / WIDER) -->
+    <div class="box box-bias">
 
-  <div class="bias-line">
+      <div class="bias-line">
 
-    <!-- Title -->
-    <span class="bias-title">Bias</span>
+        <span class="bias-title">Structural Bias</span>
+        <span class="bias-arrow">→</span>
 
-    <span class="bias-arrow">→</span>
+        <span class="tf">4H</span>
+        <span id="bias4H" class="bias-dot bullish"></span>
 
-    <!-- Timeframes -->
-    <span class="tf">4H</span>
-    <span id="bias4H" class="bias-dot bullish"></span>
+        <span>/</span>
 
-    <span>/</span>
+        <span class="tf">1H</span>
+        <span id="bias1H" class="bias-dot bullish"></span>
 
-    <span class="tf">1H</span>
-    <span id="bias1H" class="bias-dot bullish"></span>
+        <span>/</span>
 
-    <span>/</span>
+        <span class="tf">15m</span>
+        <span id="bias15M" class="bias-dot pullback"></span>
 
-    <span class="tf">15m</span>
-    <span id="bias15M" class="bias-dot pullback"></span>
+        <span class="bias-arrow">→</span>
 
-    <span class="bias-arrow">→</span>
+        <span id="biasPhase" class="bias-phase-inline">
+          Pullback phase
+        </span>
 
-    <!-- Phase -->
-    <span id="biasPhase" class="bias-phase-inline">
-      Pullback phase
-    </span>
+      </div>
 
-  </div>
-
-</div>
+    </div>
 
   </div>
 
-  <!-- =====================================================
-       DASHBOARD ROW 2 : FUTURE BOXES (DOWN)
-       ===================================================== -->
+  <!-- ================= ROW 2 ================= -->
   <div class="dashboard-row">
-    <!-- Paste future boxes here -->
+    <!-- Future boxes go here (downwards) -->
   </div>
 
-  <script src="app.js"></script>
+  app.jsscript>
 </body>
 </html>
