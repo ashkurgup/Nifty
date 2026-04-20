@@ -16,31 +16,43 @@ def now_ist():
     return datetime.now(IST)
 
 # =========================================================
-# YFINANCE SAFE FETCH (CRITICAL)
+# SAFE FILE HELPERS
+# =========================================================
+
+def load_previous(path, fallback):
+    if os.path.exists(path):
+        try:
+            with open(path, "r") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return fallback
+
+def save_json(path, data):
+    with open(path, "w") as f:
+        json.dump(data, f, indent=2)
+
+# =========================================================
+# YFINANCE SAFE FETCH
 # =========================================================
 
 def fetch_hist(symbol, interval="1m"):
-    """
-    Forced-fresh Yahoo Finance fetch.
-    Works best for intraday NSE context dashboards.
-    """
-    ticker = yf.Ticker(symbol)
-    hist = ticker.history(
-        period="1d",
-        interval=interval,
-        auto_adjust=True,
-        prepost=True,
-    )
-
-    if hist is None or hist.empty:
+    try:
+        ticker = yf.Ticker(symbol)
+        hist = ticker.history(
+            period="1d",
+            interval=interval,
+            auto_adjust=True,
+            prepost=True,
+        )
+        if hist is None or hist.empty:
+            return None
+        return hist.sort_index()
+    except Exception:
         return None
 
-    # Yahoo sometimes returns unsorted candles
-    hist = hist.sort_index()
-    return hist
-
 # =========================================================
-# ROLLING 30-MIN CHANGE (CANONICAL)
+# ROLLING 30‑MIN CHANGE
 # =========================================================
 
 def rolling_30m_change(hist):
@@ -63,39 +75,49 @@ def rolling_30m_change(hist):
     return round((end - start) / start * 100, 2)
 
 # =========================================================
-# NIFTY LIVE (LAST PRICE)
+# NIFTY LIVE (FAIL‑SAFE)
 # =========================================================
 
 def fetch_nifty():
+    path = f"{DATA_DIR}/nifty.json"
+    now = now_ist()
+
     hist = fetch_hist("^NSEI", "1m")
 
     if hist is None or len(hist) < 2:
-        raise RuntimeError("NIFTY data unavailable")
+        prev = load_previous(path, {
+            "symbol": "NIFTY",
+            "price": 0,
+            "change": 0,
+            "percent": 0,
+            "market_status": "CLOSED",
+            "updated": ""
+        })
+        prev["updated"] = now.strftime("%d %b %Y, %H:%M:%S IST")
+        return prev
 
     last_price = round(float(hist["Close"].iloc[-1]), 2)
+    prev_price = float(hist["Close"].iloc[-2])
+    change = round(last_price - prev_price, 2)
 
-    # Use rolling change instead of prev close
-    change_pct = rolling_30m_change(hist)
-    change_pct = change_pct if change_pct is not None else 0.0
-
-    now = now_ist()
+    pct = rolling_30m_change(hist)
+    pct = pct if pct is not None else 0.0
 
     return {
         "symbol": "NIFTY",
         "price": last_price,
-        "change": round(last_price - hist["Close"].iloc[-2], 2),
-        "percent": change_pct,
+        "change": change,
+        "percent": pct,
         "market_status": "LIVE" if time(9, 15) <= now.time() <= time(15, 30) else "CLOSED",
         "updated": now.strftime("%d %b %Y, %H:%M:%S IST")
     }
 
 # =========================================================
-# STRUCTURAL BIAS (EMA-BASED, STABLE)
+# STRUCTURAL BIAS (FAIL‑SAFE)
 # =========================================================
 
 def bias_tf(symbol, interval, ema):
     hist = fetch_hist(symbol, interval)
-
     if hist is None or len(hist) < ema:
         return "PULLBACK"
 
@@ -130,7 +152,7 @@ def fetch_bias():
     }
 
 # =========================================================
-# GLOBAL METER (STRIP + METER)
+# GLOBAL METER (FAIL‑SAFE)
 # =========================================================
 
 GLOBAL_INDICES = {
@@ -142,7 +164,7 @@ GLOBAL_INDICES = {
 
 def fetch_global_meter():
     indices = {}
-    total_score = 0
+    total = 0
     count = 0
 
     for name, symbol in GLOBAL_INDICES.items():
@@ -151,14 +173,12 @@ def fetch_global_meter():
         pct = pct if pct is not None else 0.0
 
         score = 1 if pct > 0 else -1 if pct < 0 else 0
-        total_score += score
+        total += score
         count += 1
 
-        indices[name] = {
-            "change_30m": pct
-        }
+        indices[name] = {"change_30m": pct}
 
-    meter = round(5 + (total_score / max(count, 1)) * 5, 2)
+    meter = round(5 + (total / max(count, 1)) * 5, 2)
     meter = max(0, min(10, meter))
 
     return {
@@ -168,7 +188,7 @@ def fetch_global_meter():
     }
 
 # =========================================================
-# NIFTY BREADTH METER (WEIGHTED)
+# NIFTY BREADTH METER (FAIL‑SAFE)
 # =========================================================
 
 NIFTY_SECTORS = {
@@ -217,9 +237,9 @@ def fetch_nifty_breadth():
 # =========================================================
 
 if __name__ == "__main__":
-    json.dump(fetch_nifty(), open(f"{DATA_DIR}/nifty.json", "w"), indent=2)
-    json.dump(fetch_bias(), open(f"{DATA_DIR}/nifty_bias.json", "w"), indent=2)
-    json.dump(fetch_global_meter(), open(f"{DATA_DIR}/global_meter.json", "w"), indent=2)
-    json.dump(fetch_nifty_breadth(), open(f"{DATA_DIR}/nifty_breadth.json", "w"), indent=2)
+    save_json(f"{DATA_DIR}/nifty.json", fetch_nifty())
+    save_json(f"{DATA_DIR}/nifty_bias.json", fetch_bias())
+    save_json(f"{DATA_DIR}/global_meter.json", fetch_global_meter())
+    save_json(f"{DATA_DIR}/nifty_breadth.json", fetch_nifty_breadth())
 
-    print("✅ Live dashboard data updated (yfinance)")
+    print("✅ Dashboard data updated safely (yfinance)")
