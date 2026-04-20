@@ -18,6 +18,20 @@ def safe_write(path, data):
     with open(path, "w") as f:
         json.dump(data, f, indent=2)
 
+# ================= HELPER =================
+
+def close_series(df):
+    """
+    Returns a clean list of close prices from yfinance,
+    handling both Series and MultiIndex formats.
+    """
+    if df.empty:
+        return []
+    close = df["Close"]
+    if isinstance(close, dict) or hasattr(close, "columns"):
+        close = close.iloc[:, 0]   # flatten MultiIndex
+    return close.dropna().tolist()
+
 # ================= EMA =================
 
 def ema_bias(closes, period):
@@ -35,9 +49,17 @@ def fetch_nifty():
     now = now_ist()
     ts = int(time.time())
 
-    df = yf.download(NIFTY_SYMBOL, period="1d", interval="1m", progress=False)
+    df = yf.download(
+        NIFTY_SYMBOL,
+        period="1d",
+        interval="1m",
+        progress=False,
+        auto_adjust=False
+    )
 
-    if df.empty or len(df) < 2:
+    closes = close_series(df)
+
+    if len(closes) < 2:
         return {
             "symbol": "NIFTY",
             "price": 0,
@@ -48,8 +70,8 @@ def fetch_nifty():
             "updated_ts": ts
         }
 
-    last = float(df["Close"].iloc[-1])
-    prev = float(df["Close"].iloc[-2])
+    last = float(closes[-1])
+    prev = float(closes[-2])
 
     return {
         "symbol": "NIFTY",
@@ -67,23 +89,23 @@ def fetch_bias():
     now = now_ist()
     ts = int(time.time())
 
-    # ✅ 15M candles enough for many days
     df = yf.download(
         NIFTY_SYMBOL,
         period="15d",
         interval="15m",
-        progress=False
+        progress=False,
+        auto_adjust=False
     )
 
-    if df.empty:
+    closes = close_series(df)
+
+    if len(closes) < 60:
         return {
             "bias": {},
             "phase": "Unavailable",
             "updated": now.strftime("%d %b %Y, %H:%M IST"),
             "updated_ts": ts
         }
-
-    closes = df["Close"].dropna().tolist()
 
     bias_4h = ema_bias(closes[-160:], 50)   # ~10 trading days
     bias_1h = ema_bias(closes[-48:], 20)    # ~3 trading days
@@ -112,7 +134,6 @@ def fetch_bias():
     }
 
 # ================= GLOBAL METER =================
-# (kept simple for now – you can expand later)
 
 def fetch_global_meter():
     now = now_ist()
