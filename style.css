@@ -52,4 +52,20 @@
 .meter-fill.red {
   background: #dc2626;
 }
-``
+
+/* =========================
+   NORMALIZED METER CONTEXT
+   (ENVIRONMENT, NOT DIRECTION)
+========================= */
+
+.meter-fill {
+  background: #9ca3af;      /* neutral / mixed */
+}
+
+.meter-fill.green {
+  background: #16a34a;      /* supportive environment */
+}
+
+.meter-fill.red {
+  background: #dc2626;      /* fragile environment */
+}
