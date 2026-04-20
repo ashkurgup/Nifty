@@ -1,29 +1,15 @@
-/* =========================================================
-   DASHBOARD SCRIPT
-   RULES:
-   - One section per box
-   - Do NOT mix box logic
-   - Append new boxes at the bottom
-   ========================================================= */
-
-
-/* =========================================================
-   [BOX 1] NIFTY PRICE ❄️ FROZEN ❄️
-   ========================================================= */
+/* =====================================================
+   NIFTY PRICE BOX
+   ===================================================== */
 
 function renderNifty(data) {
-
-  // Status dot
   const statusDot = document.getElementById("niftyStatus");
   statusDot.className =
-    "status-dot " +
-    (data.market_status === "LIVE" ? "live" : "closed");
+    "status-dot " + (data.market_status === "LIVE" ? "live" : "closed");
 
-  // Price
   document.getElementById("niftyPrice").innerText =
     data.price.toFixed(2);
 
-  // Change
   const changeEl = document.getElementById("niftyChange");
   const sign = data.change >= 0 ? "+" : "";
   changeEl.innerText =
@@ -32,26 +18,24 @@ function renderNifty(data) {
   changeEl.className =
     "nifty-change " + (data.change >= 0 ? "positive" : "negative");
 
-  // Updated time
   document.getElementById("niftyTime").innerText =
     "Updated: " + data.updated;
 }
 
 function loadNifty() {
-  fetch("data/nifty.json")
+  fetch("data/nifty.json?ts=" + Date.now())
     .then(res => res.json())
     .then(renderNifty)
     .catch(err => console.error("NIFTY load failed", err));
 }
 
 loadNifty();
-setInterval(loadNifty, 60000); // every 60 seconds
+setInterval(loadNifty, 60000);
 
 
-
-/* =========================================================
-   [BOX 2] STRUCTURAL BIAS (INDEPENDENT)
-   ========================================================= */
+/* =====================================================
+   STRUCTURAL BIAS BOX
+   ===================================================== */
 
 function renderBias(data) {
   const map = {
@@ -71,9 +55,6 @@ function renderBias(data) {
 
   document.getElementById("biasPhase").innerText =
     data.phase;
-
-  document.getElementById("biasUpdated").innerText =
-    "Updated: " + data.updated;
 }
 
 function loadBias() {
@@ -84,11 +65,4 @@ function loadBias() {
 }
 
 loadBias();
-setInterval(loadBias, 300000); // every 5 minutes
-
-
-
-/* =========================================================
-   [BOX FUTURE]
-   - Add new render/load pairs below this line
-   ========================================================= */
+setInterval(loadBias, 300000);
