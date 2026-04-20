@@ -34,6 +34,18 @@ def fetch_ohlc(symbol, interval, bars):
         return []
     return sorted(data["values"], key=lambda x: x["datetime"])
 
+# ================= EMA =================
+
+def ema_bias(values, period):
+    closes = [float(v["close"]) for v in values]
+    if len(closes) < period:
+        return None
+    k = 2 / (period + 1)
+    ema = closes[0]
+    for p in closes[1:]:
+        ema = p * k + ema * (1 - k)
+    return "BULLISH" if closes[-1] > ema else "BEARISH"
+
 # ================= NIFTY PRICE =================
 
 def fetch_nifty():
@@ -67,31 +79,29 @@ def fetch_nifty():
 
 # ================= STRUCTURAL BIAS =================
 
-def ema_bias(values, period):
-    closes = [float(v["close"]) for v in values]
-    if len(closes) < period:
-        return None
-    k = 2 / (period + 1)
-    ema = closes[0]
-    for p in closes[1:]:
-        ema = p * k + ema * (1 - k)
-    return "BULLISH" if closes[-1] > ema else "BEARISH"
-
 def fetch_bias():
     now = now_ist()
     ts = int(time.time())
 
-    # ✅ 4H → ~10 trading days (daily candles)
-    values_4h = fetch_ohlc("NIFTY_50", "1day", 12)
+    # ✅ ONE reliable fetch
+    # 15‑minute candles × 300 ≈ ~12 trading days
+    values = fetch_ohlc("NIFTY_50", "15min", 300)
 
-    # ✅ 1H → ~3 trading days (hourly candles)
-    values_1h = fetch_ohlc("NIFTY_50", "1h", 24)
+    if len(values) < 50:
+        return {
+            "bias": {},
+            "phase": "Unavailable",
+            "updated": now.strftime("%d %b %Y, %H:%M IST"),
+            "updated_ts": ts
+        }
 
-    # ✅ 15M → intraday
-    values_15m = fetch_ohlc("NIFTY_50", "15min", 20)
+    # ✅ Frame slicing
+    values_4h = values[-160:]   # ~10 trading days
+    values_1h = values[-48:]    # ~3 trading days
+    values_15m = values[-20:]   # intraday
 
     bias = {
-        "4H": ema_bias(values_4h, 10),
+        "4H": ema_bias(values_4h, 50),
         "1H": ema_bias(values_1h, 20),
         "15M": ema_bias(values_15m, 10)
     }
