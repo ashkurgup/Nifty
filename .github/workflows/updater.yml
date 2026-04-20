@@ -2,7 +2,7 @@ name: Update Market Data
 
 on:
   schedule:
-    - cron: "*/5 * * * 1-5"   # every 5 minutes, Mon–Fri
+    - cron: "*/5 3-10 * * 1-5"
   workflow_dispatch:
 
 jobs:
@@ -31,4 +31,4 @@ jobs:
           git config user.email "github-actions@github.com"
           git add data/nifty.json
           git commit -m "Update NIFTY data" || echo "No changes"
-          git push
+          git push origin main
