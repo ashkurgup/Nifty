@@ -172,4 +172,4 @@ if __name__ == "__main__":
     safe_write("data/nifty_bias.json", fetch_bias())
     safe_write("data/global_meter.json", fetch_global_meter())
     safe_write("data/nifty_breadth.json", fetch_nifty_breadth())
-``
+
