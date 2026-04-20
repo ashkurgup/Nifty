@@ -9,7 +9,18 @@ IST = pytz.timezone("Asia/Kolkata")
 DATA_DIR = "data"
 os.makedirs(DATA_DIR, exist_ok=True)
 
-NIFTY_SYMBOL = "^NSEI"
+# ================= CONFIG =================
+
+NIFTY = "^NSEI"
+
+GLOBAL_SYMBOLS = {
+    "DowF": {"symbol": "YM=F", "weight": 0.35},
+    "DAX": {"symbol": "^GDAXI", "weight": 0.25},
+    "Nikkei": {"symbol": "^N225", "weight": 0.25},
+    "HSI": {"symbol": "^HSI", "weight": 0.15},
+}
+
+# ================= HELPERS =================
 
 def now_ist():
     return datetime.now(IST)
@@ -18,46 +29,30 @@ def safe_write(path, data):
     with open(path, "w") as f:
         json.dump(data, f, indent=2)
 
-# ================= HELPER =================
-
-def close_series(df):
-    """
-    Returns a clean list of close prices from yfinance,
-    handling both Series and MultiIndex formats.
-    """
+def get_closes(symbol, period="1d", interval="5m"):
+    df = yf.download(symbol, period=period, interval=interval, progress=False)
     if df.empty:
         return []
     close = df["Close"]
-    if isinstance(close, dict) or hasattr(close, "columns"):
-        close = close.iloc[:, 0]   # flatten MultiIndex
+    if hasattr(close, "columns"):
+        close = close.iloc[:, 0]
     return close.dropna().tolist()
 
-# ================= EMA =================
+def rolling_30m_change(closes):
+    if len(closes) < 6:
+        return 0.0
+    start = closes[-6]
+    end = closes[-1]
+    if start == 0:
+        return 0.0
+    return round((end - start) / start * 100, 2)
 
-def ema_bias(closes, period):
-    if len(closes) < period:
-        return None
-    k = 2 / (period + 1)
-    ema = closes[0]
-    for p in closes[1:]:
-        ema = p * k + ema * (1 - k)
-    return "BULLISH" if closes[-1] > ema else "BEARISH"
-
-# ================= NIFTY PRICE =================
+# ================= NIFTY =================
 
 def fetch_nifty():
+    closes = get_closes(NIFTY, period="1d", interval="1m")
     now = now_ist()
     ts = int(time.time())
-
-    df = yf.download(
-        NIFTY_SYMBOL,
-        period="1d",
-        interval="1m",
-        progress=False,
-        auto_adjust=False
-    )
-
-    closes = close_series(df)
 
     if len(closes) < 2:
         return {
@@ -70,8 +65,8 @@ def fetch_nifty():
             "updated_ts": ts
         }
 
-    last = float(closes[-1])
-    prev = float(closes[-2])
+    last = closes[-1]
+    prev = closes[-2]
 
     return {
         "symbol": "NIFTY",
@@ -85,19 +80,19 @@ def fetch_nifty():
 
 # ================= STRUCTURAL BIAS =================
 
+def ema_bias(closes, period):
+    if len(closes) < period:
+        return None
+    k = 2 / (period + 1)
+    ema = closes[0]
+    for p in closes[1:]:
+        ema = p * k + ema * (1 - k)
+    return "BULLISH" if closes[-1] > ema else "BEARISH"
+
 def fetch_bias():
+    closes = get_closes(NIFTY, period="15d", interval="15m")
     now = now_ist()
     ts = int(time.time())
-
-    df = yf.download(
-        NIFTY_SYMBOL,
-        period="15d",
-        interval="15m",
-        progress=False,
-        auto_adjust=False
-    )
-
-    closes = close_series(df)
 
     if len(closes) < 60:
         return {
@@ -107,21 +102,17 @@ def fetch_bias():
             "updated_ts": ts
         }
 
-    bias_4h = ema_bias(closes[-160:], 50)   # ~10 trading days
-    bias_1h = ema_bias(closes[-48:], 20)    # ~3 trading days
-    bias_15m = ema_bias(closes[-20:], 10)   # intraday
-
     bias = {
-        "4H": bias_4h,
-        "1H": bias_1h,
-        "15M": bias_15m
+        "4H": ema_bias(closes[-160:], 50),
+        "1H": ema_bias(closes[-48:], 20),
+        "15M": ema_bias(closes[-20:], 10)
     }
 
-    if bias_4h == bias_1h == bias_15m and bias_4h:
-        phase = f"{bias_4h.capitalize()} continuation"
-    elif bias_4h == bias_1h and bias_15m:
-        phase = f"Pullback within {bias_4h.lower()} structure"
-    elif bias_4h != bias_1h:
+    if bias["4H"] == bias["1H"] == bias["15M"]:
+        phase = f"{bias['4H'].capitalize()} continuation"
+    elif bias["4H"] == bias["1H"]:
+        phase = f"Pullback within {bias['4H'].lower()} structure"
+    elif bias["4H"] != bias["1H"]:
         phase = "Structural conflict"
     else:
         phase = "Intraday bias forming"
@@ -139,19 +130,29 @@ def fetch_global_meter():
     now = now_ist()
     ts = int(time.time())
 
+    total_weighted_score = 0.0
+    indices = {}
+
+    for key, cfg in GLOBAL_SYMBOLS.items():
+        closes = get_closes(cfg["symbol"], period="1d", interval="5m")
+        pct = rolling_30m_change(closes)
+        indices[key] = {"change_30m": pct}
+
+        if pct > 0:
+            total_weighted_score += cfg["weight"]
+        elif pct < 0:
+            total_weighted_score -= cfg["weight"]
+
+    meter = max(0, min(10, 5 + total_weighted_score * 5))
+
     return {
         "updated": now.strftime("%d %b %Y, %H:%M IST"),
         "updated_ts": ts,
-        "meter": 5,
-        "indices": {
-            "DowF": {"change_30m": 0},
-            "DAX": {"change_30m": 0},
-            "Nikkei": {"change_30m": 0},
-            "HSI": {"change_30m": 0}
-        }
+        "meter": round(meter, 2),
+        "indices": indices
     }
 
-# ================= NIFTY BREADTH =================
+# ================= NIFTY BREADTH (stub for now) =================
 
 def fetch_nifty_breadth():
     now = now_ist()
@@ -171,3 +172,4 @@ if __name__ == "__main__":
     safe_write("data/nifty_bias.json", fetch_bias())
     safe_write("data/global_meter.json", fetch_global_meter())
     safe_write("data/nifty_breadth.json", fetch_nifty_breadth())
+``
