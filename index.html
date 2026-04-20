@@ -4,111 +4,43 @@
   <meta charset="UTF-8" />
   <title>Market Dashboard</title>
 
-  <!-- ✅ Lato Font (global for all boxes) -->
+  <!-- Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <style>
-    /* GLOBAL */
-body {
-  font-family: 'Lato', Arial, sans-serif;
-  background: #ffffff;
-  padding: 8px;
-}
-
-    /* ✅ COMMON BOX STYLE (USE FOR ALL 24 BOXES) */
-    .box {
-      width: 220px;
-      border: 1px solid #d1d5db;
-      border-radius: 14px;
-      padding: 16px;
-      background: #ffffff;
-
-      box-shadow:
-        0 0 0 1px rgba(209, 213, 219, 0.5),
-        0 6px 16px rgba(0, 0, 0, 0.08);
-    }
-
-    /* UPDATED LINE */
-    .updated {
-      font-size: 11px;
-      font-style: italic;
-      color: #6b7280;
-      margin-bottom: 6px;
-    }
-
-    /* DIVIDER */
-    .divider {
-      height: 1px;
-      background: #e5e7eb;
-      margin-bottom: 10px;
-    }
-
-    /* HEADER */
-    .nifty-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-
-    .dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: #9ca3af;
-      flex-shrink: 0;
-    }
-
-    .nifty-title {
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: 0.4px;
-    }
-
-    /* VALUE + CHANGE LINE */
-    .value-line {
-      margin-left: 20px; /* align with NIFTY text, not dot */
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .price {
-      font-size: 18px;
-      font-weight: 650;
-      line-height: 1;
-    }
-
-    .change {
-      font-size: 14px;
-      font-weight: 700;
-      color: #16a34a;
-      line-height: 1;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- ✅ BOX 1 : NIFTY -->
-  <div class="box">
-    <div class="updated">Updated: 18:26:54 IST</div>
+  <!-- ✅ NIFTY BOX -->
+  <div class="box large">
+
+    <!-- MARKET STATUS -->
+    <div id="niftyStatusText" class="market-status closed">
+      CLOSED
+    </div>
+
     <div class="divider"></div>
 
+    <!-- HEADER -->
     <div class="nifty-header">
-      <span class="dot"></span>
+      <span id="niftyStatus" class="status-dot closed"></span>
       <span class="nifty-title">NIFTY</span>
     </div>
 
-    <div class="value-line">
-      <span class="price">24366.90</span>
-      <span class="change">+3.65 (0.01%)</span>
-    </div>
+    <!-- PRICE -->
+    <div id="niftyPrice" class="nifty-price">--</div>
+
+    <!-- CHANGE -->
+    <div id="niftyChange" class="nifty-change">--</div>
+
+    <!-- UPDATED TIME -->
+    <div id="niftyTime" class="small">Updated: --</div>
+
   </div>
 
-  <!-- ✅ Future boxes: just duplicate .box and change content -->
-
+  <script src="app.js"></script>
 </body>
 </html>
