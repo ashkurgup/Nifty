@@ -1,15 +1,15 @@
-import requests
+import yfinance as yf
 import json
 from datetime import datetime
 import pytz
 import os
 import time
 
-API_KEY = os.getenv("TWELVE_DATA_API_KEY")
-BASE_URL = "https://api.twelvedata.com"
 IST = pytz.timezone("Asia/Kolkata")
 DATA_DIR = "data"
 os.makedirs(DATA_DIR, exist_ok=True)
+
+NIFTY_SYMBOL = "^NSEI"
 
 def now_ist():
     return datetime.now(IST)
@@ -18,26 +18,9 @@ def safe_write(path, data):
     with open(path, "w") as f:
         json.dump(data, f, indent=2)
 
-def fetch_ohlc(symbol, interval, bars):
-    r = requests.get(
-        f"{BASE_URL}/time_series",
-        params={
-            "symbol": symbol,
-            "interval": interval,
-            "outputsize": bars,
-            "apikey": API_KEY
-        },
-        timeout=20
-    )
-    data = r.json()
-    if "values" not in data:
-        return []
-    return sorted(data["values"], key=lambda x: x["datetime"])
-
 # ================= EMA =================
 
-def ema_bias(values, period):
-    closes = [float(v["close"]) for v in values]
+def ema_bias(closes, period):
     if len(closes) < period:
         return None
     k = 2 / (period + 1)
@@ -49,11 +32,12 @@ def ema_bias(values, period):
 # ================= NIFTY PRICE =================
 
 def fetch_nifty():
-    values = fetch_ohlc("NIFTY_50", "1min", 10)
     now = now_ist()
     ts = int(time.time())
 
-    if len(values) < 2:
+    df = yf.download(NIFTY_SYMBOL, period="1d", interval="1m", progress=False)
+
+    if df.empty or len(df) < 2:
         return {
             "symbol": "NIFTY",
             "price": 0,
@@ -64,14 +48,14 @@ def fetch_nifty():
             "updated_ts": ts
         }
 
-    last = float(values[-1]["close"])
-    prev = float(values[-2]["close"])
+    last = float(df["Close"].iloc[-1])
+    prev = float(df["Close"].iloc[-2])
 
     return {
         "symbol": "NIFTY",
         "price": round(last, 2),
         "change": round(last - prev, 2),
-        "percent": round((last - prev) / prev * 100, 2) if prev else 0,
+        "percent": round((last - prev) / prev * 100, 2),
         "market_status": "LIVE",
         "updated": now.strftime("%d %b %Y, %H:%M:%S IST"),
         "updated_ts": ts
@@ -83,11 +67,15 @@ def fetch_bias():
     now = now_ist()
     ts = int(time.time())
 
-    # ✅ ONE reliable fetch
-    # 15‑minute candles × 300 ≈ ~12 trading days
-    values = fetch_ohlc("NIFTY_50", "15min", 300)
+    # ✅ 15M candles enough for many days
+    df = yf.download(
+        NIFTY_SYMBOL,
+        period="15d",
+        interval="15m",
+        progress=False
+    )
 
-    if len(values) < 50:
+    if df.empty:
         return {
             "bias": {},
             "phase": "Unavailable",
@@ -95,30 +83,23 @@ def fetch_bias():
             "updated_ts": ts
         }
 
-    # ✅ Frame slicing
-    values_4h = values[-160:]   # ~10 trading days
-    values_1h = values[-48:]    # ~3 trading days
-    values_15m = values[-20:]   # intraday
+    closes = df["Close"].dropna().tolist()
+
+    bias_4h = ema_bias(closes[-160:], 50)   # ~10 trading days
+    bias_1h = ema_bias(closes[-48:], 20)    # ~3 trading days
+    bias_15m = ema_bias(closes[-20:], 10)   # intraday
 
     bias = {
-        "4H": ema_bias(values_4h, 50),
-        "1H": ema_bias(values_1h, 20),
-        "15M": ema_bias(values_15m, 10)
+        "4H": bias_4h,
+        "1H": bias_1h,
+        "15M": bias_15m
     }
 
-    if not bias["4H"] and not bias["1H"] and not bias["15M"]:
-        return {
-            "bias": {},
-            "phase": "Unavailable",
-            "updated": now.strftime("%d %b %Y, %H:%M IST"),
-            "updated_ts": ts
-        }
-
-    if bias["4H"] == bias["1H"] == bias["15M"]:
-        phase = f"{bias['4H'].capitalize()} continuation"
-    elif bias["4H"] == bias["1H"] and bias["15M"]:
-        phase = f"Pullback within {bias['4H'].lower()} structure"
-    elif bias["4H"] != bias["1H"]:
+    if bias_4h == bias_1h == bias_15m and bias_4h:
+        phase = f"{bias_4h.capitalize()} continuation"
+    elif bias_4h == bias_1h and bias_15m:
+        phase = f"Pullback within {bias_4h.lower()} structure"
+    elif bias_4h != bias_1h:
         phase = "Structural conflict"
     else:
         phase = "Intraday bias forming"
@@ -131,6 +112,7 @@ def fetch_bias():
     }
 
 # ================= GLOBAL METER =================
+# (kept simple for now – you can expand later)
 
 def fetch_global_meter():
     now = now_ist()
