@@ -1,6 +1,6 @@
-/* =========================================================
-   GLOBAL DASHBOARD STYLES
-   ========================================================= */
+/* =====================================================
+   GLOBAL
+   ===================================================== */
 
 body {
   font-family: 'Lato', Arial, sans-serif;
@@ -8,11 +8,29 @@ body {
   padding: 8px;
 }
 
+
+/* =====================================================
+   DASHBOARD LAYOUT
+   ===================================================== */
+
+.dashboard-row {
+  display: flex;
+  gap: 16px;           /* 🔽 reduce this for tighter boxes */
+  margin-bottom: 16px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+
+/* =====================================================
+   BOX BASE
+   ===================================================== */
+
 .box {
   width: 220px;
   border: 1px solid #d1d5db;
   border-radius: 14px;
-  padding: 16px;
+  padding: 16px;       /* 🔽 reduce padding to shrink box */
   background: #ffffff;
   box-shadow:
     0 0 0 1px rgba(209, 213, 219, 0.5),
@@ -23,19 +41,11 @@ body {
   width: 260px;
 }
 
-.divider {
-  height: 1px;
-  background: #e5e7eb;
-  margin: 8px 0;
-}
 
+/* =====================================================
+   NIFTY PRICE BOX
+   ===================================================== */
 
-
-/* =========================================================
-   [BOX 1] NIFTY PRICE ❄️ FROZEN ❄️
-   ========================================================= */
-
-/* Header */
 .nifty-header {
   display: flex;
   align-items: center;
@@ -47,7 +57,6 @@ body {
   font-weight: 800;
 }
 
-/* Status dot */
 .status-dot {
   width: 10px;
   height: 10px;
@@ -62,12 +71,10 @@ body {
   background: #9ca3af;
 }
 
-/* Values */
 .nifty-price {
   font-size: 22px;
   font-weight: 700;
   margin-top: 6px;
-  font-variant-numeric: tabular-nums;
 }
 
 .nifty-change {
@@ -91,10 +98,9 @@ body {
 }
 
 
-
-/* =========================================================
-   [BOX 2] STRUCTURAL BIAS
-   ========================================================= */
+/* =====================================================
+   STRUCTURAL BIAS BOX
+   ===================================================== */
 
 .bias-row {
   margin-top: 6px;
@@ -134,9 +140,3 @@ body {
   font-style: italic;
   color: #6b7280;
 }
-
-
-
-/* =========================================================
-   [BOX FUTURE]
-   ========================================================= */
