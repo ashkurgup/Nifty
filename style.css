@@ -87,3 +87,34 @@ body {
 .meter-fill.red { background: #dc2626; }
 .meter-fill.green { background: #16a34a; }
 .meter-fill.neutral { background: #9ca3af; }
+/* ===== METER STRIP (GLOBAL + NIFTY) ===== */
+
+.meter-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* Meter base */
+.meter {
+  width: 70px;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Filled part */
+.meter-fill {
+  height: 100%;
+  width: 0%;
+  background: #9ca3af;
+}
+
+/* Box sizes */
+.box-global-meter,
+.box-nifty-breadth {
+  width: 420px;
+}
