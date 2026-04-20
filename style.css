@@ -1,125 +1,89 @@
-/* ================= GLOBAL ================= */
-
 body {
   font-family: 'Lato', Arial, sans-serif;
-  background: #ffffff;
   padding: 8px;
+  background: #fff;
 }
 
-/* ================= LAYOUT ================= */
-
+/* Layout */
 .dashboard-row {
   display: flex;
-  gap: 12px;               /* ↔ space between boxes */
-  margin-bottom: 16px;     /* ↕ space between rows */
+  gap: 12px;
   align-items: flex-start;
-  flex-wrap: wrap;
 }
 
-/* ================= BASE BOX ================= */
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
+/* Boxes */
 .box {
   border: 1px solid #d1d5db;
   border-radius: 14px;
-  padding: 14px;           /* 🔽 reduce to shrink box */
-  background: #ffffff;
-  box-shadow:
-    0 0 0 1px rgba(209,213,219,0.5),
-    0 6px 16px rgba(0,0,0,0.08);
+  padding: 12px;
+  background: #fff;
+  box-shadow: 0 6px 14px rgba(0,0,0,.08);
 }
 
-/* ================= BOX SIZES ================= */
+.box-nifty { width: 240px; }
+.box-bias { width: 420px; }
+.box-global { width: 420px; }
 
-/* NIFTY box — tighter */
-.box-nifty {
-  width: 200px;
-}
-
-/* Bias box — wider so everything fits in one line */
-.box-bias {
-  width: 400px;
-}
-
-/* ================= NIFTY ================= */
-
+/* NIFTY */
 .nifty-header {
   display: flex;
   align-items: center;
   gap: 6px;
 }
+.nifty-title { font-size: 20px; font-weight: 800; }
+.nifty-price { font-size: 22px; font-weight: 700; margin-top: 6px; }
+.nifty-change { font-size: 12px; font-weight: 700; }
+.small { font-size: 10.5px; color: #64748b; font-style: italic; }
 
-.nifty-title {
-  font-size: 20px;
-  font-weight: 800;
-}
-
-.status-dot {
+/* Squares */
+.sq {
+  display: inline-block;
   width: 10px;
   height: 10px;
-  border-radius: 50%;
+  margin: 0 4px;
+  flex-shrink: 0;
+  background: #e5e7eb;
 }
+.sq.green { background: #16a34a; }
+.sq.red { background: #dc2626; }
 
-.status-dot.live { background: #16a34a; }
-.status-dot.closed { background: #9ca3af; }
-
-.nifty-price {
-  font-size: 22px;
-  font-weight: 700;
-  margin-top: 6px;
-}
-
-.nifty-change {
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.positive { color: #16a34a; }
-.negative { color: #dc2626; }
-
-.small {
-  font-size: 10.5px;
-  color: #64748b;
-  font-style: italic;
-  margin-top: 4px;
-}
-
-/* ================= STRUCTURAL BIAS ================= */
-
+/* Bias */
 .bias-line {
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
   gap: 6px;
   font-size: 13px;
-  white-space: nowrap;      /* ✅ force one line */
+}
+.bias-phase { font-style: italic; color: #6b7280; }
+
+/* Global Meter */
+.global-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  white-space: nowrap;
 }
 
-.bias-title {
-  font-weight: 800;
+/* Meter bar */
+.meter {
+  width: 80px;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
 }
-
-.bias-arrow {
-  color: #9ca3af;
-  font-weight: 700;
+.meter-fill {
+  height: 100%;
 }
-
-.tf {
-  font-weight: 800;
-}
-
-.bias-dot {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  display: inline-block;
-  flex-shrink: 0;           /* ✅ keep spheres visible */
-}
-
-.bias-dot.bullish { background: #16a34a; }
-.bias-dot.bearish { background: #dc2626; }
-.bias-dot.pullback { background: #a855f7; }
-
-.bias-phase-inline {
-  font-style: italic;
-  color: #6b7280;
-}
+.meter-fill.red { background: #dc2626; }
+.meter-fill.green { background: #16a34a; }
+.meter-fill.neutral { background: #9ca3af; }
