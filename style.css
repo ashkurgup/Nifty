@@ -15,7 +15,7 @@ body {
 
 .dashboard-row {
   display: flex;
-  gap: 16px;           /* 🔽 reduce this for tighter boxes */
+  gap: 12px;           /* 🔽 reduce this for tighter boxes */
   margin-bottom: 16px;
   align-items: flex-start;
   flex-wrap: wrap;
