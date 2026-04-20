@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Market Dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -10,16 +14,23 @@
 
 <div class="dashboard-row">
 
+  <!-- NIFTY -->
   <div class="box box-nifty">
-    <div class="nifty-title">NIFTY <span id="dataStatus" class="status"></span></div>
+    <div class="nifty-header">
+      <span id="marketSphere" class="sphere grey"></span>
+      <span class="nifty-title">NIFTY</span>
+    </div>
+
     <div id="niftyPrice" class="nifty-price">--</div>
     <div id="niftyChange" class="nifty-change">--</div>
     <div class="divider"></div>
-    <div id="niftyTime" class="small" title="">Updated: --</div>
+    <div id="niftyUpdated" class="small">Updated --</div>
   </div>
 
+  <!-- RIGHT COLUMN -->
   <div class="right-column">
 
+    <!-- STRUCTURAL BIAS -->
     <div class="box">
       <div class="bias-line">
         Structural Bias →
@@ -27,29 +38,33 @@
         / 1H <span id="bias1H" class="sq"></span>
         / 15M <span id="bias15M" class="sq"></span>
         →
-        <span id="biasPhase" class="bias-phase"></span>
+        <span id="biasMessage" class="bias-phase"></span>
       </div>
     </div>
 
+    <!-- GLOBAL METER -->
     <div class="box">
       <div class="meter-line">
         <div class="meter">
           <div id="globalMeterFill" class="meter-fill"></div>
         </div>
-        <span>Dow <span id="dowVal"></span>%</span>
-        <span>DAX <span id="daxVal"></span>%</span>
-        <span>Nikkei <span id="nikkeiVal"></span>%</span>
-        <span>HSI <span id="hangVal"></span>%</span>
+        <span>Dow <span id="dowVal">--</span>%</span>
+        <span>DAX <span id="daxVal">--</span>%</span>
+        <span>Nikkei <span id="nikkeiVal">--</span>%</span>
+        <span>HSI <span id="hsiVal">--</span>%</span>
       </div>
+      <div id="globalUpdated" class="small">Updated --</div>
     </div>
 
+    <!-- NIFTY BREADTH -->
     <div class="box">
       <div class="meter-line">
         <div class="meter">
-          <div id="niftyBreadthFill" class="meter-fill"></div>
+          <div id="breadthFill" class="meter-fill"></div>
         </div>
         BANK | FIN | IT | METAL | FMCG
       </div>
+      <div id="breadthUpdated" class="small">Updated --</div>
     </div>
 
   </div>
