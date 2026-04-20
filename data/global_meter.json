@@ -1,0 +1,26 @@
+{
+  "score": 4.25,
+  "indices": {
+    "dow": {
+      "change": 0.04,
+      "state": "LONG_CLOSED",
+      "multiplier": 0.5
+    },
+    "dax": {
+      "change": 0.0,
+      "state": "NO_DATA",
+      "multiplier": 0.0
+    },
+    "nikkei": {
+      "change": -0.35,
+      "state": "RECENTLY_CLOSED",
+      "multiplier": 0.75
+    },
+    "hang": {
+      "change": -0.08,
+      "state": "RECENTLY_CLOSED",
+      "multiplier": 0.75
+    }
+  },
+  "updated": "20 Apr 2026, 13:47 IST"
+}
