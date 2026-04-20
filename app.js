@@ -122,29 +122,36 @@ function renderGlobal(d) {
 ===================================================== */
 function renderBreadth(d) {
   const meter = d.meter;
-
-  // meter bar + value
   breadthMeterValue.innerText = meter;
+
   breadthFill.style.width = (meter * 10) + "%";
   breadthFill.className =
     "meter-fill " + (meter > 6 ? "green" : meter < 4 ? "red" : "neutral");
 
   const rows = [];
 
-  Object.entries(d.sectors || {}).forEach(([sector, pct]) => {
-    const color =
-      pct > 0 ? "#16a34a" :
-      pct < 0 ? "#dc2626" :
-      "#374151";
+  // ✅ Correct handling
+  if (Array.isArray(d.sectors)) {
+    // Pure labels – NO index, NO %
+    d.sectors.forEach(sector => {
+      rows.push(`<span>${sector}</span>`);
+    });
+  } else {
+    // Proper object with last computed values
+    Object.entries(d.sectors).forEach(([sector, pct]) => {
+      const color =
+        pct > 0 ? "#16a34a" :
+        pct < 0 ? "#dc2626" :
+        "#374151";
 
-    const sign = pct > 0 ? "+" : "";
-
-    rows.push(
-      `<span>
-        ${sector} <span style="color:${color}">${sign}${pct}%</span>
-      </span>`
-    );
-  });
+      const sign = pct > 0 ? "+" : "";
+      rows.push(
+        `<span>
+          ${sector} <span style="color:${color}">${sign}${pct}%</span>
+        </span>`
+      );
+    });
+  }
 
   breadthSectors.innerHTML = rows.join(" | ");
 }
