@@ -2,6 +2,8 @@ name: Update Market Data
 
 on:
   schedule:
+    # Every 5 minutes, Monday–Friday
+    # 03:00–10:00 UTC ≈ 08:30–15:30 IST
     - cron: "*/5 3-10 * * 1-5"
   workflow_dispatch:
 
@@ -22,13 +24,13 @@ jobs:
         run: |
           pip install yfinance pandas pytz
 
-      - name: Generate NIFTY data
+      - name: Generate dashboard data
         run: python runner.py
 
       - name: Commit and push data
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add data/nifty.json
-          git commit -m "Update NIFTY data" || echo "No changes"
+          git add data/nifty.json data/nifty_bias.json data/global_meter.json
+          git commit -m "Update dashboard market data" || echo "No changes to commit"
           git push origin main
