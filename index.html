@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>Market Dashboard</title>
 
-  <!-- Google Font -->
+  <!-- Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -14,78 +14,77 @@
 
 <body>
 
-  <!-- ================= DASHBOARD ROW ================= -->
-  <div class="dashboard-row">
+<div class="dashboard-row">
 
-    <!-- NIFTY BOX -->
-    <div class="box box-nifty">
-      <div class="nifty-header">
-        <span id="niftyStatus" class="status-dot closed"></span>
-        <span class="nifty-title">NIFTY</span>
-      </div>
-      <div id="niftyPrice" class="nifty-price">--</div>
-      <div id="niftyChange" class="nifty-change">--</div>
-      <div id="niftyTime" class="small">Updated: --</div>
+  <!-- ================= LEFT: NIFTY ================= -->
+  <div class="box box-nifty">
+    <div class="nifty-header">
+      <span class="nifty-title">NIFTY</span>
     </div>
 
-    <!-- RIGHT COLUMN (BIAS + GLOBAL METER) -->
-    <div class="right-column">
+    <div class="nifty-price">24366.90</div>
+    <div class="nifty-change">+3.65 (0.01%)</div>
 
-      <!-- STRUCTURAL BIAS -->
-      <div class="box box-bias">
-        <div class="bias-line">
-          <strong>Structural Bias</strong> →
-          4H <span id="bias4H" class="sq bullish"></span> /
-          1H <span id="bias1H" class="sq bullish"></span> /
-          15m <span id="bias15M" class="sq pullback"></span>
-          → <span id="biasPhase" class="bias-phase">Pullback phase</span>
+    <!-- Divider before Updated -->
+    <div class="divider"></div>
+
+    <div class="small">Updated: 20 Apr 2026, 13:47:40 IST</div>
+  </div>
+
+  <!-- ================= RIGHT STACK ================= -->
+  <div class="right-column">
+
+    <!-- STRUCTURAL BIAS -->
+    <div class="box box-bias">
+      <div class="bias-line">
+        <strong>Structural Bias</strong>
+        → 4H <span class="sq green"></span>
+        / 1H <span class="sq green"></span>
+        / 15m <span class="sq green"></span>
+        → <span class="bias-phase">Bullish continuation</span>
+      </div>
+    </div>
+
+    <!-- GLOBAL METER -->
+    <div class="box box-global-meter">
+      <div class="meter-line">
+        <div class="meter">
+          <div class="meter-fill green" style="width:60%"></div>
         </div>
+
+        <span>|</span>
+        <span>DowF 0.04%</span>
+        <span>|</span>
+        <span>DAX 0.00%</span>
+        <span>|</span>
+        <span>Nikkei -0.35%</span>
+        <span>|</span>
+        <span>HSI -0.08%</span>
       </div>
-
-      <!-- GLOBAL METER -->
-     <!-- ✅ GLOBAL METER WITH METER BAR -->
-<div class="box box-global-meter">
-  <div class="meter-line">
-    <div class="meter">
-      <div id="globalMeterFill" class="meter-fill"></div>
     </div>
 
-    <span>|</span>
-    <span>DowF 0.04%</span>
-    <span>|</span>
-    <span>DAX 0.00%</span>
-    <span>|</span>
-    <span>Nikkei −0.35%</span>
-    <span>|</span>
-    <span>HSI −0.08%</span>
+    <!-- NIFTY BREADTH METER -->
+    <div class="box box-nifty-breadth">
+      <div class="meter-line">
+        <div class="meter">
+          <div class="meter-fill green" style="width:70%"></div>
+        </div>
+
+        <span>|</span>
+        <span>BANK</span>
+        <span>|</span>
+        <span>FIN</span>
+        <span>|</span>
+        <span>IT</span>
+        <span>|</span>
+        <span>METAL</span>
+        <span>|</span>
+        <span>FMCG</span>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<!-- ✅ NIFTY BREADTH METER -->
-<div class="box box-nifty-breadth">
-  <div class="meter-line">
-    <div class="meter">
-      <div id="niftyBreadthFill" class="meter-fill"></div>
-    </div>
-
-    <span>|</span>
-    <span>BANK</span>
-    <span>|</span>
-    <span>FIN</span>
-    <span>|</span>
-    <span>IT</span>
-    <span>|</span>
-    <span>METAL</span>
-    <span>|</span>
-    <span>FMCG</span>
-  </div>
-</div>
-
-
-    </div>
-
-  </div>
-
-  <script src="app.js"></script>
 </body>
 </html>
