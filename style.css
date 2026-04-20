@@ -1,136 +1,80 @@
-/* ================= GLOBAL ================= */
-
 body {
-  font-family: 'Lato', Arial, sans-serif;
-  padding: 8px;
-  background: #ffffff;
+  font-family: Arial, sans-serif;
+  background: #fff;
 }
 
-/* ================= LAYOUT ================= */
+.box {
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 6px 14px rgba(0,0,0,.08);
+}
 
 .dashboard-row {
   display: flex;
   gap: 12px;
-  align-items: stretch; /* bottom aligned */
 }
 
 .right-column {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  justify-content: space-between;
 }
 
-/* ================= BOXES ================= */
+.nifty-price { font-size: 22px; font-weight: bold; }
+.nifty-change { font-size: 12px; }
 
-.box {
-  border: 1px solid #d1d5db;
-  border-radius: 14px;
-  padding: 12px;
-  background: #ffffff;
-  box-shadow: 0 6px 14px rgba(0,0,0,.08);
-}
-
-.box-nifty { width: 240px; }
-.box-bias,
-.box-global-meter,
-.box-nifty-breadth { width: 460px; }
-
-/* ================= NIFTY ================= */
-
-.nifty-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.nifty-title {
-  font-size: 20px;
-  font-weight: 800;
-}
-
-.nifty-price {
-  font-size: 22px;
-  font-weight: 700;
-  margin-top: 6px;
-}
-
-.nifty-change {
-  font-size: 12px;
-  font-weight: 700;
-  color: #16a34a;
-}
-
-.small {
-  font-size: 10.5px;
-  color: #64748b;
-  font-style: italic;
-}
-
-/* Divider */
 .divider {
   height: 1px;
-  background-color: #e5e7eb;
-  margin: 8px 0;
+  background: #e5e7eb;
+  margin: 6px 0;
 }
 
-/* ================= SQUARES ================= */
+.small { font-size: 10px; color: #64748b; }
 
 .sq {
-  display: inline-block;
   width: 10px;
   height: 10px;
-  margin: 0 4px;
+  display: inline-block;
   background: #e5e7eb;
 }
 
 .sq.green { background: #16a34a; }
 .sq.red { background: #dc2626; }
 
-/* ================= STRUCTURAL BIAS ================= */
-
-.bias-line {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 13px;
-  white-space: nowrap;
-}
-
-.bias-phase {
-  font-style: italic;
-  color: #6b7280;
-}
-
-/* ================= METERS ================= */
-
-.meter-line {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; /* LEFT aligned */
-  gap: 8px;
-  font-size: 13px;
-  white-space: nowrap;
-}
-
-/* Meter bar (same for both) */
 .meter {
   width: 80px;
   height: 8px;
   background: #e5e7eb;
   border-radius: 4px;
   overflow: hidden;
-  flex-shrink: 0;
 }
 
 .meter-fill {
   height: 100%;
   width: 0%;
-  background: #9ca3af;
-  border-radius: 4px;
 }
 
 .meter-fill.green { background: #16a34a; }
 .meter-fill.red { background: #dc2626; }
 .meter-fill.neutral { background: #9ca3af; }
+
+/* ✅ Pulse animation */
+.pulse {
+  animation: pulse 0.7s ease-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* ✅ Status badge */
+.status {
+  font-size: 10px;
+  margin-left: 6px;
+}
+.status.live { color: green; }
+.status.delayed { color: orange; }
+.status.stale { color: red; }
