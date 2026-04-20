@@ -1,120 +1,136 @@
+/* ================= GLOBAL ================= */
+
 body {
   font-family: 'Lato', Arial, sans-serif;
   padding: 8px;
-  background: #fff;
+  background: #ffffff;
 }
 
-/* Layout */
+/* ================= LAYOUT ================= */
+
 .dashboard-row {
   display: flex;
   gap: 12px;
-  align-items: flex-start;
+  align-items: stretch; /* bottom aligned */
 }
 
 .right-column {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  justify-content: space-between;
 }
 
-/* Boxes */
+/* ================= BOXES ================= */
+
 .box {
   border: 1px solid #d1d5db;
   border-radius: 14px;
   padding: 12px;
-  background: #fff;
+  background: #ffffff;
   box-shadow: 0 6px 14px rgba(0,0,0,.08);
 }
 
 .box-nifty { width: 240px; }
-.box-bias { width: 420px; }
-.box-global { width: 420px; }
+.box-bias,
+.box-global-meter,
+.box-nifty-breadth { width: 420px; }
 
-/* NIFTY */
+/* ================= NIFTY ================= */
+
 .nifty-header {
   display: flex;
   align-items: center;
   gap: 6px;
 }
-.nifty-title { font-size: 20px; font-weight: 800; }
-.nifty-price { font-size: 22px; font-weight: 700; margin-top: 6px; }
-.nifty-change { font-size: 12px; font-weight: 700; }
-.small { font-size: 10.5px; color: #64748b; font-style: italic; }
 
-/* Squares */
+.nifty-title {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.nifty-price {
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.nifty-change {
+  font-size: 12px;
+  font-weight: 700;
+  color: #16a34a;
+}
+
+.small {
+  font-size: 10.5px;
+  color: #64748b;
+  font-style: italic;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 8px 0;
+}
+
+/* ================= SQUARES ================= */
+
 .sq {
   display: inline-block;
   width: 10px;
   height: 10px;
   margin: 0 4px;
-  flex-shrink: 0;
   background: #e5e7eb;
 }
+
 .sq.green { background: #16a34a; }
 .sq.red { background: #dc2626; }
 
-/* Bias */
+/* ================= STRUCTURAL BIAS ================= */
+
 .bias-line {
   display: flex;
   align-items: center;
   justify-content: center;
-  white-space: nowrap;
   gap: 6px;
   font-size: 13px;
-}
-.bias-phase { font-style: italic; color: #6b7280; }
-
-/* Global Meter */
-.global-line {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
   white-space: nowrap;
 }
 
-/* Meter bar */
+.bias-phase {
+  font-style: italic;
+  color: #6b7280;
+}
+
+/* ================= METERS ================= */
+
+.meter-line {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* LEFT aligned */
+  gap: 8px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* Meter bar (same for both) */
 .meter {
   width: 80px;
   height: 8px;
   background: #e5e7eb;
   border-radius: 4px;
   overflow: hidden;
-}
-.meter-fill {
-  height: 100%;
-}
-.meter-fill.red { background: #dc2626; }
-.meter-fill.green { background: #16a34a; }
-.meter-fill.neutral { background: #9ca3af; }
-/* ===== METER STRIP (GLOBAL + NIFTY) ===== */
-
-.meter-line {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-/* Meter base */
-.meter {
-  width: 70px;
-  height: 8px;
-  background: #e5e7eb;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-/* Filled part */
 .meter-fill {
   height: 100%;
   width: 0%;
   background: #9ca3af;
+  border-radius: 4px;
 }
 
-/* Box sizes */
-.box-global-meter,
-.box-nifty-breadth {
-  width: 420px;
-}
+.meter-fill.green { background: #16a34a; }
+.meter-fill.red { background: #dc2626; }
+.meter-fill.neutral { background: #9ca3af; }
