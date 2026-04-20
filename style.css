@@ -1,3 +1,7 @@
+/* =========================================================
+   GLOBAL DASHBOARD STYLES
+   ========================================================= */
+
 body {
   font-family: 'Lato', Arial, sans-serif;
   background: #ffffff;
@@ -25,7 +29,13 @@ body {
   margin: 8px 0;
 }
 
-/* HEADER */
+
+
+/* =========================================================
+   [BOX 1] NIFTY PRICE ❄️ FROZEN ❄️
+   ========================================================= */
+
+/* Header */
 .nifty-header {
   display: flex;
   align-items: center;
@@ -37,7 +47,7 @@ body {
   font-weight: 800;
 }
 
-/* STATUS */
+/* Status dot */
 .status-dot {
   width: 10px;
   height: 10px;
@@ -52,22 +62,7 @@ body {
   background: #9ca3af;
 }
 
-.market-status {
-  font-size: 11px;
-  font-weight: bold;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-
-.market-status.live {
-  color: #16a34a;
-}
-
-.market-status.closed {
-  color: #6b7280;
-}
-
-/* VALUE */
+/* Values */
 .nifty-price {
   font-size: 22px;
   font-weight: 700;
@@ -94,7 +89,12 @@ body {
   font-style: italic;
   margin-top: 4px;
 }
-/* ✅ STRUCTURAL BIAS BOX */
+
+
+
+/* =========================================================
+   [BOX 2] STRUCTURAL BIAS
+   ========================================================= */
 
 .bias-row {
   margin-top: 6px;
@@ -116,7 +116,6 @@ body {
   vertical-align: middle;
 }
 
-/* Bias colors */
 .bias-dot.bullish {
   background: #16a34a;
 }
@@ -135,3 +134,9 @@ body {
   font-style: italic;
   color: #6b7280;
 }
+
+
+
+/* =========================================================
+   [BOX FUTURE]
+   ========================================================= */
