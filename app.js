@@ -4,7 +4,7 @@
 const nowSec = () => Math.floor(Date.now() / 1000);
 
 function ago(ts) {
-  if (!ts || isNaN(ts)) return "";   // ✅ prevent NaN
+  if (!ts || isNaN(ts)) return "";
   const s = nowSec() - ts;
   if (s < 60) return `Updated ${s} sec ago`;
   if (s < 3600) return `Updated ${Math.floor(s/60)} min ago`;
@@ -27,7 +27,7 @@ function isMarketOpenIST() {
 }
 
 /* =====================================================
-   NIFTY (✅ keep Updated text here)
+   NIFTY
 ===================================================== */
 let lastNifty = null;
 
@@ -43,7 +43,6 @@ function renderNifty(d) {
       lastNifty.change >= 0 ? "#16a34a" : "#dc2626";
   }
 
-  // ✅ handle both ts & updated_ts safely
   niftyUpdated.innerText = ago(d.updated_ts || d.ts);
   marketSphere.className =
     "sphere " + (isMarketOpenIST() ? "green" : "grey");
@@ -67,13 +66,12 @@ function renderBias(d) {
 }
 
 /* =====================================================
-   GLOBAL MARKET (❌ NO Updated text anymore)
+   GLOBAL MARKET (FIXED)
 ===================================================== */
-function marketStateGlobal(name) {
+function marketStateGlobal(market) {
   const utc = new Date();
   const min = utc.getUTCHours() * 60 + utc.getUTCMinutes();
   const wd = utc.getUTCDay();
-
   if (wd === 0 || wd === 6) return "CLOSED";
 
   const sessions = {
@@ -82,19 +80,24 @@ function marketStateGlobal(name) {
     Nikkei: [0,360],
     HSI: [90,480]
   };
-
-  if (!sessions[name]) return "CLOSED";
-  return (min >= sessions[name][0] && min <= sessions[name][1])
+  if (!sessions[market]) return "CLOSED";
+  return (min >= sessions[market][0] && min <= sessions[market][1])
     ? "OPEN" : "CLOSED";
 }
 
 function renderGlobal(d) {
-  globalMeterFill.style.width = (d.meter * 10) + "%";
+  const meter = d.meter;
+  globalMeterFill.style.width = (meter * 10) + "%";
+  globalMeterValue.innerText = meter;
+
+  globalMeterFill.className =
+    "meter-fill " +
+    (meter > 6 ? "green" : meter < 4 ? "red" : "neutral");
 
   const rows = [];
 
-  Object.entries(d.indices).forEach(([key, obj]) => {
-    const sessionKey = key === "DowF" ? "Dow" : key;
+  Object.entries(d.indices).forEach(([rawKey, obj]) => {
+    const key = rawKey === "DowF" ? "Dow" : rawKey;
     const pct = obj.change_30m;
 
     const color =
@@ -103,12 +106,12 @@ function renderGlobal(d) {
       "#374151";
 
     const sq =
-      marketStateGlobal(sessionKey) === "OPEN" ? "green" : "grey";
+      marketStateGlobal(key) === "OPEN" ? "green" : "grey";
 
     rows.push(
       `<span>
         <span class="sq ${sq}"></span>
-        ${sessionKey} <span style="color:${color}">${pct}%</span>
+        ${key} <span style="color:${color}">${pct}%</span>
       </span>`
     );
   });
@@ -117,19 +120,23 @@ function renderGlobal(d) {
 }
 
 /* =====================================================
-   NIFTY BREADTH (❌ NO Updated text anymore)
+   NIFTY BREADTH (FIXED)
 ===================================================== */
 function renderBreadth(d) {
-  breadthFill.style.width = (d.meter * 10) + "%";
+  const meter = d.meter;
+  breadthFill.style.width = (meter * 10) + "%";
+  breadthMeterValue.innerText = meter;
+
+  breadthFill.className =
+    "meter-fill " +
+    (meter > 6 ? "green" : meter < 4 ? "red" : "neutral");
 
   const rows = [];
-
   Object.entries(d.sectors).forEach(([sector, pct]) => {
     const color =
       pct > 0 ? "#16a34a" :
       pct < 0 ? "#dc2626" :
       "#374151";
-
     rows.push(`<span style="color:${color}">${sector}</span>`);
   });
 
@@ -148,3 +155,4 @@ function fetchAll() {
 
 fetchAll();
 setInterval(fetchAll, 60000);
+``
