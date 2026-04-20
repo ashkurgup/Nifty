@@ -1,34 +1,43 @@
 body {
-  font-family: Arial, sans-serif;
-}
-
-.row {
-  display: flex;
-  gap: 10px;
+  font-family: 'Lato', Arial, sans-serif;
+  background: #ffffff;
+  padding: 8px;
 }
 
 .box {
-  border: 1px solid #ddd;
-  padding: 12px;
-  background: #fff;
-}
-
-.box.green {
-  background: #f0fdf4;
+  width: 220px;
+  border: 1px solid #d1d5db;
+  border-radius: 14px;
+  padding: 16px;
+  background: #ffffff;
+  box-shadow:
+    0 0 0 1px rgba(209, 213, 219, 0.5),
+    0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .box.large {
   width: 260px;
 }
 
-/* NIFTY BOX */
+.divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 8px 0;
+}
+
+/* HEADER */
 .nifty-header {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-weight: bold;
 }
 
+.nifty-title {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+/* STATUS */
 .status-dot {
   width: 10px;
   height: 10px;
@@ -43,6 +52,22 @@ body {
   background: #9ca3af;
 }
 
+.market-status {
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.market-status.live {
+  color: #16a34a;
+}
+
+.market-status.closed {
+  color: #6b7280;
+}
+
+/* VALUE */
 .nifty-price {
   font-size: 22px;
   font-weight: 700;
@@ -53,7 +78,6 @@ body {
 .nifty-change {
   font-size: 12px;
   font-weight: 700;
-  font-variant-numeric: tabular-nums;
 }
 
 .positive {
@@ -69,19 +93,4 @@ body {
   color: #64748b;
   font-style: italic;
   margin-top: 4px;
-}
-/* MARKET STATUS AT TOP */
-.market-status {
-  font-size: 11px;
-  font-weight: bold;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-
-.market-status.live {
-  color: #16a34a;
-}
-
-.market-status.closed {
-  color: #6b7280;
 }
