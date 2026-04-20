@@ -1,0 +1,10 @@
+{
+  "symbol": "NIFTY",
+  "bias": {
+    "4H": "BULLISH",
+    "1H": "BULLISH",
+    "15M": "PULLBACK"
+  },
+  "phase": "Pullback phase",
+  "updated": "20 Apr 2026, 11:05 IST"
+}
