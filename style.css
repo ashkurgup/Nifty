@@ -32,12 +32,12 @@ body {
 
 /* NIFTY box — tighter */
 .box-nifty {
-  width: 240px;
+  width: 200px;
 }
 
 /* Bias box — wider so everything fits in one line */
 .box-bias {
-  width: 380px;
+  width: 400px;
 }
 
 /* ================= NIFTY ================= */
