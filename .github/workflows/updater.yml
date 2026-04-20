@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install requests pytz
+          pip install yfinance pandas pytz
 
       - name: Generate dashboard data (Twelve Data)
         env:
