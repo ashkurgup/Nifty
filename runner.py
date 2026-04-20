@@ -31,7 +31,7 @@ def fetch_nifty():
         "change": change,
         "percent": percent,
         "market_status": "LIVE" if is_market_live(now) else "CLOSED",
-        "updated": now.strftime("%H:%M:%S IST")
+        "updated": now.strftime("%d %b %Y, %H:%M:%S IST")
     }
 
 if __name__ == "__main__":
