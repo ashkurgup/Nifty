@@ -1,3 +1,16 @@
+/* =========================================================
+   DASHBOARD SCRIPT
+   RULES:
+   - One section per box
+   - Do NOT mix box logic
+   - Append new boxes at the bottom
+   ========================================================= */
+
+
+/* =========================================================
+   [BOX 1] NIFTY PRICE ❄️ FROZEN ❄️
+   ========================================================= */
+
 function renderNifty(data) {
 
   // Status dot
@@ -32,7 +45,13 @@ function loadNifty() {
 }
 
 loadNifty();
-setInterval(loadNifty, 60000); // refresh every 60s
+setInterval(loadNifty, 60000); // every 60 seconds
+
+
+
+/* =========================================================
+   [BOX 2] STRUCTURAL BIAS (INDEPENDENT)
+   ========================================================= */
 
 function renderBias(data) {
   const map = {
@@ -66,3 +85,10 @@ function loadBias() {
 
 loadBias();
 setInterval(loadBias, 300000); // every 5 minutes
+
+
+
+/* =========================================================
+   [BOX FUTURE]
+   - Add new render/load pairs below this line
+   ========================================================= */
