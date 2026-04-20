@@ -4,98 +4,70 @@
   <meta charset="UTF-8" />
   <title>Market Dashboard</title>
 
-  <!-- ===============================
-       GLOBAL FONTS
-       =============================== -->
+  <!-- Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- ===============================
-       GLOBAL STYLESHEET
-       =============================== -->
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- =========================================================
-       DASHBOARD BOXES START 
-       ========================================================= -->
+  <!-- =====================================================
+       DASHBOARD ROW 1 : NIFTY + STRUCTURAL BIAS
+       ===================================================== -->
+  <div class="dashboard-row">
 
-  <!-- =========================================================
-       [BOX 1] NIFTY PRICE  ❄️ FROZEN ❄️
-       ========================================================= -->
-  <div class="box large">
+    <!-- ✅ BOX 1 : NIFTY PRICE (FROZEN) -->
+    <div class="box large">
 
-    <!-- HEADER -->
-    <div class="nifty-header">
-      <span id="niftyStatus" class="status-dot closed"></span>
-      <span class="nifty-title">NIFTY</span>
+      <div class="nifty-header">
+        <span id="niftyStatus" class="status-dot closed"></span>
+        <span class="nifty-title">NIFTY</span>
+      </div>
+
+      <div id="niftyPrice" class="nifty-price">--</div>
+      <div id="niftyChange" class="nifty-change">--</div>
+      <div id="niftyTime" class="small">Updated: --</div>
+
     </div>
 
-    <!-- PRICE -->
-    <div id="niftyPrice" class="nifty-price">--</div>
+    <!-- ✅ BOX 2 : STRUCTURAL BIAS -->
+    <div class="box">
 
-    <!-- CHANGE -->
-    <div id="niftyChange" class="nifty-change">--</div>
+      <div class="nifty-title">Structural Bias</div>
 
-    <!-- UPDATED TIME -->
-    <div id="niftyTime" class="small">
-      Updated: --
-    </div>
+      <div class="bias-row">
+        <span class="tf">4H</span>
+        <span id="bias4H" class="bias-dot bullish"></span>
 
-  </div>
+        <span> / </span>
 
-  <!-- =========================================================
-       [BOX 2] STRUCTURAL BIAS (INDEPENDENT)
-       ========================================================= -->
-  <div class="box">
+        <span class="tf">1H</span>
+        <span id="bias1H" class="bias-dot bullish"></span>
 
-    <div class="nifty-title">Structural Bias</div>
+        <span> / </span>
 
-    <!-- TIMEFRAME BIAS ROW -->
-    <div class="bias-row">
-      <span class="tf">4H</span>
-      <span id="bias4H" class="bias-dot bullish"></span>
+        <span class="tf">15m</span>
+        <span id="bias15M" class="bias-dot pullback"></span>
+      </div>
 
-      <span> / </span>
+      <div id="biasPhase" class="bias-phase">
+        Pullback phase
+      </div>
 
-      <span class="tf">1H</span>
-      <span id="bias1H" class="bias-dot bullish"></span>
-
-      <span> / </span>
-
-      <span class="tf">15m</span>
-      <span id="bias15M" class="bias-dot pullback"></span>
-    </div>
-
-    <!-- PHASE TEXT (FROZEN WORDING LIST) -->
-    <div id="biasPhase" class="bias-phase">
-      Pullback phase
-    </div>
-
-    <!-- UPDATED TIME -->
-    <div id="biasUpdated" class="small">
-      Updated: --
     </div>
 
   </div>
 
-  <!-- =========================================================
-       [BOX FUTURE]
-       - Paste new boxes below this line
-       ========================================================= -->
+  <!-- =====================================================
+       DASHBOARD ROW 2 : FUTURE BOXES (DOWN)
+       ===================================================== -->
+  <div class="dashboard-row">
+    <!-- Paste future boxes here -->
+  </div>
 
-  <!-- =========================================================
-       DASHBOARD BOXES END
-       ========================================================= -->
-
-
-  <!-- ===============================
-       GLOBAL DASHBOARD SCRIPT
-       =============================== -->
   <script src="app.js"></script>
-
 </body>
 </html>
