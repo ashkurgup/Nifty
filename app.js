@@ -30,7 +30,27 @@ fetch("data/global_meter.json?ts=" + Date.now())
     mapSq(d.indices.dax.change,"sqDax");
     mapSq(d.indices.nikkei.change,"sqNikkei");
     mapSq(d.indices.hang.change,"sqHang");
+/* ===== GLOBAL METER ===== */
+fetch("data/global_meter.json?ts=" + Date.now())
+  .then(r => r.json())
+  .then(d => {
+    const pct = Math.round(d.score * 10);
+    const fill = document.getElementById("globalMeterFill");
+    fill.style.width = pct + "%";
+    fill.style.background =
+      d.score > 6 ? "#16a34a" : d.score < 4 ? "#dc2626" : "#9ca3af";
+  });
 
+/* ===== NIFTY BREADTH METER ===== */
+fetch("data/nifty_breadth.json?ts=" + Date.now())
+  .then(r => r.json())
+  .then(d => {
+    const pct = Math.round(d.meter * 10);
+    const fill = document.getElementById("niftyBreadthFill");
+    fill.style.width = pct + "%";
+    fill.style.background =
+      d.meter > 6 ? "#16a34a" : d.meter < 4 ? "#dc2626" : "#9ca3af";
+  });
     dowVal.innerText = `${d.indices.dow.change}%`;
     daxVal.innerText = `${d.indices.dax.change}%`;
     nikkeiVal.innerText = `${d.indices.nikkei.change}%`;
