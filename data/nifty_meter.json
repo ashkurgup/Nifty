@@ -1,0 +1,35 @@
+{
+  "updated": "20 Apr 2026, 13:40 IST",
+  "sectors": [
+    {
+      "key": "BANK",
+      "label": "BANK",
+      "change_30m": -0.22,
+      "is_open": true
+    },
+    {
+      "key": "FIN",
+      "label": "FIN",
+      "change_30m": -0.18,
+      "is_open": true
+    },
+    {
+      "key": "IT",
+      "label": "IT",
+      "change_30m": 0.31,
+      "is_open": true
+    },
+    {
+      "key": "METAL",
+      "label": "METAL",
+      "change_30m": 0.09,
+      "is_open": true
+    },
+    {
+      "key": "FMCG",
+      "label": "FMCG",
+      "change_30m": -0.04,
+      "is_open": true
+    }
+  ]
+}
