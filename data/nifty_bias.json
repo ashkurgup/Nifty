@@ -1,6 +1,10 @@
 {
-  "bias": {},
-  "phase": "Unavailable",
-  "updated": "20 Apr 2026, 16:47 IST",
-  "updated_ts": 1776683824
+  "bias": {
+    "4H": "BULLISH",
+    "1H": "BULLISH",
+    "15M": "BEARISH"
+  },
+  "phase": "Pullback within bullish structure",
+  "updated": "20 Apr 2026, 16:55 IST",
+  "updated_ts": 1776684346
 }
