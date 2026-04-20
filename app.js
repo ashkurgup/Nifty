@@ -30,7 +30,13 @@ function renderNifty(data) {
     "Updated: " + data.updated;
 }
 
-fetch("data/nifty.json")
-  .then(res => res.json())
-  .then(renderNifty)
-  .catch(err => console.error("NIFTY load failed", err));
+function loadNifty() {
+  fetch("data/nifty.json")
+    .then(res => res.json())
+    .then(renderNifty)
+    .catch(err => console.error("NIFTY load failed", err));
+}
+
+loadNifty();
+setInterval(loadNifty, 60000); // refresh every 60s
+``
