@@ -1,6 +1,4 @@
-/* =====================================================
-   GLOBAL
-   ===================================================== */
+/* ================= GLOBAL ================= */
 
 body {
   font-family: 'Lato', Arial, sans-serif;
@@ -8,43 +6,41 @@ body {
   padding: 8px;
 }
 
-
-/* =====================================================
-   DASHBOARD LAYOUT
-   ===================================================== */
+/* ================= LAYOUT ================= */
 
 .dashboard-row {
   display: flex;
-  gap: 16px;           /* 🔽 reduce this for tighter boxes */
-  margin-bottom: 16px;
+  gap: 12px;               /* ↔ space between boxes */
+  margin-bottom: 16px;     /* ↕ space between rows */
   align-items: flex-start;
   flex-wrap: wrap;
 }
 
-
-/* =====================================================
-   BOX BASE
-   ===================================================== */
+/* ================= BASE BOX ================= */
 
 .box {
-  width: 220px;
   border: 1px solid #d1d5db;
   border-radius: 14px;
-  padding: 16px;       /* 🔽 reduce padding to shrink box */
+  padding: 14px;           /* 🔽 reduce to shrink box */
   background: #ffffff;
   box-shadow:
-    0 0 0 1px rgba(209, 213, 219, 0.5),
-    0 6px 16px rgba(0, 0, 0, 0.08);
+    0 0 0 1px rgba(209,213,219,0.5),
+    0 6px 16px rgba(0,0,0,0.08);
 }
 
-.box.large {
-  width: 260px;
+/* ================= BOX SIZES ================= */
+
+/* NIFTY box — tighter */
+.box-nifty {
+  width: 240px;
 }
 
+/* Bias box — wider so everything fits in one line */
+.box-bias {
+  width: 380px;
+}
 
-/* =====================================================
-   NIFTY PRICE BOX
-   ===================================================== */
+/* ================= NIFTY ================= */
 
 .nifty-header {
   display: flex;
@@ -63,13 +59,8 @@ body {
   border-radius: 50%;
 }
 
-.status-dot.live {
-  background: #16a34a;
-}
-
-.status-dot.closed {
-  background: #9ca3af;
-}
+.status-dot.live { background: #16a34a; }
+.status-dot.closed { background: #9ca3af; }
 
 .nifty-price {
   font-size: 22px;
@@ -82,13 +73,8 @@ body {
   font-weight: 700;
 }
 
-.positive {
-  color: #16a34a;
-}
-
-.negative {
-  color: #dc2626;
-}
+.positive { color: #16a34a; }
+.negative { color: #dc2626; }
 
 .small {
   font-size: 10.5px;
@@ -97,17 +83,14 @@ body {
   margin-top: 4px;
 }
 
-
-/* =====================================================
-   STRUCTURAL BIAS – SINGLE LINE
-   ===================================================== */
+/* ================= STRUCTURAL BIAS ================= */
 
 .bias-line {
   display: flex;
   align-items: center;
-  gap: 6px;        /* 🔽 reduce for tighter line */
+  gap: 6px;
   font-size: 13px;
-  flex-wrap: wrap; /* safe on small screens */
+  white-space: nowrap;      /* ✅ force one line */
 }
 
 .bias-title {
@@ -115,17 +98,27 @@ body {
 }
 
 .bias-arrow {
-  color: #9ca3af;  /* subtle grey */
+  color: #9ca3af;
   font-weight: 700;
-  margin: 0 2px;
 }
+
+.tf {
+  font-weight: 800;
+}
+
+.bias-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;           /* ✅ keep spheres visible */
+}
+
+.bias-dot.bullish { background: #16a34a; }
+.bias-dot.bearish { background: #dc2626; }
+.bias-dot.pullback { background: #a855f7; }
 
 .bias-phase-inline {
   font-style: italic;
   color: #6b7280;
-  white-space: nowrap;
-}
-/* ===== FIX: Prevent dots from shrinking ===== */
-.bias-dot {
-  flex-shrink: 0;       /* ✅ THIS keeps spheres visible */
 }
