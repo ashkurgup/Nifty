@@ -5,32 +5,7 @@ import pytz
 import os
 
 # =========================================================
-# CONFIGURATION (PLUGGABLE LOGIC)
-# =========================================================
-
-GLOBAL_CONFIG = {
-    "indices": {
-        "dow": {"symbol": "YM=F", "weight": 0.40, "region": "US"},
-        "dax": {"symbol": "^GDAXI", "weight": 0.25, "region": "EU"},
-        "nikkei": {"symbol": "^N225", "weight": 0.20, "region": "ASIA"},
-        "hang": {
-            "symbol": "^HSI",
-            "weight": 0.15,
-            "region": "ASIA",
-            "risk_proxy": True
-        }
-    },
-    "direction_thresholds": {"positive": 0.20, "negative": -0.20},
-    "market_state_multiplier": {
-        "OPEN": 1.00,
-        "RECENTLY_CLOSED": 0.75,
-        "LONG_CLOSED": 0.50
-    },
-    "risk_proxy_boost": {"threshold": 0.15, "multiplier": 1.25}
-}
-
-# =========================================================
-# TIME / PATH
+# GLOBAL SETTINGS
 # =========================================================
 
 IST = pytz.timezone("Asia/Kolkata")
@@ -41,85 +16,97 @@ def now_ist():
     return datetime.now(IST)
 
 # =========================================================
-# MARKET STATE
+# YFINANCE SAFE FETCH (CRITICAL)
 # =========================================================
 
-def market_state(region, now):
-    h = now.hour
-    if region == "ASIA":
-        if 6 <= h < 12: return "OPEN"
-        if 12 <= h < 14: return "RECENTLY_CLOSED"
-    if region == "EU":
-        if 12 <= h < 18: return "OPEN"
-        if 18 <= h < 20: return "RECENTLY_CLOSED"
-    if region == "US":
-        if h >= 18 or h < 3: return "OPEN"
-        if 3 <= h < 5: return "RECENTLY_CLOSED"
-    return "LONG_CLOSED"
+def fetch_hist(symbol, interval="1m"):
+    """
+    Forced-fresh Yahoo Finance fetch.
+    Works best for intraday NSE context dashboards.
+    """
+    ticker = yf.Ticker(symbol)
+    hist = ticker.history(
+        period="1d",
+        interval=interval,
+        auto_adjust=True,
+        prepost=True,
+    )
 
-# =========================================================
-# SAFE HELPERS
-# =========================================================
-
-def last_30min_change(hist):
-    if hist is None or hist.empty or len(hist) < 2:
-        return None
-    try:
-        end = hist.iloc[-1]["Close"]
-        cutoff = hist.index[-1] - timedelta(minutes=30)
-        earlier = hist[hist.index <= cutoff]
-        start = earlier.iloc[-1]["Close"] if not earlier.empty else hist.iloc[0]["Close"]
-        if start == 0:
-            return None
-        return round((end - start) / start * 100, 2)
-    except Exception:
+    if hist is None or hist.empty:
         return None
 
-def direction_score(pct):
-    if pct is None:
-        return 0
-    if pct > GLOBAL_CONFIG["direction_thresholds"]["positive"]:
-        return 1
-    if pct < GLOBAL_CONFIG["direction_thresholds"]["negative"]:
-        return -1
-    return 0
+    # Yahoo sometimes returns unsorted candles
+    hist = hist.sort_index()
+    return hist
 
 # =========================================================
-# NIFTY
+# ROLLING 30-MIN CHANGE (CANONICAL)
+# =========================================================
+
+def rolling_30m_change(hist):
+    if hist is None or len(hist) < 2:
+        return None
+
+    end_time = hist.index[-1]
+    start_time = end_time - timedelta(minutes=30)
+    window = hist[hist.index >= start_time]
+
+    if len(window) < 2:
+        return None
+
+    start = window["Close"].iloc[0]
+    end = window["Close"].iloc[-1]
+
+    if start == 0:
+        return None
+
+    return round((end - start) / start * 100, 2)
+
+# =========================================================
+# NIFTY LIVE (LAST PRICE)
 # =========================================================
 
 def fetch_nifty():
-    t = yf.Ticker("^NSEI")
-    hist = t.history(period="2d", interval="1m")
-    if hist.empty or len(hist) < 2:
+    hist = fetch_hist("^NSEI", "1m")
+
+    if hist is None or len(hist) < 2:
         raise RuntimeError("NIFTY data unavailable")
 
-    last, prev = hist.iloc[-1], hist.iloc[-2]
-    price = round(float(last["Close"]), 2)
-    change = round(price - float(prev["Close"]), 2)
-    percent = round(change / float(prev["Close"]) * 100, 2)
+    last_price = round(float(hist["Close"].iloc[-1]), 2)
+
+    # Use rolling change instead of prev close
+    change_pct = rolling_30m_change(hist)
+    change_pct = change_pct if change_pct is not None else 0.0
+
     now = now_ist()
 
     return {
         "symbol": "NIFTY",
-        "price": price,
-        "change": change,
-        "percent": percent,
+        "price": last_price,
+        "change": round(last_price - hist["Close"].iloc[-2], 2),
+        "percent": change_pct,
         "market_status": "LIVE" if time(9, 15) <= now.time() <= time(15, 30) else "CLOSED",
         "updated": now.strftime("%d %b %Y, %H:%M:%S IST")
     }
 
 # =========================================================
-# STRUCTURAL BIAS
+# STRUCTURAL BIAS (EMA-BASED, STABLE)
 # =========================================================
 
 def bias_tf(symbol, interval, ema):
-    hist = yf.Ticker(symbol).history(period="5d", interval=interval)
-    if hist.empty:
+    hist = fetch_hist(symbol, interval)
+
+    if hist is None or len(hist) < ema:
         return "PULLBACK"
+
     close = hist["Close"]
     ema_val = close.ewm(span=ema).mean()
-    return "BULLISH" if close.iloc[-1] > ema_val.iloc[-1] else "BEARISH"
+
+    if close.iloc[-1] > ema_val.iloc[-1]:
+        return "BULLISH"
+    if close.iloc[-1] < ema_val.iloc[-1]:
+        return "BEARISH"
+    return "PULLBACK"
 
 def fetch_bias():
     bias = {
@@ -127,8 +114,11 @@ def fetch_bias():
         "1H": bias_tf("^NSEI", "30m", 20),
         "15M": bias_tf("^NSEI", "15m", 20)
     }
-    if bias["4H"] == bias["1H"] == "BULLISH":
-        phase = "Pullback phase" if bias["15M"] != "BULLISH" else "Bullish continuation"
+
+    if bias["4H"] == bias["1H"] == "BULLISH" and bias["15M"] != "BULLISH":
+        phase = "Pullback phase"
+    elif bias["4H"] == bias["1H"] == bias["15M"]:
+        phase = f"{bias['4H'].capitalize()} continuation"
     else:
         phase = "Trend consolidation"
 
@@ -140,47 +130,86 @@ def fetch_bias():
     }
 
 # =========================================================
-# GLOBAL METER (SAFE + PLUGGABLE)
+# GLOBAL METER (STRIP + METER)
 # =========================================================
 
+GLOBAL_INDICES = {
+    "DowF": "^DJI",
+    "DAX": "^GDAXI",
+    "Nikkei": "^N225",
+    "HSI": "^HSI"
+}
+
 def fetch_global_meter():
-    now = now_ist()
-    total = 0.0
-    indices_out = {}
+    indices = {}
+    total_score = 0
+    count = 0
 
-    for key, cfg in GLOBAL_CONFIG["indices"].items():
-        try:
-            hist = yf.Ticker(cfg["symbol"]).history(period="1d", interval="5m")
-            change = last_30min_change(hist)
+    for name, symbol in GLOBAL_INDICES.items():
+        hist = fetch_hist(symbol, "1m")
+        pct = rolling_30m_change(hist)
+        pct = pct if pct is not None else 0.0
 
-            if change is None:
-                indices_out[key] = {"change": 0.0, "state": "NO_DATA", "multiplier": 0.0}
-                continue
+        score = 1 if pct > 0 else -1 if pct < 0 else 0
+        total_score += score
+        count += 1
 
-            d_score = direction_score(change)
-            state = market_state(cfg["region"], now)
-            multiplier = GLOBAL_CONFIG["market_state_multiplier"][state]
+        indices[name] = {
+            "change_30m": pct
+        }
 
-            if cfg.get("risk_proxy") and abs(change) >= GLOBAL_CONFIG["risk_proxy_boost"]["threshold"]:
-                multiplier *= GLOBAL_CONFIG["risk_proxy_boost"]["multiplier"]
-
-            total += d_score * cfg["weight"] * multiplier
-
-            indices_out[key] = {
-                "change": change,
-                "state": state,
-                "multiplier": round(multiplier, 2)
-            }
-
-        except Exception:
-            indices_out[key] = {"change": 0.0, "state": "ERROR", "multiplier": 0.0}
-
-    score = round(max(1, min(10, 5 + total * 5)), 2)
+    meter = round(5 + (total_score / max(count, 1)) * 5, 2)
+    meter = max(0, min(10, meter))
 
     return {
-        "score": score,
-        "indices": indices_out,
-        "updated": now.strftime("%d %b %Y, %H:%M IST")
+        "updated": now_ist().strftime("%d %b %Y, %H:%M IST"),
+        "meter": meter,
+        "indices": indices
+    }
+
+# =========================================================
+# NIFTY BREADTH METER (WEIGHTED)
+# =========================================================
+
+NIFTY_SECTORS = {
+    "BANK": {"symbol": "^NSEBANK", "weight": 0.35},
+    "FIN": {"symbol": "NIFTY_FIN_SERVICE.NS", "weight": 0.25},
+    "IT": {"symbol": "^CNXIT", "weight": 0.15},
+    "METAL": {"symbol": "^CNXMETAL", "weight": 0.15},
+    "FMCG": {"symbol": "^CNXFMCG", "weight": 0.10},
+}
+
+def fetch_nifty_breadth():
+    total = 0.0
+    sectors = []
+
+    for name, cfg in NIFTY_SECTORS.items():
+        hist = fetch_hist(cfg["symbol"], "1m")
+        pct = rolling_30m_change(hist)
+        pct = pct if pct is not None else 0.0
+
+        if pct > 0.15:
+            score = 1
+        elif pct < -0.15:
+            score = -1
+        else:
+            score = 0
+
+        total += score * cfg["weight"]
+
+        sectors.append({
+            "key": name,
+            "change_30m": pct,
+            "weight": cfg["weight"]
+        })
+
+    meter = round(5 + total * 5, 2)
+    meter = max(0, min(10, meter))
+
+    return {
+        "updated": now_ist().strftime("%d %b %Y, %H:%M IST"),
+        "meter": meter,
+        "sectors": sectors
     }
 
 # =========================================================
@@ -191,4 +220,6 @@ if __name__ == "__main__":
     json.dump(fetch_nifty(), open(f"{DATA_DIR}/nifty.json", "w"), indent=2)
     json.dump(fetch_bias(), open(f"{DATA_DIR}/nifty_bias.json", "w"), indent=2)
     json.dump(fetch_global_meter(), open(f"{DATA_DIR}/global_meter.json", "w"), indent=2)
-    print("✅ All dashboard data updated safely")
+    json.dump(fetch_nifty_breadth(), open(f"{DATA_DIR}/nifty_breadth.json", "w"), indent=2)
+
+    print("✅ Live dashboard data updated (yfinance)")
