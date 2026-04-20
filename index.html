@@ -4,72 +4,70 @@
   <meta charset="UTF-8" />
   <title>Market Dashboard</title>
 
-  <!-- ✅ Google Fonts (CORRECT) -->
+  <!-- Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;800&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- ✅ Main Styles -->
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- ================= ROW 1 ================= -->
+  <!-- ================= DASHBOARD ROW ================= -->
   <div class="dashboard-row">
 
-    <!-- ✅ NIFTY BOX -->
+    <!-- NIFTY BOX -->
     <div class="box box-nifty">
-
       <div class="nifty-header">
         <span id="niftyStatus" class="status-dot closed"></span>
         <span class="nifty-title">NIFTY</span>
       </div>
-
       <div id="niftyPrice" class="nifty-price">--</div>
       <div id="niftyChange" class="nifty-change">--</div>
       <div id="niftyTime" class="small">Updated: --</div>
-
     </div>
 
-    <!-- ✅ STRUCTURAL BIAS BOX -->
-    <div class="box box-bias">
+    <!-- RIGHT COLUMN (BIAS + GLOBAL METER) -->
+    <div class="right-column">
 
-      <div class="bias-line">
+      <!-- STRUCTURAL BIAS -->
+      <div class="box box-bias">
+        <div class="bias-line">
+          <strong>Structural Bias</strong> →
+          4H <span id="bias4H" class="sq bullish"></span> /
+          1H <span id="bias1H" class="sq bullish"></span> /
+          15m <span id="bias15M" class="sq pullback"></span>
+          → <span id="biasPhase" class="bias-phase">Pullback phase</span>
+        </div>
+      </div>
 
-        <span class="bias-title">Bias</span>
-        <span class="bias-arrow">→</span>
+      <!-- GLOBAL METER -->
+      <div class="box box-global">
+        <div class="global-line">
 
-        <span class="tf">4H</span>
-        <span id="bias4H" class="bias-dot bullish"></span>
+          <!-- GLOBAL METER BAR -->
+          <div class="meter">
+            <div id="meterFill" class="meter-fill neutral" style="width:50%"></div>
+          </div>
 
-        <span>/</span>
+          <span>|</span>
 
-        <span class="tf">1H</span>
-        <span id="bias1H" class="bias-dot bullish"></span>
+          <span><span id="sqDow" class="sq"></span> Dow Futures <span id="dowVal"></span></span>
+          <span>|</span>
+          <span><span id="sqDax" class="sq"></span> DAX <span id="daxVal"></span></span>
+          <span>|</span>
+          <span><span id="sqNikkei" class="sq"></span> Nikkei <span id="nikkeiVal"></span></span>
+          <span>|</span>
+          <span><span id="sqHang" class="sq"></span> Hang Seng <span id="hangVal"></span></span>
 
-        <span>/</span>
-
-        <span class="tf">15m</span>
-        <span id="bias15M" class="bias-dot pullback"></span>
-
-        <span class="bias-arrow">→</span>
-
-        <span id="biasPhase" class="bias-phase-inline">
-          Pullback phase
-        </span>
-
+        </div>
       </div>
 
     </div>
 
   </div>
 
-  <!-- ✅ JS FILE (CORRECT) -->
   <script src="app.js"></script>
 </body>
 </html>
-``
