@@ -1,7 +1,9 @@
 /* =====================================================
    UTILITIES
 ===================================================== */
-const nowSec = () => Math.floor(Date.now() / 1000);
+function nowSec() {
+  return Math.floor(Date.now() / 1000);
+}
 
 function ago(ts) {
   if (!ts || isNaN(ts)) return "";
@@ -12,24 +14,20 @@ function ago(ts) {
 }
 
 /* =====================================================
-   MARKET SESSION (NSE)
+   NIFTY
 ===================================================== */
+let lastNifty = null;
+
 function isMarketOpenIST() {
   const now = new Date();
-  const ist = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
-  const h = ist.getHours(), m = ist.getMinutes();
-  const day = ist.getDay();
-  if (day === 0 || day === 6) return false;
+  const ist = new Date(now.toLocaleString("en-US",{timeZone:"Asia/Kolkata"}));
+  const h = ist.getHours(), m = ist.getMinutes(), d = ist.getDay();
+  if (d === 0 || d === 6) return false;
   if (h < 9 || h > 15) return false;
   if (h === 9 && m < 15) return false;
   if (h === 15 && m > 30) return false;
   return true;
 }
-
-/* =====================================================
-   NIFTY
-===================================================== */
-let lastNifty = null;
 
 function renderNifty(d) {
   if (d.price && d.price !== 0) lastNifty = d;
@@ -66,52 +64,52 @@ function renderBias(d) {
 }
 
 /* =====================================================
-   GLOBAL MARKET (FIXED)
+   GLOBAL MARKET (FIXED: Dow Futures LIVE ✅)
 ===================================================== */
-function marketStateGlobal(market) {
+function marketStateGlobal(name) {
+  const wd = new Date().getUTCDay();
+
+  // ✅ Dow Futures trade almost 24x5
+  if (name === "Dow") return wd !== 0 ? "OPEN" : "CLOSED";
+
   const utc = new Date();
-  const min = utc.getUTCHours() * 60 + utc.getUTCMinutes();
-  const wd = utc.getUTCDay();
-  if (wd === 0 || wd === 6) return "CLOSED";
+  const min = utc.getUTCHours()*60 + utc.getUTCMinutes();
 
   const sessions = {
-    Dow: [810,1200],
     DAX: [420,930],
     Nikkei: [0,360],
     HSI: [90,480]
   };
-  if (!sessions[market]) return "CLOSED";
-  return (min >= sessions[market][0] && min <= sessions[market][1])
+
+  if (!sessions[name] || wd === 0 || wd === 6) return "CLOSED";
+  return (min >= sessions[name][0] && min <= sessions[name][1])
     ? "OPEN" : "CLOSED";
 }
 
 function renderGlobal(d) {
   const meter = d.meter;
-  globalMeterFill.style.width = (meter * 10) + "%";
-  globalMeterValue.innerText = meter;
 
+  globalMeterValue.innerText = meter;
+  globalMeterFill.style.width = (meter * 10) + "%";
   globalMeterFill.className =
-    "meter-fill " +
-    (meter > 6 ? "green" : meter < 4 ? "red" : "neutral");
+    "meter-fill " + (meter > 6 ? "green" : meter < 4 ? "red" : "neutral");
 
   const rows = [];
 
-  Object.entries(d.indices).forEach(([rawKey, obj]) => {
-    const key = rawKey === "DowF" ? "Dow" : rawKey;
-    const pct = obj.change_30m;
+  Object.entries(d.indices || {}).forEach(([key,obj]) => {
+    const name = key === "DowF" ? "Dow" : key;
+    const pct = obj.change_30m ?? 0;
 
     const color =
-      pct > 0 ? "#16a34a" :
-      pct < 0 ? "#dc2626" :
-      "#374151";
+      pct > 0 ? "#16a34a" : pct < 0 ? "#dc2626" : "#374151";
 
     const sq =
-      marketStateGlobal(key) === "OPEN" ? "green" : "grey";
+      marketStateGlobal(name) === "OPEN" ? "green" : "grey";
 
     rows.push(
       `<span>
         <span class="sq ${sq}"></span>
-        ${key} <span style="color:${color}">${pct}%</span>
+        ${name} <span style="color:${color}">${pct}%</span>
       </span>`
     );
   });
@@ -120,25 +118,27 @@ function renderGlobal(d) {
 }
 
 /* =====================================================
-   NIFTY BREADTH (FIXED)
+   NIFTY BREADTH (FIXED: BANK | FIN … ✅)
 ===================================================== */
 function renderBreadth(d) {
   const meter = d.meter;
-  breadthFill.style.width = (meter * 10) + "%";
   breadthMeterValue.innerText = meter;
-
+  breadthFill.style.width = (meter * 10) + "%";
   breadthFill.className =
-    "meter-fill " +
-    (meter > 6 ? "green" : meter < 4 ? "red" : "neutral");
+    "meter-fill " + (meter > 6 ? "green" : meter < 4 ? "red" : "neutral");
 
   const rows = [];
-  Object.entries(d.sectors).forEach(([sector, pct]) => {
-    const color =
-      pct > 0 ? "#16a34a" :
-      pct < 0 ? "#dc2626" :
-      "#374151";
-    rows.push(`<span style="color:${color}">${sector}</span>`);
-  });
+
+  // ✅ support BOTH formats
+  if (Array.isArray(d.sectors)) {
+    d.sectors.forEach(s => rows.push(s));
+  } else {
+    Object.entries(d.sectors || {}).forEach(([s,pct]) => {
+      const color =
+        pct > 0 ? "#16a34a" : pct < 0 ? "#dc2626" : "#374151";
+      rows.push(`<span style="color:${color}">${s}</span>`);
+    });
+  }
 
   breadthSectors.innerHTML = rows.join(" | ");
 }
@@ -155,4 +155,3 @@ function fetchAll() {
 
 fetchAll();
 setInterval(fetchAll, 60000);
-``
