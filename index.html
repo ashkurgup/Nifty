@@ -1,14 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Market Dashboard</title>
-
-  <!-- Font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;800&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -16,75 +10,51 @@
 
 <div class="dashboard-row">
 
-  <!-- ================= LEFT: NIFTY ================= -->
   <div class="box box-nifty">
-    <div class="nifty-header">
-      <span class="nifty-title">NIFTY</span>
-    </div>
-
-    <div class="nifty-price">24366.90</div>
-    <div class="nifty-change">+3.65 (0.01%)</div>
-
-    <!-- Divider before Updated -->
+    <div class="nifty-title">NIFTY <span id="dataStatus" class="status"></span></div>
+    <div id="niftyPrice" class="nifty-price">--</div>
+    <div id="niftyChange" class="nifty-change">--</div>
     <div class="divider"></div>
-
-    <div class="small">Updated: 20 Apr 2026, 13:47:40 IST</div>
+    <div id="niftyTime" class="small" title="">Updated: --</div>
   </div>
 
-  <!-- ================= RIGHT STACK ================= -->
   <div class="right-column">
 
-    <!-- STRUCTURAL BIAS -->
-    <div class="box box-bias">
+    <div class="box">
       <div class="bias-line">
-        <strong>Structural Bias</strong>
-        → 4H <span class="sq green"></span>
-        / 1H <span class="sq green"></span>
-        / 15m <span class="sq green"></span>
-        → <span class="bias-phase">Bullish continuation</span>
+        Structural Bias →
+        4H <span id="bias4H" class="sq"></span>
+        / 1H <span id="bias1H" class="sq"></span>
+        / 15M <span id="bias15M" class="sq"></span>
+        →
+        <span id="biasPhase" class="bias-phase"></span>
       </div>
     </div>
 
-    <!-- GLOBAL METER -->
-    <div class="box box-global-meter">
+    <div class="box">
       <div class="meter-line">
         <div class="meter">
-          <div class="meter-fill green" style="width:60%"></div>
+          <div id="globalMeterFill" class="meter-fill"></div>
         </div>
-
-        <span>|</span>
-        <span>DowF 0.04%</span>
-        <span>|</span>
-        <span>DAX 0.00%</span>
-        <span>|</span>
-        <span>Nikkei -0.35%</span>
-        <span>|</span>
-        <span>HSI -0.08%</span>
+        <span>Dow <span id="dowVal"></span>%</span>
+        <span>DAX <span id="daxVal"></span>%</span>
+        <span>Nikkei <span id="nikkeiVal"></span>%</span>
+        <span>HSI <span id="hangVal"></span>%</span>
       </div>
     </div>
 
-    <!-- NIFTY BREADTH METER -->
-    <div class="box box-nifty-breadth">
+    <div class="box">
       <div class="meter-line">
         <div class="meter">
-          <div class="meter-fill green" style="width:70%"></div>
+          <div id="niftyBreadthFill" class="meter-fill"></div>
         </div>
-
-        <span>|</span>
-        <span>BANK</span>
-        <span>|</span>
-        <span>FIN</span>
-        <span>|</span>
-        <span>IT</span>
-        <span>|</span>
-        <span>METAL</span>
-        <span>|</span>
-        <span>FMCG</span>
+        BANK | FIN | IT | METAL | FMCG
       </div>
     </div>
 
   </div>
 </div>
 
+<script src="script.js"></script>
 </body>
 </html>
