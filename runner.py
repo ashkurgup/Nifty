@@ -8,11 +8,12 @@ import pytz
 DATA_DIR = "data"
 os.makedirs(DATA_DIR, exist_ok=True)
 
+# Configuration with locked weights and shorthands [cite: 41, 195]
 GLOBAL_MARKETS = {
-    "DowF":   {"symbol": "YM=F",    "weight": 0.35, "tz": "America/New_York"},
-    "DAX":    {"symbol": "^GDAXI",  "weight": 0.25, "tz": "Europe/Berlin"},
-    "Nikkei": {"symbol": "^N225",   "weight": 0.25, "tz": "Asia/Tokyo"},
-    "HSI":    {"symbol": "^HSI",    "weight": 0.15, "tz": "Asia/Hong_Kong"},
+    "DowF":   {"symbol": "YM=F",    "weight": 0.35, "tz": "America/New_York", "is_futures": True},
+    "DAX":    {"symbol": "^GDAXI",  "weight": 0.25, "tz": "Europe/Berlin",    "is_futures": False},
+    "Nikkei": {"symbol": "^N225",   "weight": 0.25, "tz": "Asia/Tokyo",       "is_futures": False},
+    "HSI":    {"symbol": "^HSI",    "weight": 0.15, "tz": "Asia/Hong_Kong",   "is_futures": False},
 }
 
 SECTORS = {
@@ -23,9 +24,10 @@ SECTORS = {
     "FM":  {"symbol": "^CNXFMCG",  "weight": 0.10}
 }
 
-def is_market_open(tz_name, market_key):
+def is_market_open(tz_name, is_futures):
     now = datetime.now(pytz.timezone(tz_name))
-    if market_key == "DowF":
+    # Dow Futures (YM=F) specific logic [cite: 203]
+    if is_futures: 
         return "OPEN" if now.weekday() < 5 or (now.weekday() == 6 and now.hour >= 18) else "CLOSED"
     return "OPEN" if (now.weekday() < 5 and 9 <= now.hour < 17) else "CLOSED"
 
@@ -46,7 +48,7 @@ def update_nifty():
         "price": round(cl[-1], 2) if cl else 0,
         "change": round(cl[-1] - cl[-2], 2) if len(cl) > 1 else 0,
         "percent": round(((cl[-1] - cl[-2]) / cl[-2]) * 100, 2) if len(cl) > 1 else 0,
-        "market": "CLOSED", 
+        "market": "CLOSED", # Persistent Snapshot state [cite: 265, 276]
         "updated_ts": int(time.time())
     }
 
@@ -56,8 +58,9 @@ def update_global():
     for k, cfg in GLOBAL_MARKETS.items():
         cl = fetch_data(cfg["symbol"])
         pct = round(((cl[-1]-cl[-6])/cl[-6])*100, 2) if len(cl)>=6 else 0
-        status = is_market_open(cfg["tz"], k)
+        status = is_market_open(cfg["tz"], cfg["is_futures"])
         indices[k] = {"change_30m": pct, "status": status}
+        # Activity adjustment for meter only [cite: 201, 203]
         mult = 1.0 if status == "OPEN" else 0.40 
         total_score += (1 if pct > 0 else -1 if pct < 0 else 0) * cfg["weight"] * mult
     return {"meter": max(0, min(10, round(5 + (total_score * 5)))), "indices": indices}
@@ -69,20 +72,20 @@ def update_breadth():
         cl = fetch_data(cfg["symbol"])
         pct = round(((cl[-1]-cl[-6])/cl[-6])*100, 2) if len(cl)>=6 else 0
         sects[name] = pct
-        total_score += (1 if pct > 0 else -1 if pct < 0 else 0) * cfg["weight"]
+        total_score += (1 if pct > 0 else -1 if pct < 0 else 0) * cfg["weight"] # [cite: 30, 41]
     return {"meter": max(0, min(10, round(5 + (total_score * 5)))), "sectors": sects}
 
 def update_bias():
     cl = fetch_data("^NSEI")
     if len(cl) < 240: return {"bias": {}, "message": "Insufficient Data"}
+    # Standard technical definitions [cite: 87, 88, 89]
     b15, b1h, b4h = ("BULLISH" if cl[-1] > sum(cl[-n:])/n else "BEARISH" for n in (6, 48, 240))
+    # Human interactive logic [cite: 91, 107, 125]
     if b4h == b1h == b15: msg = "Bullish continuation"
     elif b4h == b1h: msg = f"Pullback within {b4h.lower()} structure"
     else: msg = "Structural conflict"
     return {"bias": {"4H": b4h, "1H": b1h, "15M": b15}, "message": msg}
 
 if __name__ == "__main__":
-    write_json("nifty", update_nifty())
-    write_json("global_meter", update_global())
-    write_json("nifty_breadth", update_breadth())
-    write_json("nifty_bias", update_bias())
+    write_json("nifty", update_nifty()); write_json("global_meter", update_global())
+    write_json("nifty_breadth", update_breadth()); write_json("nifty_bias", update_bias())
