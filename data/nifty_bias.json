@@ -1,9 +1,8 @@
 {
   "bias": {
     "4H": "BULLISH",
-    "1H": "BEARISH",
-    "15M": "BEARISH"
+    "1H": "BULLISH",
+    "15M": "BULLISH"
   },
-  "message": "Structural conflict",
-  "updated_ts": 1776762771
+  "message": "Bullish continuation"
 }
