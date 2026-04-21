@@ -18,15 +18,14 @@ GLOBAL_MARKETS = {
 
 SECTORS = {
     "BNK": {"symbol": "^NSEBANK",  "weight": 0.35},
-    "FIN":  {"symbol": "^CNXFIN",   "weight": 0.25},
-    "IT":   {"symbol": "^CNXIT",    "weight": 0.15},
+    "FIN": {"symbol": "^CNXFIN",   "weight": 0.25},
+    "IT":  {"symbol": "^CNXIT",    "weight": 0.15},
     "MET": {"symbol": "^CNXMETAL", "weight": 0.15},
     "FM":  {"symbol": "^CNXFMCG",  "weight": 0.10}
 }
 
 def is_market_open(tz_name, market_key):
     now = datetime.now(pytz.timezone(tz_name))
-    # Dow Futures (YM=F) are open nearly 23h a day
     if market_key == "DowF":
         return "OPEN" if now.weekday() < 5 or (now.weekday() == 6 and now.hour >= 18) else "CLOSED"
     return "OPEN" if (now.weekday() < 5 and 9 <= now.hour < 17) else "CLOSED"
@@ -48,7 +47,7 @@ def update_nifty():
         "price": round(cl[-1], 2) if cl else 0,
         "change": round(cl[-1] - cl[-2], 2) if len(cl) > 1 else 0,
         "percent": round(((cl[-1] - cl[-2]) / cl[-2]) * 100, 2) if len(cl) > 1 else 0,
-        "market": "CLOSED", # PERSISTENT CLOSED STATE [cite: 265, 276]
+        "market": "CLOSED", 
         "updated_ts": int(time.time())
     }
 
@@ -60,7 +59,7 @@ def update_global():
         pct = round(((cl[-1]-cl[-6])/cl[-6])*100, 2) if len(cl)>=6 else 0
         status = is_market_open(cfg["tz"], k)
         indices[k] = {"change_30m": pct, "status": status}
-        mult = 1.0 if status == "OPEN" else 0.40 # Activity adjustment [cite: 203]
+        mult = 1.0 if status == "OPEN" else 0.40 
         total_score += (1 if pct > 0 else -1 if pct < 0 else 0) * cfg["weight"] * mult
     return {"meter": max(0, min(10, round(5 + (total_score * 5)))), "indices": indices}
 
@@ -77,11 +76,10 @@ def update_breadth():
 def update_bias():
     cl = fetch_data("^NSEI")
     if len(cl) < 240: return {"bias": {}, "message": "Insufficient Data"}
-    # Simplified structural EMA logic [cite: 86, 89]
     b15, b1h, b4h = ("BULLISH" if cl[-1] > sum(cl[-n:])/n else "BEARISH" for n in (6, 48, 240))
-    if b4h == b1h == b15: msg = "Bullish continuation" # [cite: 91]
-    elif b4h == b1h: msg = f"Pullback within {b4h.lower()} structure" # [cite: 107, 116]
-    else: msg = "Structural conflict" # [cite: 124]
+    if b4h == b1h == b15: msg = "Bullish continuation"
+    elif b4h == b1h: msg = f"Pullback within {b4h.lower()} structure"
+    else: msg = "Structural conflict"
     return {"bias": {"4H": b4h, "1H": b1h, "15M": b15}, "message": msg}
 
 if __name__ == "__main__":
