@@ -8,7 +8,6 @@ import pytz
 DATA_DIR = "data"
 os.makedirs(DATA_DIR, exist_ok=True)
 
-# Locked Configurations with shorthand naming
 GLOBAL_MARKETS = {
     "DowF":   {"symbol": "YM=F",    "weight": 0.35, "tz": "America/New_York"},
     "DAX":    {"symbol": "^GDAXI",  "weight": 0.25, "tz": "Europe/Berlin"},
