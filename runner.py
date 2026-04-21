@@ -1,156 +1,143 @@
 import yfinance as yf
 import json
-from datetime import datetime
-import pytz
 import os
 import time
 
-IST = pytz.timezone("Asia/Kolkata")
 DATA_DIR = "data"
 os.makedirs(DATA_DIR, exist_ok=True)
 
-NIFTY = "^NSEI"
-
+# --- CONFIGURATION (LOCKED WEIGHTS) ---
 GLOBAL_MARKETS = {
-    "DowF":   {"symbol": "YM=F",   "weight": 0.35},
-    "DAX":    {"symbol": "^GDAXI", "weight": 0.25},
-    "Nikkei": {"symbol": "^N225",  "weight": 0.25},
-    "HSI":    {"symbol": "^HSI",   "weight": 0.15},
+    "DowF":   {"symbol": "YM=F",    "weight": 0.35},
+    "DAX":    {"symbol": "^GDAXI",  "weight": 0.25},
+    "Nikkei": {"symbol": "^N225",   "weight": 0.25},
+    "HSI":    {"symbol": "^HSI",    "weight": 0.15},
 }
 
 SECTORS = {
-    "BANK": 0.35,
-    "FIN": 0.25,
-    "IT": 0.15,
-    "METAL": 0.15,
-    "FMCG": 0.10
+    "BANK": {"symbol": "^NSEBANK",  "weight": 0.35},
+    "FIN":  {"symbol": "^CNXFIN",   "weight": 0.25},
+    "IT":   {"symbol": "^CNXIT",    "weight": 0.15},
+    "METAL":{"symbol": "^CNXMETAL", "weight": 0.15},
+    "FMCG": {"symbol": "^CNXFMCG",  "weight": 0.10}
 }
 
-SECTOR_SYMBOLS = {
-    "BANK": "^NSEBANK",
-    "FIN": "^CNXFIN",
-    "IT": "^CNXIT",
-    "METAL": "^CNXMETAL",
-    "FMCG": "^CNXFMCG"
-}
-
-def now_ts():
+def get_now():
     return int(time.time())
 
-def write(name, obj):
+def load_old_data(name):
+    path = f"{DATA_DIR}/{name}.json"
+    if os.path.exists(path):
+        with open(path, "r") as f:
+            return json.load(f)
+    return None
+
+def write_data(name, obj):
     with open(f"{DATA_DIR}/{name}.json", "w") as f:
         json.dump(obj, f, indent=2)
 
-def closes_5m(symbol, days=3):
-    df = yf.download(symbol, period=f"{days}d", interval="5m", progress=False)
-    if df.empty:
+def fetch_closes(symbol, interval="5m", period="5d"):
+    try:
+        df = yf.download(symbol, period=period, interval=interval, progress=False)
+        if df.empty: return []
+        c = df["Close"]
+        if hasattr(c, "columns"): c = c.iloc[:, 0]
+        return c.dropna().tolist()
+    except:
         return []
-    c = df["Close"]
-    if hasattr(c, "columns"):
-        c = c.iloc[:, 0]
-    return c.dropna().tolist()
 
 def rolling_30m_pct(cl):
-    if len(cl) < 6 or cl[-6] == 0:
-        return None
-    return round((cl[-1] - cl[-6]) / cl[-6] * 100, 2)
+    if len(cl) < 6: return None
+    return round(((cl[-1] - cl[-6]) / cl[-6]) * 100, 2)
 
-# ---------------- NIFTY ----------------
-def fetch_nifty():
-    cl = closes_5m(NIFTY, 3)
-    ts = now_ts()
-
-    if len(cl) < 2:
-        return {"price": 0, "change": 0, "percent": 0, "market": "CLOSED", "updated_ts": ts}
-
+# --- 1. NIFTY LIVE ---
+def update_nifty():
+    old = load_old_data("nifty")
+    cl = fetch_closes("^NSEI")
+    
+    if not cl and old: return old
+    
+    ts = get_now()
     last, prev = cl[-1], cl[-2]
+    # Simple market open check (Friday 3:30 PM IST is roughly 10:00 UTC)
+    market_state = "LIVE" if (1 <= time.gmtime().tm_wday <= 5) else "CLOSED"
+
     return {
         "price": round(last, 2),
         "change": round(last - prev, 2),
-        "percent": round((last - prev) / prev * 100, 2),
-        "market": "LIVE",
+        "percent": round(((last - prev) / prev) * 100, 2),
+        "market": market_state,
         "updated_ts": ts
     }
 
-# ---------------- GLOBAL ----------------
-def fetch_global():
-    total = 0
-    indices = {}
-    ts = now_ts()
-
+# --- 2. GLOBAL METER (ACTIVITY ADJUSTED) ---
+def update_global():
+    old = load_old_data("global_meter")
+    indices = old["indices"] if old else {}
+    total_weighted_score = 0
+    
     for k, cfg in GLOBAL_MARKETS.items():
-        cl = closes_5m(cfg["symbol"])
+        cl = fetch_closes(cfg["symbol"])
         pct = rolling_30m_pct(cl)
-        if pct is None:
-            continue
+        
+        # Use persistence if fetch fails
+        current_pct = pct if pct is not None else indices.get(k, {}).get("change_30m", 0)
+        indices[k] = {"change_30m": current_pct}
+        
+        # Activity Adjustment (Simulated: Defaulting to OPEN for this logic) [cite: 203]
+        multiplier = 1.0 
+        score = (1 if current_pct > 0 else -1 if current_pct < 0 else 0)
+        total_weighted_score += (score * cfg["weight"] * multiplier)
 
-        score = 1 if pct > 0 else -1 if pct < 0 else 0
-        total += score * cfg["weight"]
-        indices[k] = {"change_30m": pct}
+    meter = max(0, min(10, round(5 + (total_weighted_score * 5))))
+    return {"meter": meter, "indices": indices, "updated_ts": get_now()}
 
-    meter = max(0, min(10, round(5 + total * 5)))
-    return {"meter": meter, "indices": indices, "updated_ts": ts}
+# --- 3. BREADTH (SECTOR WEIGHTED) ---
+def update_breadth():
+    old = load_old_data("nifty_breadth")
+    sectors_data = old["sectors"] if old else {}
+    total_weighted_score = 0
 
-# ---------------- BREADTH ----------------
-def fetch_breadth():
-    total = 0
-    sectors = {}
-    ts = now_ts()
-
-    for sector, weight in SECTORS.items():
-        cl = closes_5m(SECTOR_SYMBOLS[sector])
+    for name, cfg in SECTORS.items():
+        cl = fetch_closes(cfg["symbol"])
         pct = rolling_30m_pct(cl)
-        if pct is None:
-            continue
+        
+        current_pct = pct if pct is not None else sectors_data.get(name, 0)
+        sectors_data[name] = current_pct
+        
+        score = (1 if current_pct > 0 else -1 if current_pct < 0 else 0)
+        total_weighted_score += (score * cfg["weight"])
 
-        sectors[sector] = pct
-        total += (1 if pct > 0 else -1 if pct < 0 else 0) * weight
+    meter = max(0, min(10, round(5 + (total_weighted_score * 5))))
+    return {"meter": meter, "sectors": sectors_data, "updated_ts": get_now()}
 
-    meter = max(0, min(10, round(5 + total * 5)))
-    return {"meter": meter, "sectors": sectors, "updated_ts": ts}
+# --- 4. BIAS (MESSAGING LAYER) ---
+def update_bias():
+    cl = fetch_closes("^NSEI", interval="5m", period="30d")
+    if len(cl) < 240: # Need enough for 4H
+        old = load_old_data("nifty_bias")
+        return old if old else {"bias": {}, "message": "Initializing...", "updated_ts": get_now()}
 
-# ---------------- BIAS ----------------
-def ema(cl, n):
-    k = 2 / (n + 1)
-    e = cl[0]
-    for p in cl[1:]:
-        e = p * k + e * (1 - k)
-    return e
+    # Bias Logic [cite: 86, 87, 88, 89]
+    b15m = "BULLISH" if cl[-1] > sum(cl[-6:])/6 else "BEARISH"
+    b1h = "BULLISH" if cl[-1] > sum(cl[-48:])/48 else "BEARISH"
+    b4h = "BULLISH" if cl[-1] > sum(cl[-240:])/240 else "BEARISH"
 
-def bias_state(cl, size, ema_n):
-    if len(cl) < size:
-        return None
-    return "BULLISH" if cl[-1] > ema(cl[-size:], ema_n) else "BEARISH"
-
-def fetch_bias():
-    cl = closes_5m(NIFTY, 15)
-    ts = now_ts()
-
-    if len(cl) < 240:
-        return {"bias": {}, "message": "Unavailable", "updated_ts": ts}
-
-    b15 = bias_state(cl, 6, 5)
-    b1h = bias_state(cl, 48, 20)
-    b4h = bias_state(cl, 240, 50)
-
-    if b4h == b1h == b15:
-        msg = f"{b4h.capitalize()} continuation"
+    if b4h == b1h == b15m:
+        msg = f"{b4h.capitalize()} continuation" [cite: 91, 99]
     elif b4h == b1h:
-        msg = f"Pullback within {b4h.lower()} structure"
-    elif b4h != b1h:
-        msg = "Structural conflict"
+        msg = f"Pullback within {b4h.lower()} structure" [cite: 107, 116]
     else:
-        msg = "Intraday bias forming"
+        msg = "Structural conflict" [cite: 124]
 
     return {
-        "bias": {"4H": b4h, "1H": b1h, "15M": b15},
+        "bias": {"4H": b4h, "1H": b1h, "15M": b15m},
         "message": msg,
-        "updated_ts": ts
+        "updated_ts": get_now()
     }
 
-# ---------------- MAIN ----------------
 if __name__ == "__main__":
-    write("nifty", fetch_nifty())
-    write("global_meter", fetch_global())
-    write("nifty_breadth", fetch_breadth())
-    write("nifty_bias", fetch_bias())
+    write_data("nifty", update_nifty())
+    write_data("global_meter", update_global())
+    write_data("nifty_breadth", update_breadth())
+    write_data("nifty_bias", update_bias())
