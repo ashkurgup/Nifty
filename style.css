@@ -6,11 +6,10 @@ body {
     overflow-x: hidden;
 }
 
-/* Forces all elements into ONE horizontal line */
 .dashboard-line {
     display: flex;
     gap: 8px;
-    align-items: stretch; /* Ensures all boxes have equal height */
+    align-items: stretch;
     width: 100%;
 }
 
@@ -18,18 +17,17 @@ body {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    flex-grow: 2; /* Middle section stays wider */
+    flex-grow: 1; /* Consumes middle space */
 }
 
 .box {
     background: #fff;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
-    padding: 10px 12px;
+    padding: 10px 0 10px 12px; /* Zero right padding */
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-/* Sidebar Boxes (Nifty, Strategy, Wealth) scaled to match */
 .box-nifty, .box-side {
     width: 180px;
     flex-shrink: 0;
@@ -44,8 +42,8 @@ body {
 .small, .side-sub { font-size: 10px; color: #6b7280; font-style: italic; }
 
 .sphere { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-.sphere.green { background: #16a34a; }
-.sphere.grey { background: #9ca3af; }
+.sphere.green { background: #16a34a; } /* [cite: 264] */
+.sphere.grey { background: #9ca3af; } /* [cite: 265] */
 
 .divider { height: 1px; background: #f3f4f6; margin: 8px 0; }
 
@@ -54,7 +52,7 @@ body {
 .sq.red { background: #dc2626; }
 .sq.grey { background: #d1d5db; }
 
-.meter-line { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; }
+.meter-line { display: flex; align-items: center; gap: 10px; font-size: 12.5px; font-weight: 700; }
 .meter { width: 60px; height: 7px; background: #f3f4f6; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
 .meter-fill { height: 100%; width: 0%; transition: width 0.4s ease; }
 .meter-fill.green { background: #16a34a; }
