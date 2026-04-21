@@ -14,6 +14,7 @@ function renderNifty(d) {
 function renderGlobal(d) {
     if (!d) return;
     const fill = document.getElementById("globalMeterFill");
+    // Corrected to match Breadth Meter color logic
     fill.className = `meter-fill ${meterCtx(d.meter)}`;
     fill.style.width = (d.meter * 10) + "%";
     document.getElementById("globalMeterValue").innerText = Math.round(d.meter);
@@ -46,6 +47,20 @@ function renderBias(d) {
     document.getElementById("biasMessage").innerText = d.message;
 }
 
+function renderStrategy(d) {
+    if (!d) return;
+    const stratBox = document.querySelector(".box-side:nth-child(3)"); 
+    stratBox.innerHTML = `
+        <div class="side-title">STRATEGY</div>
+        <div class="side-val">Active</div>
+        <div class="sr-levels">S: <span class="pos">${d.sup}</span> | R: <span class="neg">${d.res}</span></div>
+        <div class="small">SMC Protocol</div>
+    `;
+}
+
 const load = (p, fn) => fetch(`data/${p}.json?t=${Date.now()}`).then(r => r.json()).then(fn).catch(() => {});
-load("nifty", renderNifty); load("global_meter", renderGlobal);
-load("nifty_breadth", renderBreadth); load("nifty_bias", renderBias);
+load("nifty", renderNifty); 
+load("global_meter", renderGlobal);
+load("nifty_breadth", renderBreadth); 
+load("nifty_bias", renderBias);
+load("strategy", renderStrategy);
