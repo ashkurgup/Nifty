@@ -1,54 +1,23 @@
-body {
-    font-family: 'Lato', sans-serif;
-    background: #f9fafb;
-    padding: 8px;
-    margin: 0;
-    overflow-x: hidden;
-}
+body { font-family: 'Lato', sans-serif; background: #f9fafb; padding: 8px; margin: 0; overflow-x: hidden; }
 
-/* One-line horizontal parallel layout */
-.dashboard-line {
-    display: flex;
-    gap: 8px;
-    align-items: stretch;
-    width: 100%;
-}
+.dashboard-line { display: flex; gap: 8px; align-items: stretch; width: 100%; }
 
-.center-rows {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    flex-grow: 1;
-}
+.center-rows { display: flex; flex-direction: column; gap: 6px; flex-grow: 1; }
 
-.box {
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 10px 14px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
+.box { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 10px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
 
-.box-nifty, .box-side {
-    width: 190px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-/* Centered status squares [cite: 213] */
+/* Centered Status Square */
 .sq { 
     width: 10px; height: 10px; display: inline-flex; align-self: center; 
-    margin: 0 4px; vertical-align: middle; 
+    margin: 0 6px; vertical-align: middle; 
 }
 .sq.green { background: #16a34a; }
 .sq.grey { background: #d1d5db; }
 .sq.red { background: #dc2626; }
 
-/* Increased Spacing for cleaner look [cite: 241] */
+/* Readability Gap for parallel rows */
 .item-wrap { display: inline-flex; align-items: center; white-space: nowrap; }
-.gap { margin: 0 9px; color: #e5e7eb; font-weight: 400; }
+.gap { margin: 0 16px; color: #e5e7eb; font-weight: 400; }
 
 .meter-line { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; }
 .meter { width: 70px; height: 8px; background: #f3f4f6; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
@@ -56,7 +25,8 @@ body {
 .meter-fill.green { background: #16a34a; }
 .meter-fill.red { background: #dc2626; }
 
-.nifty-title, .side-title { font-size: 18px; font-weight: 800; }
 .nifty-price, .side-val { font-size: 24px; font-weight: 700; margin-top: 4px; }
 .small { font-size: 10px; color: #9ca3af; font-style: italic; }
 .bias-phase { font-style: italic; color: #6b7280; font-weight: 400; font-size: 12.5px; }
+
+.box-nifty, .box-side { width: 190px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: center; }
