@@ -1,18 +1,18 @@
 {
-  "meter": 4,
+  "meter": 9,
   "indices": {
     "DowF": {
-      "change_30m": 0.06
+      "change_30m": 0.01
     },
     "DAX": {
-      "change_30m": -0.08
+      "change_30m": 0.1
     },
     "Nikkei": {
-      "change_30m": -0.31
+      "change_30m": 0.0
     },
     "HSI": {
-      "change_30m": -0.12
+      "change_30m": 0.12
     }
   },
-  "updated_ts": 1776689798
+  "updated_ts": 1776762770
 }

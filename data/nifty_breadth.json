@@ -1,11 +1,11 @@
 {
-  "meter": 0,
+  "meter": 1,
   "sectors": {
-    "BANK": -0.13,
-    "FIN": -0.17,
-    "IT": -0.9,
-    "METAL": -0.45,
-    "FMCG": -0.26
+    "BANK": -0.05,
+    "FIN": -0.03,
+    "IT": -0.14,
+    "METAL": -0.05,
+    "FMCG": 0.18
   },
-  "updated_ts": 1776689799
+  "updated_ts": 1776762770
 }
