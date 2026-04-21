@@ -6,6 +6,7 @@ body {
     overflow-x: hidden;
 }
 
+/* One-line horizontal parallel layout */
 .dashboard-line {
     display: flex;
     gap: 8px;
@@ -17,45 +18,45 @@ body {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    flex-grow: 1; /* Consumes middle space */
+    flex-grow: 1;
 }
 
 .box {
     background: #fff;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
-    padding: 10px 0 10px 12px; /* Zero right padding */
+    padding: 10px 14px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .box-nifty, .box-side {
-    width: 180px;
+    width: 190px;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.nifty-title, .side-title { font-size: 18px; font-weight: 800; }
-.nifty-price, .side-val { font-size: 22px; font-weight: 700; margin-top: 4px; }
-.nifty-change { font-size: 12px; font-weight: 700; }
-.small, .side-sub { font-size: 10px; color: #6b7280; font-style: italic; }
-
-.sphere { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-.sphere.green { background: #16a34a; } /* [cite: 264] */
-.sphere.grey { background: #9ca3af; } /* [cite: 265] */
-
-.divider { height: 1px; background: #f3f4f6; margin: 8px 0; }
-
-.sq { width: 10px; height: 10px; display: inline-block; vertical-align: middle; }
+/* Centered status squares [cite: 213] */
+.sq { 
+    width: 10px; height: 10px; display: inline-flex; align-self: center; 
+    margin: 0 4px; vertical-align: middle; 
+}
 .sq.green { background: #16a34a; }
-.sq.red { background: #dc2626; }
 .sq.grey { background: #d1d5db; }
+.sq.red { background: #dc2626; }
 
-.meter-line { display: flex; align-items: center; gap: 10px; font-size: 12.5px; font-weight: 700; }
-.meter { width: 60px; height: 7px; background: #f3f4f6; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
-.meter-fill { height: 100%; width: 0%; transition: width 0.4s ease; }
+/* Increased Spacing for cleaner look [cite: 241] */
+.item-wrap { display: inline-flex; align-items: center; white-space: nowrap; }
+.gap { margin: 0 16px; color: #e5e7eb; font-weight: 400; }
+
+.meter-line { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; }
+.meter { width: 70px; height: 8px; background: #f3f4f6; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
+.meter-fill { height: 100%; transition: width 0.4s ease; }
 .meter-fill.green { background: #16a34a; }
 .meter-fill.red { background: #dc2626; }
 
-.bias-phase { font-style: italic; color: #6b7280; font-weight: 400; font-size: 12px; }
+.nifty-title, .side-title { font-size: 18px; font-weight: 800; }
+.nifty-price, .side-val { font-size: 24px; font-weight: 700; margin-top: 4px; }
+.small { font-size: 10px; color: #9ca3af; font-style: italic; }
+.bias-phase { font-style: italic; color: #6b7280; font-weight: 400; font-size: 12.5px; }
