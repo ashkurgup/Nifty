@@ -6,7 +6,7 @@ body { font-family: 'Lato', sans-serif; background: #f9fafb; padding: 8px; margi
 
 .box { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 10px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
 
-/* Centered Status Square */
+/* Vertically Centered Square */
 .sq { 
     width: 10px; height: 10px; display: inline-flex; align-self: center; 
     margin: 0 6px; vertical-align: middle; 
@@ -15,7 +15,7 @@ body { font-family: 'Lato', sans-serif; background: #f9fafb; padding: 8px; margi
 .sq.grey { background: #d1d5db; }
 .sq.red { background: #dc2626; }
 
-/* Readability Gap for parallel rows */
+/* Readability Gap */
 .item-wrap { display: inline-flex; align-items: center; white-space: nowrap; }
 .gap { margin: 0 16px; color: #e5e7eb; font-weight: 400; }
 
@@ -24,9 +24,5 @@ body { font-family: 'Lato', sans-serif; background: #f9fafb; padding: 8px; margi
 .meter-fill { height: 100%; transition: width 0.4s ease; }
 .meter-fill.green { background: #16a34a; }
 .meter-fill.red { background: #dc2626; }
-
-.nifty-price, .side-val { font-size: 24px; font-weight: 700; margin-top: 4px; }
-.small { font-size: 10px; color: #9ca3af; font-style: italic; }
-.bias-phase { font-style: italic; color: #6b7280; font-weight: 400; font-size: 12.5px; }
 
 .box-nifty, .box-side { width: 190px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: center; }
