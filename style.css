@@ -48,7 +48,7 @@ body {
 
 /* Increased Spacing for cleaner look [cite: 241] */
 .item-wrap { display: inline-flex; align-items: center; white-space: nowrap; }
-.gap { margin: 0 16px; color: #e5e7eb; font-weight: 400; }
+.gap { margin: 0 12px; color: #e5e7eb; font-weight: 400; }
 
 .meter-line { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; }
 .meter { width: 70px; height: 8px; background: #f3f4f6; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
