@@ -1,12 +1,12 @@
 {
-  "meter": 3,
+  "meter": 6,
   "indices": {
     "DowF": {
-      "change_30m": -0.07,
-      "status": "CLOSED"
+      "change_30m": 0.02,
+      "status": "OPEN"
     },
     "DAX": {
-      "change_30m": -0.18,
+      "change_30m": -0.08,
       "status": "OPEN"
     },
     "Nikkei": {
