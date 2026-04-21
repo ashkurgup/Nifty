@@ -10,20 +10,20 @@
 </head>
 <body>
 
-<div class="dashboard-grid">
+<div class="dashboard-line">
     <div class="box box-nifty">
         <div class="nifty-header">
             <span id="marketSphere" class="sphere grey"></span> [cite: 261, 265]
-            <span class="nifty-title">NIFTY</span> [cite: 251]
+            <span class="nifty-title">NIFTY</span>
         </div>
         <div id="niftyPrice" class="nifty-price">--</div> [cite: 267, 268]
         <div id="niftyChange" class="nifty-change">--</div> [cite: 269, 271]
         <div class="divider"></div>
-        <div id="niftyUpdated" class="small">Updated -- min ago</div> [cite: 14, 259]
+        <div id="niftyUpdated" class="small"></div> [cite: 14, 259]
     </div>
 
-    <div class="center-column">
-        <div class="box">
+    <div class="center-rows">
+        <div class="box row-box">
             <div class="bias-line">
                 Structural Bias → 
                 4H <span id="bias4H" class="sq"></span> 
@@ -33,7 +33,7 @@
             </div>
         </div>
 
-        <div class="box">
+        <div class="box row-box">
             <div class="meter-line">
                 <div class="meter"><div id="globalMeterFill" class="meter-fill"></div></div> [cite: 181, 187]
                 <span id="globalMeterValue">--</span> | 
@@ -41,7 +41,7 @@
             </div>
         </div>
 
-        <div class="box">
+        <div class="box row-box">
             <div class="meter-line">
                 <div class="meter"><div id="breadthFill" class="meter-fill"></div></div> [cite: 28, 33]
                 <span id="breadthMeterValue">--</span> | 
@@ -50,17 +50,16 @@
         </div>
     </div>
 
-    <div class="extra-column">
-        <div class="box box-fixed">
-            <div class="nifty-title" style="font-size: 14px;">STRATEGY</div>
-            <div class="nifty-price" style="font-size: 18px;">Active</div>
-            <div class="small">SMC Protocol</div>
-        </div>
-        <div class="box box-fixed">
-            <div class="nifty-title" style="font-size: 14px;">WEALTH 2029</div>
-            <div class="nifty-price" style="font-size: 18px;">--%</div>
-            <div class="small">Debt-Free Goal</div>
-        </div>
+    <div class="box box-side">
+        <div class="side-title">STRATEGY</div>
+        <div class="side-val">Active</div>
+        <div class="side-sub">SMC Protocol</div>
+    </div>
+
+    <div class="box box-side">
+        <div class="side-title">WEALTH 2029</div>
+        <div class="side-val">--%</div>
+        <div class="side-sub">Debt-Free Goal</div>
     </div>
 </div>
 
