@@ -3,75 +3,56 @@
 <head>
   <meta charset="UTF-8" />
   <title>Market Dashboard</title>
-
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;800&display=swap" rel="stylesheet">
-
-  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
 <div class="dashboard-row">
-
-  <!-- NIFTY -->
   <div class="box box-nifty">
     <div class="nifty-header">
       <span id="marketSphere" class="sphere grey"></span>
       <span class="nifty-title">NIFTY</span>
     </div>
-
     <div id="niftyPrice" class="nifty-price">--</div>
     <div id="niftyChange" class="nifty-change">--</div>
     <div class="divider"></div>
     <div id="niftyUpdated" class="small"></div>
   </div>
 
-  <!-- RIGHT COLUMN -->
   <div class="right-column">
-
-    <!-- BIAS -->
     <div class="box">
       <div class="bias-line">
-        Structural Bias →
-        4H <span id="bias4H" class="sq"></span>
-        / 1H <span id="bias1H" class="sq"></span>
-        / 15M <span id="bias15M" class="sq"></span>
-        →
-        <span id="biasMessage" class="bias-phase"></span>
+        Structural Bias → 
+        4H <span id="bias4H" class="sq"></span> 
+        / 1H <span id="bias1H" class="sq"></span> 
+        / 15M <span id="bias15M" class="sq"></span> 
+        → <span id="biasMessage" class="bias-phase"></span>
       </div>
     </div>
 
-    <!-- GLOBAL -->
     <div class="box">
-      <a class="meter-line">
+      <div class="meter-line">
         <div class="meter">
           <div id="globalMeterFill" class="meter-fill"></div>
         </div>
-        <span id="globalMeterValue">--</span> |
+        <span id="globalMeterValue">--</span> | 
         <span id="globalMarkets"></span>
       </div>
     </div>
 
-    <!-- BREADTH -->
     <div class="box">
       <div class="meter-line">
         <div class="meter">
           <div id="breadthFill" class="meter-fill"></div>
         </div>
-        <span id="breadthMeterValue">--</span> |
+        <span id="breadthMeterValue">--</span> | 
         <span id="breadthSectors"></span>
       </div>
     </div>
-
   </div>
 </div>
-
-<!-- ✅ THIS MUST BE EXACT -->
 <script src="app.js"></script>
-
 </body>
 </html>
