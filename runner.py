@@ -8,7 +8,7 @@ import pytz
 DATA_DIR = "data"
 os.makedirs(DATA_DIR, exist_ok=True)
 
-# Configuration with locked weights
+# Locked Weights and Timezones [cite: 41, 195]
 GLOBAL_MARKETS = {
     "DowF":   {"symbol": "YM=F",    "weight": 0.35, "tz": "America/New_York"},
     "DAX":    {"symbol": "^GDAXI",  "weight": 0.25, "tz": "Europe/Berlin"},
@@ -17,31 +17,23 @@ GLOBAL_MARKETS = {
 }
 
 SECTORS = {
-    "BANK": {"symbol": "^NSEBANK",  "weight": 0.35},
-    "FIN":  {"symbol": "^CNXFIN",   "weight": 0.25},
-    "IT":   {"symbol": "^CNXIT",    "weight": 0.15},
-    "METAL":{"symbol": "^CNXMETAL", "weight": 0.15},
-    "FMCG": {"symbol": "^CNXFMCG",  "weight": 0.10}
+    "BANK": "^NSEBANK", "FIN": "^CNXFIN", "IT": "^CNXIT", "METAL": "^CNXMETAL", "FMCG": "^CNXFMCG"
 }
 
-def get_market_status(tz_name):
-    """Determines if a market is OPEN based on timezone."""
+def is_market_open(tz_name):
     now = datetime.now(pytz.timezone(tz_name))
-    if now.weekday() >= 5: return "CLOSED"
-    # Simplified logic: Standard market hours 9:30-16:00
-    if 9 <= now.hour < 17: return "OPEN"
-    return "CLOSED"
+    # Open Mon-Fri, approx 9:00 to 17:00 local time
+    return "OPEN" if (now.weekday() < 5 and 9 <= now.hour < 17) else "CLOSED"
 
-def load_old_data(name):
-    path = f"{DATA_DIR}/{name}.json"
-    if os.path.exists(path):
-        with open(path, "r") as f: return json.load(f)
-    return None
+def load_json(name):
+    try:
+        with open(f"{DATA_DIR}/{name}.json", "r") as f: return json.load(f)
+    except: return None
 
-def write_data(name, obj):
+def write_json(name, obj):
     with open(f"{DATA_DIR}/{name}.json", "w") as f: json.dump(obj, f, indent=2)
 
-def fetch_closes(symbol):
+def fetch_data(symbol):
     try:
         df = yf.download(symbol, period="5d", interval="5m", progress=False)
         if df.empty: return []
@@ -49,15 +41,10 @@ def fetch_closes(symbol):
         return c.iloc[:, 0].dropna().tolist() if hasattr(c, "columns") else c.dropna().tolist()
     except: return []
 
-def rolling_30m_pct(cl):
-    if len(cl) < 6: return None
-    return round(((cl[-1] - cl[-6]) / cl[-6]) * 100, 2)
-
-# --- Components ---
-def update_nifty():
-    old = load_old_data("nifty")
-    cl = fetch_closes("^NSEI")
-    if not cl and old: return old
+# --- 1. NIFTY LIVE [cite: 251] ---
+def get_nifty():
+    cl = fetch_data("^NSEI")
+    if not cl: return load_json("nifty")
     last, prev = cl[-1], cl[-2]
     return {
         "price": round(last, 2),
@@ -67,45 +54,43 @@ def update_nifty():
         "updated_ts": int(time.time())
     }
 
-def update_global():
-    old = load_old_data("global_meter")
+# --- 2. GLOBAL [cite: 165, 203] ---
+def get_global():
+    old = load_json("global_meter")
     indices = old["indices"] if old else {}
-    total_weighted_score = 0
-    
-    for k, cfg in GLOBAL_MARKETS.items():
-        cl = fetch_closes(cfg["symbol"])
-        pct = rolling_30m_pct(cl)
-        status = get_market_status(cfg["tz"])
-        
-        current_pct = pct if pct is not None else indices.get(k, {}).get("change_30m", 0)
-        indices[k] = {"change_30m": current_pct, "status": status}
-        
-        # Apply Activity Multipliers [cite: 203]
-        mult = 1.0 if status == "OPEN" else 0.40
-        score = (1 if current_pct > 0 else -1 if current_pct < 0 else 0)
-        total_weighted_score += (score * cfg["weight"] * mult)
-
-    return {"meter": max(0, min(10, round(5 + (total_weighted_score * 5)))), "indices": indices}
-
-def update_breadth():
-    old = load_old_data("nifty_breadth")
-    sectors_data = old["sectors"] if old else {}
     total_score = 0
-    for name, cfg in SECTORS.items():
-        cl = fetch_closes(cfg["symbol"])
-        pct = rolling_30m_pct(cl)
-        current_pct = pct if pct is not None else sectors_data.get(name, 0)
-        sectors_data[name] = current_pct
-        total_score += (1 if current_pct > 0 else -1 if current_pct < 0 else 0) * cfg["weight"]
-    return {"meter": max(0, min(10, round(5 + (total_score * 5)))), "sectors": sectors_data}
+    for k, cfg in GLOBAL_MARKETS.items():
+        cl = fetch_data(cfg["symbol"])
+        pct = (round(((cl[-1]-cl[-6])/cl[-6])*100, 2)) if len(cl)>=6 else indices.get(k,{}).get("change_30m", 0)
+        status = is_market_open(cfg["tz"])
+        indices[k] = {"change_30m": pct, "status": status}
+        mult = 1.0 if status == "OPEN" else 0.40 # Activity Multiplier [cite: 203]
+        total_score += (1 if pct > 0 else -1 if pct < 0 else 0) * cfg["weight"] * mult
+    return {"meter": max(0, min(10, round(5 + (total_score * 5)))), "indices": indices}
 
-def update_bias():
-    cl = fetch_closes("^NSEI")
-    if len(cl) < 240: return load_old_data("nifty_bias")
+# --- 3. BREADTH [cite: 3, 41] ---
+def get_breadth():
+    weights = {"BANK": 0.35, "FIN": 0.25, "IT": 0.15, "METAL": 0.15, "FMCG": 0.10}
+    old = load_json("nifty_breadth")
+    sects = old["sectors"] if old else {}
+    total = 0
+    for s, w in weights.items():
+        cl = fetch_data(SECTORS[s])
+        pct = (round(((cl[-1]-cl[-6])/cl[-6])*100, 2)) if len(cl)>=6 else sects.get(s, 0)
+        sects[s] = pct
+        total += (1 if pct > 0 else -1 if pct < 0 else 0) * w
+    return {"meter": max(0, min(10, round(5 + (total * 5)))), "sectors": sects}
+
+# --- 4. BIAS [cite: 80, 90] ---
+def get_bias():
+    cl = fetch_data("^NSEI")
+    if len(cl) < 240: return load_json("nifty_bias")
     b15, b1h, b4h = ("BULLISH" if cl[-1] > sum(cl[-n:])/n else "BEARISH" for n in (6, 48, 240))
-    msg = f"{b4h.capitalize()} continuation" if b4h == b1h == b15 else f"Pullback within {b4h.lower()} structure" if b4h == b1h else "Structural conflict"
+    if b4h == b1h == b15: msg = f"{b4h.capitalize()} continuation"
+    elif b4h == b1h: msg = f"Pullback within {b4h.lower()} structure"
+    else: msg = "Structural conflict"
     return {"bias": {"4H": b4h, "1H": b1h, "15M": b15}, "message": msg}
 
 if __name__ == "__main__":
-    write_data("nifty", update_nifty()); write_data("global_meter", update_global())
-    write_data("nifty_breadth", update_breadth()); write_data("nifty_bias", update_bias())
+    write_json("nifty", get_nifty()); write_json("global_meter", get_global())
+    write_json("nifty_breadth", get_breadth()); write_json("nifty_bias", get_bias())
