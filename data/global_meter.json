@@ -1,1 +1,1 @@
-{"meter": 5.0, "indices": {"DOW": {"change_30m": 0.0, "status": "CLOSED"}, "DAX": {"change_30m": 0.0, "status": "CLOSED"}, "NIKKEI": {"change_30m": 0.0, "status": "CLOSED"}, "HSI": {"change_30m": 0.0, "status": "CLOSED"}}}
+{"meter": 5.0, "indices": {"DOW": {"change_30m": 0.0, "status": "OPEN"}, "DAX": {"change_30m": 0.0, "status": "RECENTLY_CLOSED"}, "NIKKEI": {"change_30m": 0.0, "status": "CLOSED"}, "HSI": {"change_30m": 0.0, "status": "CLOSED"}}}
