@@ -1,102 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Market Dashboard</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
-</head>
-<body>
+import pandas as pd
+import json
+import time
+import os
 
-<div class="dashboard-line" style="display: flex; gap: 10px; align-items: stretch; width: 100%;">
+# --- LOCKED SPECIFICATIONS ---
+SECTOR_WEIGHTS = {'BANK': 0.35, 'FIN': 0.25, 'IT': 0.15, 'METAL': 0.15, 'FMCG': 0.10} [cite: 41]
+GLOBAL_WEIGHTS = {'DOW': 0.35, 'DAX': 0.25, 'NIKKEI': 0.25, 'HSI': 0.15} [cite: 195]
+ACTIVITY_MULTIPLIERS = {'OPEN': 1.0, 'RECENTLY_CLOSED': 0.75, 'CLOSED': 0.40} [cite: 203]
 
-    <div class="box box-nifty" style="flex: 0 0 210px; padding: 15px; min-height: 160px;">
-        <div style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-size: 16px; font-weight: 900; color: #111827;">NIFTY</span>
-                <span id="marketStatus" style="font-size: 10px; font-weight: 800; letter-spacing: 0.5px; margin-left: 10px;">● --</span>
-            </div>
-            <div style="margin: 10px 0;">
-                <div id="niftyPrice" style="font-size: 28px; font-weight: 900; color: #111827; line-height: 1;">--</div>
-                <div id="niftyChange" style="font-size: 13px; font-weight: 700; margin-top: 4px;">--</div>
-            </div>
-            <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 5px 0;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <div style="font-size: 8px; color: #9ca3af; font-weight: 800; text-transform: uppercase;">Low</div>
-                    <div id="niftyLow" style="font-size: 11px; font-weight: 700; color: #374151;">--</div>
-                </div>
-                <div style="text-align: right;">
-                    <div style="font-size: 8px; color: #9ca3af; font-weight: 800; text-transform: uppercase;">High</div>
-                    <div id="niftyHigh" style="font-size: 11px; font-weight: 700; color: #374151;">--</div>
-                </div>
-            </div>
-            <div id="niftyUpdated" style="font-size: 10px; margin-top: 8px; font-style: italic; color: #9ca3af;">--</div>
-        </div>
-    </div>
+def get_bias_message(b4h, b1h, b15m):
+    """Maps structure states to Human Interactive Messages [cite: 80, 90]"""
+    if b4h != b1h: 
+        return "Higher timeframes disagree — the market is transitioning." [cite: 125, 127]
+    if b4h == "BULLISH":
+        return "The trend is intact and aligned across all timeframes." if b15m == "BULLISH" else "The broader trend is up, but price is digesting gains." [cite: 92, 108]
+    if b4h == "BEARISH":
+        return "Downtrend is structured and orderly." if b15m == "BEARISH" else "A bounce is occurring inside a broader downtrend." [cite: 100, 117]
+    return "There isn’t enough information to form a structural view." [cite: 144]
 
-    <div class="center-rows" style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
-        <div class="box" style="padding: 12px; display: flex; align-items: center;">
-            <div class="bias-line" style="font-size: 14px;">
-                Structural Bias → 4H <span id="bias4H" class="sq"></span> / 1H <span id="bias1H" class="sq"></span> / 15M <span id="bias15M" class="sq"></span> → <span id="biasMessage" style="font-weight:700;">--</span>
-            </div>
-        </div>
+def update_dashboard():
+    # 1. NIFTY LIVE (5m Basis) [cite: 251, 257]
+    # In production, replace with real API call for 5m candles
+    nifty_data = {
+        "price": 22450.20, "change": 45.10, "percent": 0.20,
+        "market": "OPEN", "updated_ts": int(time.time())
+    }
 
-        <div class="box" style="padding: 10px;">
-            <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
-                <div class="meter"><div id="globalMeterFill" class="meter-fill"></div></div> 
-                <span id="globalMeterValue" style="font-weight: 800; min-width: 25px;">--</span>
-                <span style="color: #e5e7eb;">|</span>
-                <div id="globalMarkets" style="display: flex; align-items: center; flex-grow: 1; overflow: hidden;"></div>
-            </div>
-        </div>
+    # 2. BREADTH (30m Rolling, Weighted) [cite: 30, 31, 39]
+    sector_data = {}
+    weighted_participation = 0
+    for s, w in SECTOR_WEIGHTS.items():
+        # Calculation: (Current Close - Open from 6 candles ago) / Open [cite: 18]
+        pct = 0.50 # Placeholder for (Close_now - Open_30min_ago)
+        sector_data[s] = round(pct, 2)
+        # Weighted Participation Score [cite: 30, 42]
+        if pct > 0: weighted_participation += w
+        elif pct < 0: weighted_participation -= w
+    
+    # Scale -1.0 to +1.0 weighted sum into 0 to 10 Meter [cite: 34]
+    breadth_meter = 5 + (weighted_participation * 5)
 
-        <div class="box" style="padding: 10px;">
-            <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
-                <div class="meter"><div id="breadthFill" class="meter-fill"></div></div> 
-                <span id="breadthMeterValue" style="font-weight: 800; min-width: 25px;">--</span>
-                <span style="color: #e5e7eb;">|</span>
-                <div id="breadthSectors" style="display: flex; align-items: center; flex-grow: 1; overflow: hidden;"></div>
-            </div>
-        </div>
-    </div>
+    # 3. GLOBAL (Activity Adjusted) [cite: 181, 200]
+    global_indices = {}
+    global_weighted_score = 0
+    for m, w in GLOBAL_WEIGHTS.items():
+        pct = -0.15 # Placeholder for 30m rolling calculation [cite: 170]
+        state = "OPEN" # Mock state
+        # Adjust meter contribution by activity [cite: 202]
+        global_weighted_score += (1 if pct > 0 else -1 if pct < 0 else 0) * w * ACTIVITY_MULTIPLIERS[state]
+        global_indices[m] = {"change_30m": pct, "status": state}
+    
+    global_meter = 5 + (global_weighted_score * 5)
 
-    <div style="flex: 0 0 410px; display: flex; flex-direction: column; gap: 8px;">
-        <div style="display: flex; gap: 8px; flex-grow: 1;">
-            <div class="box box-side" style="flex: 1;">
-                <div class="side-title">STRATEGY</div>
-                <div class="side-val" style="font-size: 18px; font-weight: 900; margin: 4px 0;">Active</div>
-                <div id="stratLevels" style="font-size: 11px; font-weight: 700; color: #6b7280;">SMC Protocol</div>
-            </div>
-            <div class="box box-side" style="flex: 1;">
-                <div class="side-title">WEALTH 2029</div>
-                <div id="wealthVal" style="font-size: 18px; font-weight: 900; margin: 4px 0;">--%</div>
-                <div class="small" style="color: #6b7280;">Debt-Free Goal</div>
-            </div>
-        </div>
-        <div class="box" style="flex: 0 0 42px; display: flex; align-items: center; justify-content: center; background: #f9fafb; padding: 0;">
-            <span style="font-size: 9px; font-weight: 800; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px;">Trading Session Active</span>
-        </div>
-    </div>
+    # 4. BIAS (Structural Frame) [cite: 85, 86]
+    # 4H (~15 days), 1H (~3 days), 15M (Intraday) [cite: 87, 88, 89]
+    bias_data = {
+        "bias": {"4H": "BULLISH", "1H": "BULLISH", "15M": "BEARISH"},
+        "message": get_bias_message("BULLISH", "BULLISH", "BEARISH")
+    }
 
-</div>
+    # Save to JSON
+    for name, payload in [("nifty", nifty_data), ("nifty_breadth", {"meter": breadth_meter, "sectors": sector_data}), 
+                         ("global_meter", {"meter": global_meter, "indices": global_indices}), ("nifty_bias", bias_data)]:
+        with open(f'data/{name}.json', 'w') as f:
+            json.dump(payload, f)
 
-<hr class="faint-divider">
-
-<div class="secondary-row" style="display: flex; gap: 10px;">
-    <div class="box" style="flex: 1; text-align: center; padding: 15px;">Metric 1</div>
-    <div class="box" style="flex: 1; text-align: center; padding: 15px;">Metric 2</div>
-    <div class="box" style="flex: 1; text-align: center; padding: 15px;">Metric 3</div>
-    <div class="box" style="flex: 1; text-align: center; padding: 15px;">Metric 4</div>
-    <div class="box" style="flex: 1; text-align: center; padding: 15px;">Metric 5</div>
-</div>
-
-<hr class="faint-divider">
-
-<div class="third-row">
-    <div class="box" style="padding: 15px; font-weight: 800;">Market Overview & Deep Analytics</div>
-</div>
-
-<script src="app.js"></script>
-</body>
-</html>
+if __name__ == "__main__":
+    if not os.path.exists('data'): os.makedirs('data')
+    update_dashboard()
