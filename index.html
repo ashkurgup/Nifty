@@ -1,124 +1,97 @@
-/* --- 1. GLOBAL SETTINGS & RESET --- 
-   The 'border-box' formula ensures padding doesn't make boxes wider than 100%.
-*/
-* { box-sizing: border-box; }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Market Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
 
-body { 
-    font-family: 'Lato', sans-serif; 
-    background: #f9fafb; 
-    padding: 12px; 
-    margin: 0; 
-    color: #374151;
-    overflow-x: hidden;
-}
+<div class="dashboard-line">
+    <div class="box box-nifty">
+        <div class="nifty-header">
+            <span id="marketSphere" class="sphere green"></span> 
+            <span class="nifty-title">NIFTY</span>
+        </div>
+        <div id="niftyPrice" class="nifty-price">24581.05</div>
+        <div id="niftyChange" class="pos">+3 (0.01%)</div>
+        <div class="small">Updated 1022 min ago</div>
+    </div>
 
-/* --- 2. THE MASTER BOX DESIGN --- 
-   This is your reusable visual style for every data container.
-*/
-.box { 
-    background: #fff; 
-    border: 1px solid #e5e7eb; 
-    border-radius: 12px; 
-    padding: 10px 14px; 
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center;
-    flex: 1; /* Default: Share space equally */
-}
+    <div class="center-rows">
+        <div class="box">
+            <div class="bias-line">
+                Structural Bias → 4H <span class="sq green"></span> / 1H <span class="sq green"></span> / 15M <span class="sq grey"></span> → Bullish
+            </div>
+        </div>
+        <div class="box">
+            <div class="meter-line">
+                <div class="meter"><div class="meter-fill" style="width: 70%;"></div></div> 
+                <span>70% | Global Markets</span>
+            </div>
+        </div>
+    </div>
 
-/* --- 3. TOP DASHBOARD STACKING --- */
-.dashboard-line { display: flex; gap: 8px; align-items: stretch; width: 100%; }
+    <div class="box box-side">
+        <div class="side-title">STRATEGY</div>
+        <div class="side-val">Active</div>
+        <div class="small">SMC Protocol</div>
+    </div>
+    <div class="box box-side">
+        <div class="side-title">WEALTH 2029</div>
+        <div class="side-val">--%</div>
+        <div class="small">Debt-Free Goal</div>
+    </div>
+</div>
 
-.center-rows { 
-    display: flex; 
-    flex-direction: column; /* Formula: Stack Bias and Meters vertically */
-    gap: 6px; 
-    flex-grow: 1; 
-}
+<hr class="faint-divider">
 
-.box-nifty, .box-side { width: 195px; flex-shrink: 0; }
+<div class="secondary-row">
+    <div class="box">Metric 1</div>
+    <div class="box">Metric 2</div>
+    <div class="box">Metric 3</div>
+    <div class="box">Metric 4</div>
+    <div class="box">Metric 5</div>
+</div>
 
-/* --- 4. THE MAIN LAYOUT WRAPPER (Bottom Section) --- 
-   'justify-content: space-between' pushes the V-Group to the right corner.
-*/
-.main-layout-wrapper {
-    display: flex;
-    justify-content: space-between; 
-    align-items: stretch;
-    gap: 20px;
-    width: 100%;
-}
+<hr class="faint-divider">
 
-/* --- 5. THE LEFT SIDE GROUPING --- 
-   This stacks the H-Box Row, the Wide Metric, and the Buttons vertically.
-*/
-.left-side-group {
-    display: flex;
-    flex-direction: column; 
-    gap: 12px;
-    flex-grow: 1; 
-}
+<div class="main-layout-wrapper">
+    
+    <div class="left-side-group">
+        
+        <div class="zone-horizontal">
+            <div class="box">H-Box 1</div>
+            <div class="box">H-Box 2</div>
+            <div class="box">H-Box 3</div>
+            <div class="box">H-Box 4</div>
+        </div>
 
-.zone-horizontal { display: flex; gap: 10px; }
-.zone-horizontal .box { min-height: 100px; }
+        <a href="next-page.html" class="box clickable-box">
+            <div style="font-weight: 800;">LEFT SIDE WIDE METRIC</div>
+            <div class="small">Click to view detailed analysis →</div>
+        </a>
 
-/* --- 6. CLICKABLE BOX FORMULA --- 
-   This makes the 'a' tag look like a box and feel like a button.
-*/
-.clickable-box {
-    text-decoration: none; /* Removes underline */
-    color: inherit;        /* Keeps text color black/grey */
-    transition: all 0.2s;  /* Smooths the hover effect */
-    cursor: pointer;
-}
+        <div class="button-row">
+            <a href="buy-logs.html" class="btn btn-buy">Buy Log</a>
+            <a href="sell-logs.html" class="btn btn-sell">Sell Log</a>
+        </div>
 
-.clickable-box:hover {
-    background-color: #f3f4f6;
-    transform: translateY(-2px); /* Formula: Lifts box on hover */
-}
+    </div>
 
-/* --- 7. BUTTON FORMULAS --- */
-.button-row { display: flex; gap: 10px; width: 100%; }
+    <div class="vertical-separator"></div>
 
-.btn {
-    flex: 1;
-    padding: 12px;
-    text-align: center;
-    border-radius: 8px;
-    font-weight: 700;
-    text-decoration: none;
-    color: white;
-    transition: opacity 0.2s;
-}
+    <div class="zone-vertical">
+        <div class="box">V-Box 1</div>
+        <div class="box">V-Box 2</div>
+        <div class="box">V-Box 3</div>
+    </div>
+    
+</div>
 
-.btn-buy  { background-color: #16a34a; }
-.btn-sell { background-color: #dc2626; }
-.btn:hover { opacity: 0.8; }
+<hr class="faint-divider">
 
-/* --- 8. THE RIGHT CORNER GROUP --- */
-.zone-vertical {
-    display: flex;
-    flex-direction: column; /* Formula: Stack V-boxes vertically */
-    gap: 10px;
-    width: 200px; 
-}
-
-/* --- 9. SEPARATORS & UI DETAILS --- */
-.faint-divider {
-    border: 0; height: 1px; margin: 15px 0;
-    background: linear-gradient(to right, transparent, #e5e7eb, transparent);
-}
-
-.vertical-separator {
-    width: 1px;
-    background: linear-gradient(to bottom, transparent, #e5e7eb, transparent);
-}
-
-/* Status Squares & Meters */
-.sq { width: 10px; height: 10px; display: inline-block; margin: 0 4px; border-radius: 2px; }
-.sq.green { background: #16a34a; }
-.sq.red   { background: #dc2626; }
-
-.meter { width: 70px; height: 8px; background: #f3f4f6; border-radius: 10px; overflow: hidden; }
-.meter-fill { height: 100%; background: #16a34a; }
+<script src="app.js"></script>
+</body>
+</html>
