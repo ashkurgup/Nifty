@@ -6,69 +6,26 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            /* CHANGE THESE VALUES TO ADJUST SPACING AROUND THE | BARS */
-            --gap-before: 12px; 
-            --gap-after: 12px;
-        }
-
-        body {
-            background-color: #f8fafc;
-            margin: 0;
-            padding: 20px;
-            font-family: 'Lato', sans-serif;
-            box-sizing: border-box;
-        }
-
-        .page-wrapper {
-            max-width: 100%;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .dashboard-line, .secondary-row {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-            align-items: stretch;
-        }
-
-        .box {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            box-sizing: border-box;
-        }
-
+        :root { --gap-before: 12px; --gap-after: 12px; }
+        body { background-color: #f8fafc; margin: 0; padding: 20px; font-family: 'Lato', sans-serif; box-sizing: border-box; }
+        .page-wrapper { max-width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
+        .dashboard-line, .secondary-row { display: flex; gap: 10px; width: 100%; align-items: stretch; }
+        .box { background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-sizing: border-box; }
         .sq { width: 8px; height: 8px; display: inline-block; border-radius: 50%; margin: 0 4px; }
-        .green { background: #16a34a; }
-        .red { background: #dc2626; }
-        .grey { background: #9ca3af; }
-        
+        .green { background: #16a34a; } .red { background: #dc2626; } .grey { background: #9ca3af; }
         .meter { width: 100%; height: 8px; background: #f1f5f9; border-radius: 10px; overflow: hidden; }
         .meter-fill { height: 100%; transition: width 0.5s ease; }
-
-        /* Forces items to stay side-by-side */
-        .flex-row-center {
-            display: flex;
-            align-items: center;
-            width: 100%;
-        }
+        .flex-row-center { display: flex; align-items: center; width: 100%; }
     </style>
 </head>
 <body>
-
 <div class="page-wrapper">
-
     <div class="dashboard-line">
-
         <div class="box box-nifty" style="flex: 0 0 210px; padding: 15px; min-height: 160px;">
             <div style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span style="font-size: 14px; font-weight: 900; color: #111827;">NIFTY</span>
-                    <span id="marketStatus" style="font-size: 10px; font-weight: 800; color: #16a34a;">● LIVE</span>
+                    <span id="marketStatus" style="font-size: 10px; font-weight: 800;">○ LOADING</span>
                 </div>
                 <div style="margin: 10px 0;">
                     <div id="niftyPrice" style="font-size: 26px; font-weight: 900; color: #111827; line-height: 1;">--</div>
@@ -87,58 +44,49 @@
             <div class="box" style="flex: 1; padding: 12px; display: flex; align-items: center; justify-content: center;">
                 <div style="font-size: 13px; font-weight: 600;">Structural Bias → 4H <span id="bias4H" class="sq"></span> / 1H <span id="bias1H" class="sq"></span> / 15M <span id="bias15M" class="sq"></span> → <span id="biasMessage" style="font-weight:700;">--</span></div>
             </div>
-            
             <div class="box" style="flex: 1; padding: 0 15px; display: flex; align-items: center;">
                 <div class="flex-row-center">
                     <div style="flex: 0 0 60px;"><div class="meter"><div id="globalMeterFill" class="meter-fill"></div></div></div>
-                    <div style="padding: 0 var(--gap-before);">
-                        <span id="globalMeterValue" style="font-weight: 800; font-size: 13px;">--</span>
-                    </div>
+                    <div style="padding: 0 var(--gap-before);"><span id="globalMeterValue" style="font-weight: 800; font-size: 13px;">--</span></div>
                     <div style="color: #e2e8f0; flex-shrink: 0;">|</div>
-                    <div id="globalMarkets" style="flex: 1; display: flex; align-items: center; justify-content: space-around; padding-left: var(--gap-after); overflow: hidden;"></div>
+                    <div id="globalMarkets" style="flex: 1; display: flex; align-items: center; justify-content: space-around; padding-left: var(--gap-after);"></div>
                 </div>
             </div>
-
             <div class="box" style="flex: 1; padding: 0 15px; display: flex; align-items: center;">
                 <div class="flex-row-center">
                     <div style="flex: 0 0 60px;"><div class="meter"><div id="breadthFill" class="meter-fill"></div></div></div>
-                    <div style="padding: 0 var(--gap-before);">
-                        <span id="breadthMeterValue" style="font-weight: 800; font-size: 13px;">--</span>
-                    </div>
+                    <div style="padding: 0 var(--gap-before);"><span id="breadthMeterValue" style="font-weight: 800; font-size: 13px;">--</span></div>
                     <div style="color: #e2e8f0; flex-shrink: 0;">|</div>
-                    <div id="breadthSectors" style="flex: 1; display: flex; align-items: center; justify-content: space-around; padding-left: var(--gap-after); overflow: hidden;"></div>
+                    <div id="breadthSectors" style="flex: 1; display: flex; align-items: center; justify-content: space-around; padding-left: var(--gap-after);"></div>
                 </div>
             </div>
         </div>
 
-        <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+        <div style="flex: 0 0 450px; display: flex; flex-direction: column; gap: 8px;">
             <div class="box" style="flex: 0 0 38px; display: flex; align-items: center; justify-content: center; background: #f8fafc;">
                 <span style="font-size: 9px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">Trading Session Active</span>
             </div>
             <div style="flex: 1; display: flex; gap: 8px;">
-                <div class="box" style="flex: 1; padding: 12px;">
+                <div class="box" style="flex: 3; padding: 12px; display: flex; flex-direction: column; justify-content: center;">
                     <div style="font-size: 10px; color: #94a3b8; font-weight: 800;">STRATEGY</div>
                     <div style="font-size: 18px; font-weight: 900; margin: 4px 0;">Active</div>
                     <div id="stratLevels" style="font-size: 11px; font-weight: 700; color: #64748b;">SMC Protocol</div>
                 </div>
-                <div class="box" style="flex: 1; padding: 12px;">
-                    <div style="font-size: 10px; color: #94a3b8; font-weight: 800;">WEALTH 2029</div>
-                    <div id="wealthVal" style="font-size: 18px; font-weight: 900; margin: 4px 0;">--%</div>
-                    <div style="font-size: 10px; color: #64748b;">Debt-Free Goal</div>
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                    <button class="box" style="flex: 1; cursor: pointer; border: 1px solid #16a34a; background: #f0fdf4; font-family: 'Lato'; font-weight: 900; font-size: 11px; color: #16a34a; letter-spacing: 1px; transition: 0.2s;" onmouseover="this.style.background='#16a34a'; this.style.color='white'" onmouseout="this.style.background='#f0fdf4'; this.style.color='#16a34a'">BUY</button>
+                    <button class="box" style="flex: 1; cursor: pointer; border: 1px solid #dc2626; background: #fef2f2; font-family: 'Lato'; font-weight: 900; font-size: 11px; color: #dc2626; letter-spacing: 1px; transition: 0.2s;" onmouseover="this.style.background='#dc2626'; this.style.color='white'" onmouseout="this.style.background='#fef2f2'; this.style.color='#dc2626'">SELL</button>
                 </div>
             </div>
         </div>
     </div>
-
     <div class="secondary-row">
-        <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Metric 1</div>
-        <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Metric 2</div>
-        <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Metric 3</div>
-        <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Metric 4</div>
-        <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Metric 5</div>
+        <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Wealth Tracking</div>
+        <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Portfolio Alpha</div>
+        <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Risk Manager</div>
+        <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Market Depth</div>
+        <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Trade Journal</div>
     </div>
 </div>
-
 <script src="app.js"></script>
 </body>
 </html>
