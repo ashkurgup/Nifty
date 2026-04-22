@@ -83,6 +83,27 @@ const run = () => {
     fetch('data/global_meter.json').then(r => r.json()).then(renderGlobal).catch(() => {});
     fetch('data/nifty_breadth.json').then(r => r.json()).then(renderBreadth).catch(() => {});
 };
+function renderAnalytics(d) {
+    if (!d) return;
+    document.getElementById("majorCandle").innerText = d.major;
+    document.getElementById("last30Stats").innerText = d.stats;
+    const eventEl = document.getElementById("momentumEvent");
+    eventEl.innerText = d.event;
+    
+    // Dynamic color for momentum
+    if (d.event.includes("Expansion")) {
+        eventEl.style.color = "#16a34a";
+    } else {
+        eventEl.style.color = "#94a3b8";
+    }
+}
 
+// Update the run() function to include analytics
+const run = () => {
+    fetch('data/nifty.json').then(r => r.json()).then(renderNifty).catch(() => {});
+    fetch('data/global_meter.json').then(r => r.json()).then(renderGlobal).catch(() => {});
+    fetch('data/nifty_breadth.json').then(r => r.json()).then(renderBreadth).catch(() => {});
+    fetch('data/analytics.json').then(r => r.json()).then(renderAnalytics).catch(() => {});
+};
 setInterval(run, 60000);
 run();
