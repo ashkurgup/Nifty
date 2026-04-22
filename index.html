@@ -6,7 +6,12 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* CSS RESET & LAYOUT FIXES */
+        :root {
+            /* CHANGE THESE VALUES TO ADJUST SPACING AROUND THE | BARS */
+            --gap-before: 12px; 
+            --gap-after: 12px;
+        }
+
         body {
             background-color: #f8fafc;
             margin: 0;
@@ -35,10 +40,8 @@
             border: 1px solid #e2e8f0;
             border-radius: 12px;
             box-sizing: border-box;
-            transition: all 0.2s ease;
         }
 
-        /* Utility Styles */
         .sq { width: 8px; height: 8px; display: inline-block; border-radius: 50%; margin: 0 4px; }
         .green { background: #16a34a; }
         .red { background: #dc2626; }
@@ -47,9 +50,11 @@
         .meter { width: 100%; height: 8px; background: #f1f5f9; border-radius: 10px; overflow: hidden; }
         .meter-fill { height: 100%; transition: width 0.5s ease; }
 
-        /* Ticker Spacing Fix */
-        .ticker-container span {
-            white-space: nowrap;
+        /* Forces items to stay side-by-side */
+        .flex-row-center {
+            display: flex;
+            align-items: center;
+            width: 100%;
         }
     </style>
 </head>
@@ -83,18 +88,26 @@
                 <div style="font-size: 13px; font-weight: 600;">Structural Bias → 4H <span id="bias4H" class="sq"></span> / 1H <span id="bias1H" class="sq"></span> / 15M <span id="bias15M" class="sq"></span> → <span id="biasMessage" style="font-weight:700;">--</span></div>
             </div>
             
-            <div class="box" style="flex: 1; padding: 0 15px; display: flex; align-items: center; gap: 12px;">
-                <div style="flex: 0 0 60px;"><div class="meter"><div id="globalMeterFill" class="meter-fill"></div></div></div>
-                <div id="globalMeterValue" style="flex: 0 0 20px; font-weight: 800; font-size: 13px; text-align: center;">--</div>
-                <div style="color: #e2e8f0;">|</div>
-                <div id="globalMarkets" class="ticker-container" style="flex: 1; display: flex; align-items: center; justify-content: space-around; overflow: hidden; font-size: 11px;"></div>
+            <div class="box" style="flex: 1; padding: 0 15px; display: flex; align-items: center;">
+                <div class="flex-row-center">
+                    <div style="flex: 0 0 60px;"><div class="meter"><div id="globalMeterFill" class="meter-fill"></div></div></div>
+                    <div style="padding: 0 var(--gap-before);">
+                        <span id="globalMeterValue" style="font-weight: 800; font-size: 13px;">--</span>
+                    </div>
+                    <div style="color: #e2e8f0; flex-shrink: 0;">|</div>
+                    <div id="globalMarkets" style="flex: 1; display: flex; align-items: center; justify-content: space-around; padding-left: var(--gap-after); overflow: hidden;"></div>
+                </div>
             </div>
 
-            <div class="box" style="flex: 1; padding: 0 15px; display: flex; align-items: center; gap: 12px;">
-                <div style="flex: 0 0 60px;"><div class="meter"><div id="breadthFill" class="meter-fill"></div></div></div>
-                <div id="breadthMeterValue" style="flex: 0 0 20px; font-weight: 800; font-size: 13px; text-align: center;">--</div>
-                <div style="color: #e2e8f0;">|</div>
-                <div id="breadthSectors" class="ticker-container" style="flex: 1; display: flex; align-items: center; justify-content: space-around; overflow: hidden; font-size: 11px;"></div>
+            <div class="box" style="flex: 1; padding: 0 15px; display: flex; align-items: center;">
+                <div class="flex-row-center">
+                    <div style="flex: 0 0 60px;"><div class="meter"><div id="breadthFill" class="meter-fill"></div></div></div>
+                    <div style="padding: 0 var(--gap-before);">
+                        <span id="breadthMeterValue" style="font-weight: 800; font-size: 13px;">--</span>
+                    </div>
+                    <div style="color: #e2e8f0; flex-shrink: 0;">|</div>
+                    <div id="breadthSectors" style="flex: 1; display: flex; align-items: center; justify-content: space-around; padding-left: var(--gap-after); overflow: hidden;"></div>
+                </div>
             </div>
         </div>
 
@@ -115,15 +128,17 @@
                 </div>
             </div>
         </div>
+    </div>
 
-    </div> <div class="secondary-row">
+    <div class="secondary-row">
         <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Metric 1</div>
         <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Metric 2</div>
         <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Metric 3</div>
         <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Metric 4</div>
         <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Metric 5</div>
     </div>
+</div>
 
-</div> <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
