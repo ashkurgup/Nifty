@@ -35,11 +35,14 @@ function renderGlobal(d) {
     fill.style.width = (d.meter * 10) + "%";
     document.getElementById("globalMeterValue").innerText = Math.round(d.meter);
 
-    document.getElementById("globalMarkets").innerHTML = Object.entries(d.indices).map(([k, v]) => `
-        <span style="display: flex; align-items: center; gap: 4px; white-space: nowrap;">
-            <span class="sq ${v.status === 'OPEN' ? 'green' : 'grey'}" style="width:6px; height:6px;"></span> 
-            ${k} <span style="color:${colorFor(v.change_30m)}">${v.change_30m >= 0 ? '+' : ''}${v.change_30m}%</span>
-        </span>`).join('<span style="color:#e5e7eb; margin: 0 4px;">|</span>');
+document.getElementById("globalMarkets").innerHTML = Object.entries(d.indices).map(([k, v]) => `
+    <span style="display: flex; align-items: center; font-weight: 800; font-size: 13px; margin-right: 20px; white-space: nowrap;">
+        <span class="sq ${v.status === 'OPEN' ? 'green' : 'grey'}" style="width:7px; height:7px; margin-right:6px;"></span> 
+        ${k} 
+        <span style="color:${colorFor(v.change_30m)}; margin-left: 5px;">
+            ${v.change_30m >= 0 ? '+' : ''}${v.change_30m}%
+        </span>
+    </span>`).join('<span style="color:#e5e7eb; margin-right: 20px;">|</span>');
 }
 
 function renderBreadth(d) {
