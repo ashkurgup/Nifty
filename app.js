@@ -24,13 +24,25 @@ function renderNifty(d) {
     if(d.high) document.getElementById("niftyHigh").innerText = d.high.toFixed(2);
     if(d.low) document.getElementById("niftyLow").innerText = d.low.toFixed(2);
 
-    // Footer: Darker "Last Updated"
-    const timeStr = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+ /* --- Inside renderNifty(d) --- */
+
+// 4. FOOTER: Logic for actual Data Fetch Time
+if (d.updated_ts) {
+    // Convert the Unix timestamp (seconds) to a readable JS time
+    const fetchTime = new Date(d.updated_ts * 1000).toLocaleTimeString([], {
+        hour: '2-digit', 
+        minute: '2-digit'
+    });
+
     const updatedEl = document.getElementById("niftyUpdated");
     if (updatedEl) {
-        updatedEl.innerText = `Last Updated: ${timeStr}`;
-        updatedEl.style.color = "#4b5563"; // Darker Grey
-        updatedEl.style.fontWeight = "800";
+        updatedEl.innerText = `Last Updated: ${fetchTime}`;
+        
+        // STYLING: Italic and faint
+        updatedEl.style.fontStyle = "italic";   // Makes it italic
+        updatedEl.style.color = "#9ca3af";       // A lighter, "faint" grey
+        updatedEl.style.fontWeight = "400";      // Removes the bold weight
+        updatedEl.style.fontSize = "10px";       // Keeps it small and subtle
     }
 }
 
