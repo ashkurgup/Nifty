@@ -1,63 +1,53 @@
-/* --- GLOBAL RESET & THEME --- */
-body { 
-    font-family: 'Lato', sans-serif; 
-    background: #f9fafb; 
-    padding: 12px; 
-    margin: 0; 
-}
+/* --- BASE STYLES --- */
+body { font-family: 'Lato', sans-serif; background: #f9fafb; padding: 15px; margin: 0; }
 
-/* --- THE BOX DESIGN (Your Master Visual) --- */
 .box { 
-    background: #fff; 
-    border: 1px solid #e5e7eb; 
-    border-radius: 12px; 
-    padding: 10px 14px; 
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    flex: 1; /* Default: all boxes share space equally */
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; 
+    padding: 10px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+    display: flex; flex-direction: column; justify-content: center;
 }
 
-/* --- THE FORMULAS: FLEXBOX LAYOUTS --- */
+/* --- LAYOUT FORMULAS --- */
 
-/* Formula 1: Horizontal Row */
-.dashboard-line, .secondary-row, .zone-horizontal { 
-    display: flex; 
-    gap: 10px; 
-    align-items: stretch; 
-}
-
-/* Formula 2: Vertical Stack */
-.center-rows, .zone-vertical, .left-column-wrapper { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 8px; 
-}
-
-/* Formula 3: The Main Layout Wrapper (Left vs Right) */
+/* Main container: Spreads the left group and right group apart */
 .main-layout-wrapper {
     display: flex;
+    justify-content: space-between; /* Pushes V-Boxes to the right corner */
+    align-items: stretch;
     gap: 20px;
+    width: 100%;
 }
 
-/* --- THE SEPARATORS --- */
+/* This creates the vertical stack for the H-Boxes + Wide Metric */
+.left-side-group {
+    display: flex;
+    flex-direction: column; 
+    gap: 10px;
+    flex: 4; /* Takes up most of the left/center space */
+}
+
+/* Keeps the 4 small H-boxes in a single row */
+.zone-horizontal {
+    display: flex;
+    gap: 10px;
+}
+.zone-horizontal .box { flex: 1; min-height: 100px; }
+
+/* The Right Column */
+.zone-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 200px; /* Gives the right column a set width */
+}
+
+/* SEPARATORS */
 .faint-divider {
-    border: 0;
-    height: 1px;
+    border: 0; height: 1px; margin: 20px 0;
     background: linear-gradient(to right, transparent, #e5e7eb, transparent);
-    margin: 20px 0;
 }
 
 .vertical-separator {
     width: 1px;
     background: linear-gradient(to bottom, transparent, #e5e7eb, transparent);
 }
-
-/* --- UTILITY SIZE CLASSES --- */
-.w-large  { flex: 3; } /* 3x the space */
-.w-medium { flex: 2; } /* 2x the space */
-.w-fixed  { width: 195px; flex-shrink: 0; } /* Never changes size */
-
-/* --- NIFTY SPECIFIC UI --- */
-.nifty-title { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
-.nifty-price { font-size: 24px; font-weight: 700; }
-.sphere { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-.sphere.grey { background: #d1d5db; }
