@@ -1,7 +1,9 @@
 {
-  "price": 24581.05,
-  "change": 3.0,
-  "percent": 0.01,
-  "market": "CLOSED",
-  "updated_ts": 1776775623
+  "price": 24429.0,
+  "high": 24515.95,
+  "low": 24352.9,
+  "change": 8.25,
+  "percent": 0.03,
+  "market": "LIVE",
+  "updated_ts": 1776845670
 }

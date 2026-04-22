@@ -1,21 +1,21 @@
 {
-  "meter": 6,
+  "meter": 3,
   "indices": {
     "DowF": {
-      "change_30m": 0.02,
+      "change_30m": -0.06,
       "status": "OPEN"
     },
     "DAX": {
-      "change_30m": -0.08,
+      "change_30m": -0.03,
       "status": "OPEN"
     },
     "Nikkei": {
-      "change_30m": 0.0,
+      "change_30m": 0.05,
       "status": "CLOSED"
     },
     "HSI": {
-      "change_30m": 0.12,
-      "status": "CLOSED"
+      "change_30m": 0.09,
+      "status": "OPEN"
     }
   }
 }
