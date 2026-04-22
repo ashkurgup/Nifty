@@ -116,3 +116,41 @@ body {
 .secondary-row .box {
     flex: 1;                /* Formula: Forces every box to be the EXACT same width */
 }
+/* FORMULA: THE BUTTON CONTAINER
+   We use flex here to keep them side-by-side inside the vertical group.
+*/
+.button-row {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+/* FORMULA: THE BUTTON BASE
+   'text-decoration: none' removes the underline from the link (<a> tag).
+   'flex: 1' makes both buttons the same width.
+*/
+.btn {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none; 
+    font-size: 14px;
+    transition: opacity 0.2s;
+}
+
+.btn:hover {
+    opacity: 0.8; /* Subtle fade effect when hovering */
+}
+
+/* THE COLOR FORMULAS */
+.btn-buy {
+    background-color: #16a34a; /* Green */
+    color: white;
+}
+
+.btn-sell {
+    background-color: #dc2626; /* Red */
+    color: white;
+}
