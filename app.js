@@ -65,6 +65,7 @@ function renderBreadth(d) {
     fill.style.width = (d.meter * 10) + "%";
     document.getElementById("breadthMeterValue").innerText = Math.round(d.meter);
 
+    // Using the same format as Global Markets for consistency
     document.getElementById("breadthSectors").innerHTML = Object.entries(d.sectors).map(([s, p]) => `
         <span style="display: flex; align-items: center; font-weight: 800; font-size: 13px; margin-right: 20px; white-space: nowrap;">
             <span class="sq green" style="width:7px; height:7px; margin-right:6px;"></span> 
