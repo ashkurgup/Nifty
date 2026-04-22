@@ -154,3 +154,23 @@ body {
     background-color: #dc2626; /* Red */
     color: white;
 }
+/* FORMULA: THE CLICKABLE BOX
+   'text-decoration: none' removes the link underline.
+   'color: inherit' ensures the text stays the same color as the rest of the dashboard.
+*/
+.clickable-box {
+    text-decoration: none; 
+    color: inherit; 
+    transition: transform 0.1s, background-color 0.2s;
+    cursor: pointer; /* Shows the 'hand' icon when hovering */
+}
+
+/* Formula for the 'Click' feel */
+.clickable-box:hover {
+    background-color: #f3f4f6; /* Subtle grey highlight */
+    transform: translateY(-2px); /* Lifts the box slightly up */
+}
+
+.clickable-box:active {
+    transform: translateY(0); /* Pushes it back down when clicked */
+}
