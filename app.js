@@ -2,15 +2,28 @@ const colorFor = (v) => v > 0 ? "#16a34a" : v < 0 ? "#dc2626" : "#374151";
 const meterCtx = (v) => v >= 7 ? "green" : v <= 4 ? "red" : ""; 
 
 function renderNifty(d) {
+   function renderNifty(d) {
     if (!d) return;
 
-    // 1. Update Market Status Text instead of Sphere
+    // 1. UPDATE HEADER: Only "LIVE" or "CLOSED" with space
+    const isOpen = d.market === "LIVE";
     const statusEl = document.getElementById("marketStatus");
     if (statusEl) {
-        const isOpen = d.market === "LIVE";
-        statusEl.innerText = isOpen ? "● MARKET OPEN" : "○ MARKET CLOSED";
-        statusEl.style.color = isOpen ? "#16a34a" : "#9ca3af"; // Green if Live, Grey if Closed
+        // Space added between NIFTY and bullet is handled in HTML/CSS spacing
+        statusEl.innerText = isOpen ? "● LIVE" : "○ CLOSED";
+        statusEl.style.color = isOpen ? "#16a34a" : "#9ca3af";
     }
+
+    // 2. UPDATE FOOTER: Remove "Live", make text darker
+    // Using a darker grey like #6b7280 instead of #cbd5e1
+    const timeStr = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    const updatedEl = document.getElementById("niftyUpdated");
+    updatedEl.innerText = timeStr;
+    updatedEl.style.color = "#6b7280"; // Darker grey
+    updatedEl.style.fontWeight = "700";
+
+    // ... (keep price and high/low logic same)
+}
 
     // 2. Update Price
     document.getElementById("niftyPrice").innerText = d.price.toFixed(2);
