@@ -3,12 +3,29 @@ const meterCtx = (v) => v >= 7 ? "green" : v <= 4 ? "red" : "";
 
 function renderNifty(d) {
     if (!d) return;
-    document.getElementById("marketSphere").className = `sphere ${d.market === "LIVE" ? "green" : "grey"}`;
+
+    // 1. Update Market Status Text instead of Sphere
+    const statusEl = document.getElementById("marketStatus");
+    if (statusEl) {
+        const isOpen = d.market === "LIVE";
+        statusEl.innerText = isOpen ? "● MARKET OPEN" : "○ MARKET CLOSED";
+        statusEl.style.color = isOpen ? "#16a34a" : "#9ca3af"; // Green if Live, Grey if Closed
+    }
+
+    // 2. Update Price
     document.getElementById("niftyPrice").innerText = d.price.toFixed(2);
+
+    // 3. Update Change and Day High/Low
     const chg = document.getElementById("niftyChange");
     chg.innerText = `${d.change >= 0 ? "+" : ""}${d.change} (${d.percent}%)`;
     chg.style.color = colorFor(d.change);
-    document.getElementById("niftyUpdated").innerText = `Updated ${Math.floor((Date.now()/1000 - d.updated_ts)/60)} min ago`;
+
+    // NEW: Populate High and Low (Assuming your JSON has 'high' and 'low' keys)
+    if(d.high) document.getElementById("niftyHigh").innerText = d.high.toFixed(2);
+    if(d.low) document.getElementById("niftyLow").innerText = d.low.toFixed(2);
+
+    // 4. Update Timestamp
+    document.getElementById("niftyUpdated").innerText = `Live • ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
 }
 
 function renderGlobal(d) {
