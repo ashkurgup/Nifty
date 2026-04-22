@@ -14,7 +14,7 @@
         <div style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span style="font-size: 16px; font-weight: 900; color: #111827;">NIFTY</span>
-                <span id="marketStatus" style="font-size: 10px; font-weight: 800; letter-spacing: 0.5px;">● --</span>
+                <span id="marketStatus" style="font-size: 10px; font-weight: 800; letter-spacing: 0.5px; margin-left: 10px;">● --</span>
             </div>
             <div style="margin: 10px 0;">
                 <div id="niftyPrice" style="font-size: 28px; font-weight: 900; color: #111827; line-height: 1;">--</div>
@@ -31,12 +31,11 @@
                     <div id="niftyHigh" style="font-size: 11px; font-weight: 700; color: #374151;">--</div>
                 </div>
             </div>
-            <div id="niftyUpdated" style="font-size: 10px; margin-top: 8px;">--</div>
+            <div id="niftyUpdated" style="font-size: 10px; margin-top: 8px; font-style: italic; color: #9ca3af;">--</div>
         </div>
     </div>
 
     <div class="center-rows" style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
-        
         <div class="box" style="padding: 12px; display: flex; align-items: center;">
             <div class="bias-line" style="font-size: 14px;">
                 Structural Bias → 4H <span id="bias4H" class="sq"></span> / 1H <span id="bias1H" class="sq"></span> / 15M <span id="bias15M" class="sq"></span> → <span id="biasMessage" style="font-weight:700;">--</span>
@@ -62,16 +61,21 @@
         </div>
     </div>
 
-    <div style="flex: 0 0 200px; display: flex; flex-direction: column; gap: 8px;">
-        <div class="box box-side" style="height: 50%;">
-            <div class="side-title">STRATEGY</div>
-            <div class="side-val" style="font-size: 18px; font-weight: 900; margin: 4px 0;">Active</div>
-            <div id="stratLevels" style="font-size: 11px; font-weight: 700;">SMC Protocol</div>
+    <div style="flex: 0 0 410px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; gap: 8px; flex-grow: 1;">
+            <div class="box box-side" style="flex: 1;">
+                <div class="side-title">STRATEGY</div>
+                <div class="side-val" style="font-size: 18px; font-weight: 900; margin: 4px 0;">Active</div>
+                <div id="stratLevels" style="font-size: 11px; font-weight: 700; color: #6b7280;">SMC Protocol</div>
+            </div>
+            <div class="box box-side" style="flex: 1;">
+                <div class="side-title">WEALTH 2029</div>
+                <div id="wealthVal" style="font-size: 18px; font-weight: 900; margin: 4px 0;">--%</div>
+                <div class="small" style="color: #6b7280;">Debt-Free Goal</div>
+            </div>
         </div>
-        <div class="box box-side" style="height: 50%;">
-            <div class="side-title">WEALTH 2029</div>
-            <div id="wealthVal" style="font-size: 18px; font-weight: 900; margin: 4px 0;">--%</div>
-            <div class="small">Debt-Free Goal</div>
+        <div class="box" style="flex: 0 0 42px; display: flex; align-items: center; justify-content: center; background: #f9fafb; padding: 0;">
+            <span style="font-size: 9px; font-weight: 800; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px;">Trading Session Active</span>
         </div>
     </div>
 
@@ -80,11 +84,11 @@
 <hr class="faint-divider">
 
 <div class="secondary-row" style="display: flex; gap: 10px;">
-    <div class="box" style="flex: 1; text-align: center;">Metric 1</div>
-    <div class="box" style="flex: 1; text-align: center;">Metric 2</div>
-    <div class="box" style="flex: 1; text-align: center;">Metric 3</div>
-    <div class="box" style="flex: 1; text-align: center;">Metric 4</div>
-    <div class="box" style="flex: 1; text-align: center;">Metric 5</div>
+    <div class="box" style="flex: 1; text-align: center; padding: 15px;">Metric 1</div>
+    <div class="box" style="flex: 1; text-align: center; padding: 15px;">Metric 2</div>
+    <div class="box" style="flex: 1; text-align: center; padding: 15px;">Metric 3</div>
+    <div class="box" style="flex: 1; text-align: center; padding: 15px;">Metric 4</div>
+    <div class="box" style="flex: 1; text-align: center; padding: 15px;">Metric 5</div>
 </div>
 
 <hr class="faint-divider">
@@ -92,8 +96,6 @@
 <div class="third-row">
     <div class="box" style="padding: 15px; font-weight: 800;">Market Overview & Deep Analytics</div>
 </div>
-
-<hr class="faint-divider">
 
 <script src="app.js"></script>
 </body>
