@@ -1,53 +1,101 @@
-/* --- BASE STYLES --- */
-body { font-family: 'Lato', sans-serif; background: #f9fafb; padding: 15px; margin: 0; }
+/* FORMULA 1: THE FOUNDATION 
+   'Lato' gives the professional finance look. 
+   'box-sizing' ensures padding doesn't break our width math.
+*/
+* { box-sizing: border-box; }
 
-.box { 
-    background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; 
-    padding: 10px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
-    display: flex; flex-direction: column; justify-content: center;
+body { 
+    font-family: 'Lato', sans-serif; 
+    background: #f9fafb; 
+    padding: 15px; 
+    margin: 0; 
+    color: #374151;
 }
 
-/* --- LAYOUT FORMULAS --- */
+/* FORMULA 2: THE UNIVERSAL BOX DESIGN
+   This keeps your UI consistent. Every box gets the same shadow and corners.
+*/
+.box { 
+    background: #fff; 
+    border: 1px solid #e5e7eb; 
+    border-radius: 12px; 
+    padding: 10px 14px; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center;
+}
 
-/* Main container: Spreads the left group and right group apart */
+/* FORMULA 3: THE MAIN WRAPPER (Left vs. Right Corner)
+   'space-between' pushes the Right Side (V-Boxes) to the edge of the screen.
+*/
 .main-layout-wrapper {
     display: flex;
-    justify-content: space-between; /* Pushes V-Boxes to the right corner */
+    justify-content: space-between; 
     align-items: stretch;
     gap: 20px;
     width: 100%;
 }
 
-/* This creates the vertical stack for the H-Boxes + Wide Metric */
+/* FORMULA 4: NESTED STACKING (Left Side)
+   This 'column' allows us to put the Row of 4 boxes ON TOP of the Wide Metric.
+*/
 .left-side-group {
     display: flex;
     flex-direction: column; 
-    gap: 10px;
-    flex: 4; /* Takes up most of the left/center space */
+    gap: 12px;
+    flex-grow: 1; /* Tells the left side to take up all remaining space */
 }
 
-/* Keeps the 4 small H-boxes in a single row */
+/* FORMULA 5: HORIZONTAL ALIGNMENT
+   Used for the 4 H-Boxes to sit side-by-side.
+*/
 .zone-horizontal {
     display: flex;
     gap: 10px;
 }
-.zone-horizontal .box { flex: 1; min-height: 100px; }
 
-/* The Right Column */
+/* 'flex: 1' makes sure all 4 H-boxes are exactly the same width */
+.zone-horizontal .box { 
+    flex: 1; 
+    min-height: 120px; 
+}
+
+/* FORMULA 6: THE RIGHT SIDEBAR
+   Fixed width ensures these boxes don't get squashed.
+*/
 .zone-vertical {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 200px; /* Gives the right column a set width */
+    width: 200px; 
+    flex-shrink: 0;
 }
 
-/* SEPARATORS */
+/* FORMULA 7: THE "PRO" SEPARATORS
+   Linear gradients make the lines look 'faint' at the edges.
+*/
 .faint-divider {
-    border: 0; height: 1px; margin: 20px 0;
+    border: 0; 
+    height: 1px; 
+    margin: 20px 0;
     background: linear-gradient(to right, transparent, #e5e7eb, transparent);
 }
 
 .vertical-separator {
     width: 1px;
     background: linear-gradient(to bottom, transparent, #e5e7eb, transparent);
+    margin: 0 5px;
 }
+
+/* --- NIFTY SPECIFIC STYLES --- */
+.nifty-title { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+.nifty-price { font-size: 24px; font-weight: 700; color: #111827; }
+.sphere { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.sphere.green { background: #16a34a; }
+.sphere.grey { background: #9ca3af; }
+
+/* METER STYLES */
+.meter-line { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; }
+.meter { width: 70px; height: 8px; background: #f3f4f6; border-radius: 10px; overflow: hidden; }
+.meter-fill { height: 100%; transition: width 0.4s ease; background: #16a34a; }
