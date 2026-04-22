@@ -1,19 +1,17 @@
-/* FORMULA 1: THE FOUNDATION 
-   'Lato' gives the professional finance look. 
-   'box-sizing' ensures padding doesn't break our width math.
-*/
+/* --- 1. GLOBAL SETTINGS --- */
 * { box-sizing: border-box; }
 
 body { 
     font-family: 'Lato', sans-serif; 
     background: #f9fafb; 
-    padding: 15px; 
+    padding: 10px; 
     margin: 0; 
     color: #374151;
+    overflow-x: hidden;
 }
 
-/* FORMULA 2: THE UNIVERSAL BOX DESIGN
-   This keeps your UI consistent. Every box gets the same shadow and corners.
+/* --- 2. THE BOX FORMULA --- 
+   This ensures every box in your dashboard looks the same.
 */
 .box { 
     background: #fff; 
@@ -26,76 +24,85 @@ body {
     justify-content: center;
 }
 
-/* FORMULA 3: THE MAIN WRAPPER (Left vs. Right Corner)
-   'space-between' pushes the Right Side (V-Boxes) to the edge of the screen.
+/* --- 3. TOP DASHBOARD LINE --- */
+.dashboard-line { 
+    display: flex; 
+    gap: 8px; 
+    align-items: stretch; 
+    width: 100%; 
+}
+
+/* Restoring the Stacking Rule: 
+   This forces the Bias and Meter boxes to stack vertically in the center.
 */
+.center-rows { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 6px; 
+    flex-grow: 1; 
+}
+
+/* Fixed widths for Nifty and Side boxes so they don't shrink */
+.box-nifty, .box-side { 
+    width: 195px; 
+    flex-shrink: 0; 
+}
+
+/* --- 4. BOTTOM MAIN LAYOUT (Left Group vs Right Corner) --- */
 .main-layout-wrapper {
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between; /* Pushes V-group to the far right */
     align-items: stretch;
     gap: 20px;
     width: 100%;
 }
 
-/* FORMULA 4: NESTED STACKING (Left Side)
-   This 'column' allows us to put the Row of 4 boxes ON TOP of the Wide Metric.
-*/
+/* This stacks the 4 H-Boxes on TOP of the Wide Metric */
 .left-side-group {
     display: flex;
     flex-direction: column; 
     gap: 12px;
-    flex-grow: 1; /* Tells the left side to take up all remaining space */
+    flex-grow: 1; 
 }
 
-/* FORMULA 5: HORIZONTAL ALIGNMENT
-   Used for the 4 H-Boxes to sit side-by-side.
-*/
+/* The row containing H1, H2, H3, H4 */
 .zone-horizontal {
     display: flex;
     gap: 10px;
 }
+.zone-horizontal .box { flex: 1; min-height: 120px; }
 
-/* 'flex: 1' makes sure all 4 H-boxes are exactly the same width */
-.zone-horizontal .box { 
-    flex: 1; 
-    min-height: 120px; 
-}
-
-/* FORMULA 6: THE RIGHT SIDEBAR
-   Fixed width ensures these boxes don't get squashed.
-*/
+/* The Right Corner Column */
 .zone-vertical {
     display: flex;
     flex-direction: column;
     gap: 10px;
     width: 200px; 
-    flex-shrink: 0;
 }
 
-/* FORMULA 7: THE "PRO" SEPARATORS
-   Linear gradients make the lines look 'faint' at the edges.
-*/
+/* --- 5. SEPARATORS & VISUALS --- */
 .faint-divider {
-    border: 0; 
-    height: 1px; 
-    margin: 20px 0;
+    border: 0; height: 1px; margin: 15px 0;
     background: linear-gradient(to right, transparent, #e5e7eb, transparent);
 }
 
 .vertical-separator {
     width: 1px;
     background: linear-gradient(to bottom, transparent, #e5e7eb, transparent);
-    margin: 0 5px;
 }
 
-/* --- NIFTY SPECIFIC STYLES --- */
-.nifty-title { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
-.nifty-price { font-size: 24px; font-weight: 700; color: #111827; }
-.sphere { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-.sphere.green { background: #16a34a; }
-.sphere.grey { background: #9ca3af; }
+/* Squares for Bias */
+.sq { width: 10px; height: 10px; display: inline-block; margin: 0 4px; vertical-align: middle; border-radius: 2px; }
+.sq.green { background: #16a34a; }
+.sq.red { background: #dc2626; }
+.sq.grey { background: #d1d5db; }
 
-/* METER STYLES */
+/* Meter visuals */
 .meter-line { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; }
 .meter { width: 70px; height: 8px; background: #f3f4f6; border-radius: 10px; overflow: hidden; }
-.meter-fill { height: 100%; transition: width 0.4s ease; background: #16a34a; }
+.meter-fill { height: 100%; background: #16a34a; transition: width 0.4s ease; }
+
+/* Nifty Header UI */
+.nifty-title { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+.nifty-price { font-size: 24px; font-weight: 700; }
+.sphere { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
