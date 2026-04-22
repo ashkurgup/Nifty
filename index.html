@@ -36,23 +36,31 @@
     </div>
 
     
-    <div class="center-rows">
-        <div class="box">
-            <div class="bias-line">Structural Bias → 4H <span id="bias4H" class="sq"></span> / 1H <span id="bias1H" class="sq"></span> / 15M <span id="bias15M" class="sq"></span> → <span id="biasMessage">--</span></div>
-        </div>
-        <div class="box">
-            <div class="meter-line">
-                <div class="meter"><div id="globalMeterFill" class="meter-fill"></div></div> 
-                <span id="globalMeterValue">--</span> | <span id="globalMarkets">Global Markets</span>
-            </div>
-        </div>
-        <div class="box">
-            <div class="meter-line">
-                <div class="meter"><div id="breadthFill" class="meter-fill"></div></div> 
-                <span id="breadthMeterValue">--</span> | <span id="breadthSectors">Nifty Breadth</span>
-            </div>
+   <div class="center-rows">
+    <div class="box">
+        <div class="bias-line">Structural Bias → 4H <span id="bias4H" class="sq"></span> / 1H <span id="bias1H" class="sq"></span> / 15M <span id="bias15M" class="sq"></span> → <span id="biasMessage">--</span></div>
+    </div>
+
+    <div class="box">
+        <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
+            <div class="meter"><div id="globalMeterFill" class="meter-fill"></div></div> 
+            <span id="globalMeterValue" style="font-weight: 800; min-width: 20px;">--</span>
+            <span style="color: #e5e7eb;">|</span>
+            <div id="globalMarkets" style="font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1;"></div>
         </div>
     </div>
+
+    <div class="box">
+        <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
+            <div class="meter"><div id="breadthFill" class="meter-fill"></div></div> 
+            <span id="breadthMeterValue" style="font-weight: 800; min-width: 20px;">--</span>
+            <span style="color: #e5e7eb;">|</span>
+            <div id="breadthSectors" style="font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1;"></div>
+        </div>
+    </div>
+</div>
+
+    
     <div class="box box-side">
         <div class="side-title">STRATEGY</div>
         <div class="side-val">Active</div>
