@@ -99,8 +99,16 @@
         <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800; color: #64748b;">Trade Journal</div>
     </div>
 
-    <div class="box" style="width: 100%; min-height: 80px; padding: 20px; display: flex; align-items: center; justify-content: center;">
-        <span style="font-weight: 900; color: #94a3b8; letter-spacing: 2px;">PERSISTENCE ANALYTICS ENGINE</span>
+    <div class="box" style="width: 100%; min-height: 100px; padding: 15px 25px; display: flex; flex-direction: column; justify-content: center; gap: 8px; background: #ffffff;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-weight: 900; color: #1e293b; font-size: 11px; letter-spacing: 1px;">ANALYTICS ENGINE</span>
+        <span style="color: #e2e8f0;">|</span>
+        <span id="majorCandle" style="font-size: 11px; font-weight: 800; color: #475569;">Loading Major Candle Data...</span>
+    </div>
+    <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 0;">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+        <span id="last30Stats" style="font-size: 11px; font-weight: 700; color: #64748b;">Loading 30m Stats...</span>
+        <span id="momentumEvent" style="font-size: 10px; font-weight: 900; color: #16a34a; text-transform: uppercase;">--</span>
     </div>
 </div>
 <script src="app.js"></script>
