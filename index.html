@@ -10,11 +10,11 @@
 
 <div class="dashboard-line">
 
-    <div class="box box-nifty" style="padding: 15px; min-height: 160px;">
+    <div class="box box-nifty" style="padding: 15px; min-height: 160px; width: 220px; flex-shrink: 0;">
         <div style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span style="font-size: 16px; font-weight: 900; color: #111827;">NIFTY</span>
-                <span id="marketStatus" style="font-size: 10px; font-weight: 800; color: #16a34a; letter-spacing: 0.5px;">● OPEN</span>
+                <span id="marketStatus" style="font-size: 10px; font-weight: 800; color: #16a34a; letter-spacing: 0.5px; margin-left: 10px;">● LIVE</span>
             </div>
             <div style="margin: 10px 0;">
                 <div id="niftyPrice" style="font-size: 28px; font-weight: 900; color: #111827; line-height: 1;">--</div>
@@ -31,47 +31,52 @@
                     <div id="niftyHigh" style="font-size: 11px; font-weight: 700; color: #374151;">--</div>
                 </div>
             </div>
-            <div id="niftyUpdated" style="font-size: 9px; color: #cbd5e1; margin-top: 8px; font-style: italic;">--</div>
+            <div id="niftyUpdated" style="font-size: 9px; margin-top: 8px;">--</div>
         </div>
     </div>
 
-    
-   <div class="center-rows">
-    <div class="box">
-        <div class="bias-line">Structural Bias → 4H <span id="bias4H" class="sq"></span> / 1H <span id="bias1H" class="sq"></span> / 15M <span id="bias15M" class="sq"></span> → <span id="biasMessage">--</span></div>
+    <div class="center-rows" style="flex-grow: 1; display: flex; flex-direction: column; gap: 8px;">
+        
+        <div class="box" style="padding: 12px;">
+            <div class="bias-line" style="font-size: 13px; font-weight: 600;">
+                Structural Bias → 4H <span id="bias4H" class="sq"></span> / 1H <span id="bias1H" class="sq"></span> / 15M <span id="bias15M" class="sq"></span> → <span id="biasMessage">--</span>
+            </div>
+        </div>
+
+        <div class="box" style="padding: 10px;">
+            <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
+                <div class="meter"><div id="globalMeterFill" class="meter-fill"></div></div> 
+                <span id="globalMeterValue" style="font-weight: 800; min-width: 25px;">--</span>
+                <span style="color: #e5e7eb;">|</span>
+                <div id="globalMarkets" style="display: flex; align-items: center; flex-grow: 1; overflow-x: auto; white-space: nowrap;"></div>
+            </div>
+        </div>
+
+        <div class="box" style="padding: 10px;">
+            <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
+                <div class="meter"><div id="breadthFill" class="meter-fill"></div></div> 
+                <span id="breadthMeterValue" style="font-weight: 800; min-width: 25px;">--</span>
+                <span style="color: #e5e7eb;">|</span>
+                <div id="breadthSectors" style="display: flex; align-items: center; flex-grow: 1; overflow-x: auto; white-space: nowrap;"></div>
+            </div>
+        </div>
     </div>
 
-   <div class="box">
-    <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
-        <div class="meter"><div id="globalMeterFill" class="meter-fill"></div></div> 
-        <span id="globalMeterValue" style="font-weight: 800; min-width: 20px;">--</span>
-        <span style="color: #e5e7eb;">|</span>
-        <div id="globalMarkets" style="display: flex; align-items: center; font-size: 11px; white-space: nowrap; overflow: hidden; flex-grow: 1;"></div>
+    <div style="display: flex; flex-direction: column; gap: 8px; width: 180px; flex-shrink: 0;">
+        <div class="box box-side">
+            <div class="side-title">STRATEGY</div>
+            <div class="side-val">Active</div>
+            <div class="small">SMC Protocol</div>
+        </div>
+        <div class="box box-side">
+            <div class="side-title">WEALTH 2029</div>
+            <div id="wealthVal" class="side-val">--%</div>
+            <div class="small">Debt-Free Goal</div>
+        </div>
     </div>
+
 </div>
 
-<div class="box">
-    <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
-        <div class="meter"><div id="breadthFill" class="meter-fill"></div></div> 
-        <span id="breadthMeterValue" style="font-weight: 800; min-width: 20px;">--</span>
-        <span style="color: #e5e7eb;">|</span>
-        <div id="breadthSectors" style="display: flex; align-items: center; font-size: 11px; white-space: nowrap; overflow: hidden; flex-grow: 1;"></div>
-    </div>
-</div>
-</div>
-
-    
-    <div class="box box-side">
-        <div class="side-title">STRATEGY</div>
-        <div class="side-val">Active</div>
-        <div class="small">SMC Protocol</div>
-    </div>
-    <div class="box box-side">
-        <div class="side-title">WEALTH 2029</div>
-        <div id="wealthVal" class="side-val">--%</div>
-        <div class="small">Debt-Free Goal</div>
-    </div>
-    </div>
 <hr class="faint-divider">
 
 <div class="secondary-row">
@@ -81,15 +86,16 @@
     <div class="box">Metric 4</div>
     <div class="box">Metric 5</div>
 </div>
+
 <hr class="faint-divider">
 
 <div class="third-row">
     <div class="box">Market Overview & Deep Analytics</div>
 </div>
+
 <hr class="faint-divider">
 
 <div class="main-layout-wrapper">
-    
     <div class="left-side-group">
         <div class="zone-horizontal">
             <div class="box">H-Box 1</div>
@@ -105,7 +111,7 @@
             <a href="buy-logs.html" class="btn btn-buy" style="flex: 1;">Buy Log</a>
             <a href="sell-logs.html" class="btn btn-sell" style="flex: 1;">Sell Log</a>
         </div>
-        </div>
+    </div>
 
     <div class="vertical-separator"></div>
 
@@ -114,7 +120,8 @@
         <div class="box">V-Box 2</div>
         <div class="box">V-Box 3</div>
     </div>
-    </div>
+</div>
+
 <hr class="faint-divider">
 
 <script src="app.js"></script>
