@@ -106,3 +106,13 @@ body {
 .nifty-title { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
 .nifty-price { font-size: 24px; font-weight: 700; }
 .sphere { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+.secondary-row {
+    display: flex;          /* Formula: Pushes items side-by-side */
+    gap: 10px;              /* Formula: Creates equal breathing room between boxes */
+    width: 100%;            /* Formula: Ensures it spans the full screen width */
+}
+
+.secondary-row .box {
+    flex: 1;                /* Formula: Forces every box to be the EXACT same width */
+}
