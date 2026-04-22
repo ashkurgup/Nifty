@@ -1,10 +1,1 @@
-{
-  "meter": 10,
-  "sectors": {
-    "BNK": 0.07,
-    "IT": 0.03,
-    "MET": 0.2,
-    "FIN": 0.06,
-    "FM": 0.02
-  }
-}
+{"meter": 10.0, "sectors": {"BANK": 0.5, "FIN": 0.5, "IT": 0.5, "METAL": 0.5, "FMCG": 0.5}}

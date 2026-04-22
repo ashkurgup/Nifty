@@ -1,8 +1,1 @@
-{
-  "bias": {
-    "4H": "BULLISH",
-    "1H": "BULLISH",
-    "15M": "BEARISH"
-  },
-  "message": "Healthy bullish"
-}
+{"bias": {"4H": "BULLISH", "1H": "BULLISH", "15M": "BEARISH"}, "message": "The broader trend is up, but price is digesting gains."}
