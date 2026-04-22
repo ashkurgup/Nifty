@@ -1,60 +1,63 @@
-body { font-family: 'Lato', sans-serif; background: #f9fafb; padding: 8px; margin: 0; overflow-x: hidden; }
-
-.dashboard-line { display: flex; gap: 8px; align-items: stretch; width: 100%; }
-
-.center-rows { display: flex; flex-direction: column; gap: 6px; flex-grow: 1; }
-
-.box { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 10px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-
-/* Vertically Centered Squares */
-.sq { 
-    width: 10px; height: 10px; display: inline-flex; align-self: center; 
-    margin: 0 6px; vertical-align: middle; 
-}
-.sq.green { background: #16a34a; }
-.sq.grey { background: #d1d5db; }
-.sq.red { background: #dc2626; }
-
-/* Parallel Item Spacing */
-.item-wrap { display: inline-flex; align-items: center; white-space: nowrap; }
-.gap { margin: 0 16px; color: #e5e7eb; font-weight: 400; }
-
-.meter-line { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; }
-.meter { width: 70px; height: 8px; background: #f3f4f6; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
-.meter-fill { height: 100%; transition: width 0.4s ease; }
-.meter-fill.green { background: #16a34a; }
-.meter-fill.red { background: #dc2626; }
-
-/* Original NIFTY UI restore */
-.box-nifty { width: 195px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: center; }
-.nifty-title { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
-.nifty-price { font-size: 24px; font-weight: 700; margin-top: 4px; }
-.small { font-size: 10px; color: #9ca3af; font-style: italic; }
-.sphere { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-.sphere.green { background: #16a34a; }
-.sphere.grey { background: #9ca3af; }
-
-.box-side { width: 195px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: center; }
-.side-val { font-size: 24px; font-weight: 700; margin-top: 4px; }
-/* ... [Existing styles remain unchanged] ... */
-
-.pos { color: #16a34a; font-weight: 700; }
-.neg { color: #dc2626; font-weight: 700; }
-
-.sr-levels {
-    font-size: 13px;
-    font-weight: 600;
-    margin: 4px 0;
-    padding-top: 4px;
-    border-top: 1px solid #e5e7eb;
-    color: #374151;
-    letter-spacing: 0.5px;
+/* --- GLOBAL RESET & THEME --- */
+body { 
+    font-family: 'Lato', sans-serif; 
+    background: #f9fafb; 
+    padding: 12px; 
+    margin: 0; 
 }
 
-.box-side {
-    width: 195px;
-    flex-shrink: 0;
+/* --- THE BOX DESIGN (Your Master Visual) --- */
+.box { 
+    background: #fff; 
+    border: 1px solid #e5e7eb; 
+    border-radius: 12px; 
+    padding: 10px 14px; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    flex: 1; /* Default: all boxes share space equally */
+}
+
+/* --- THE FORMULAS: FLEXBOX LAYOUTS --- */
+
+/* Formula 1: Horizontal Row */
+.dashboard-line, .secondary-row, .zone-horizontal { 
+    display: flex; 
+    gap: 10px; 
+    align-items: stretch; 
+}
+
+/* Formula 2: Vertical Stack */
+.center-rows, .zone-vertical, .left-column-wrapper { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+}
+
+/* Formula 3: The Main Layout Wrapper (Left vs Right) */
+.main-layout-wrapper {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    gap: 20px;
 }
+
+/* --- THE SEPARATORS --- */
+.faint-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+    margin: 20px 0;
+}
+
+.vertical-separator {
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, #e5e7eb, transparent);
+}
+
+/* --- UTILITY SIZE CLASSES --- */
+.w-large  { flex: 3; } /* 3x the space */
+.w-medium { flex: 2; } /* 2x the space */
+.w-fixed  { width: 195px; flex-shrink: 0; } /* Never changes size */
+
+/* --- NIFTY SPECIFIC UI --- */
+.nifty-title { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+.nifty-price { font-size: 24px; font-weight: 700; }
+.sphere { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.sphere.grey { background: #d1d5db; }
