@@ -1,11 +1,12 @@
 /* --- UTILITIES --- */
-const colorDir = (v) => v > 0 ? "#16a34a" : v < 0 ? "#dc2626" : "#9ca3af"; // Directional only [cite: 52, 219]
+// Directional color reflects what last happened [cite: 56, 223]
+const colorDir = (v) => v > 0 ? "#16a34a" : v < 0 ? "#dc2626" : "#9ca3af"; 
 
 /* --- RENDER FUNCTIONS --- */
 function renderNifty(d) {
-    if (!d) return; // Persistence: Replaced only when new data arrives [cite: 276]
+    if (!d) return; 
     const statusEl = document.getElementById("marketStatus");
-    statusEl.innerText = d.market === "OPEN" ? "● OPEN" : "○ CLOSED"; [cite: 264, 265]
+    statusEl.innerText = d.market === "OPEN" ? "● OPEN" : "○ CLOSED";
     statusEl.style.color = d.market === "OPEN" ? "#16a34a" : "#9ca3af";
     
     document.getElementById("niftyPrice").innerText = d.price.toFixed(2);
@@ -15,12 +16,11 @@ function renderNifty(d) {
 }
 
 function renderBreadth(d) {
-    if (!d) return; // Stability: No zeroing [cite: 66]
+    if (!d) return; 
     const fill = document.getElementById("breadthFill");
-    fill.style.width = (d.meter * 10) + "%";
-    document.getElementById("breadthMeterValue").innerText = Math.round(d.meter); [cite: 34]
+    fill.style.width = (d.meter * 10) + "%"; // 0-10 scale [cite: 34]
+    document.getElementById("breadthMeterValue").innerText = Math.round(d.meter);
 
-    // Sector display with directional color only [cite: 50, 54]
     document.getElementById("breadthSectors").innerHTML = Object.entries(d.sectors).map(([s, p]) => `
         <span style="font-weight: 800; font-size: 12px;">
             ${s} <span style="color:${colorDir(p)}; margin-left: 2px;">${p > 0 ? '+' : ''}${p}%</span>
@@ -28,9 +28,9 @@ function renderBreadth(d) {
 }
 
 function renderGlobal(d) {
-    if (!d) return; // Signal Persistence [cite: 169]
+    if (!d) return; 
     const fill = document.getElementById("globalMeterFill");
-    fill.style.width = (d.meter * 10) + "%";
+    fill.style.width = (d.meter * 10) + "%"; 
     document.getElementById("globalMeterValue").innerText = Math.round(d.meter);
 
     document.getElementById("globalMarkets").innerHTML = Object.entries(d.indices).map(([k, v]) => `
@@ -46,10 +46,9 @@ function renderBias(d) {
     document.getElementById("bias4H").className = `sq ${map[d.bias["4H"]] || ""}`;
     document.getElementById("bias1H").className = `sq ${map[d.bias["1H"]] || ""}`;
     document.getElementById("bias15M").className = `sq ${map[d.bias["15M"]] || ""}`;
-    document.getElementById("biasMessage").innerText = d.message; // Human interactive layer [cite: 90]
+    document.getElementById("biasMessage").innerText = d.message; 
 }
 
-// Global Load Function
 const load = (p, fn) => fetch(`data/${p}.json?t=${Date.now()}`).then(r => r.json()).then(fn).catch(() => {});
 const run = () => {
     load("nifty", renderNifty);
@@ -58,5 +57,5 @@ const run = () => {
     load("nifty_bias", renderBias);
 };
 
-setInterval(run, 60000); // Check every minute
+setInterval(run, 60000); 
 run();
