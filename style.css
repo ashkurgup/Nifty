@@ -1,17 +1,19 @@
-/* --- 1. GLOBAL SETTINGS --- */
+/* --- 1. GLOBAL SETTINGS & RESET --- 
+   The 'border-box' formula ensures padding doesn't make boxes wider than 100%.
+*/
 * { box-sizing: border-box; }
 
 body { 
     font-family: 'Lato', sans-serif; 
     background: #f9fafb; 
-    padding: 10px; 
+    padding: 12px; 
     margin: 0; 
     color: #374151;
     overflow-x: hidden;
 }
 
-/* --- 2. THE BOX FORMULA --- 
-   This ensures every box in your dashboard looks the same.
+/* --- 2. THE MASTER BOX DESIGN --- 
+   This is your reusable visual style for every data container.
 */
 .box { 
     background: #fff; 
@@ -22,42 +24,35 @@ body {
     display: flex; 
     flex-direction: column; 
     justify-content: center;
+    flex: 1; /* Default: Share space equally */
 }
 
-/* --- 3. TOP DASHBOARD LINE --- */
-.dashboard-line { 
-    display: flex; 
-    gap: 8px; 
-    align-items: stretch; 
-    width: 100%; 
-}
+/* --- 3. TOP DASHBOARD STACKING --- */
+.dashboard-line { display: flex; gap: 8px; align-items: stretch; width: 100%; }
 
-/* Restoring the Stacking Rule: 
-   This forces the Bias and Meter boxes to stack vertically in the center.
-*/
 .center-rows { 
     display: flex; 
-    flex-direction: column; 
+    flex-direction: column; /* Formula: Stack Bias and Meters vertically */
     gap: 6px; 
     flex-grow: 1; 
 }
 
-/* Fixed widths for Nifty and Side boxes so they don't shrink */
-.box-nifty, .box-side { 
-    width: 195px; 
-    flex-shrink: 0; 
-}
+.box-nifty, .box-side { width: 195px; flex-shrink: 0; }
 
-/* --- 4. BOTTOM MAIN LAYOUT (Left Group vs Right Corner) --- */
+/* --- 4. THE MAIN LAYOUT WRAPPER (Bottom Section) --- 
+   'justify-content: space-between' pushes the V-Group to the right corner.
+*/
 .main-layout-wrapper {
     display: flex;
-    justify-content: space-between; /* Pushes V-group to the far right */
+    justify-content: space-between; 
     align-items: stretch;
     gap: 20px;
     width: 100%;
 }
 
-/* This stacks the 4 H-Boxes on TOP of the Wide Metric */
+/* --- 5. THE LEFT SIDE GROUPING --- 
+   This stacks the H-Box Row, the Wide Metric, and the Buttons vertically.
+*/
 .left-side-group {
     display: flex;
     flex-direction: column; 
@@ -65,22 +60,51 @@ body {
     flex-grow: 1; 
 }
 
-/* The row containing H1, H2, H3, H4 */
-.zone-horizontal {
-    display: flex;
-    gap: 10px;
-}
-.zone-horizontal .box { flex: 1; min-height: 120px; }
+.zone-horizontal { display: flex; gap: 10px; }
+.zone-horizontal .box { min-height: 100px; }
 
-/* The Right Corner Column */
+/* --- 6. CLICKABLE BOX FORMULA --- 
+   This makes the 'a' tag look like a box and feel like a button.
+*/
+.clickable-box {
+    text-decoration: none; /* Removes underline */
+    color: inherit;        /* Keeps text color black/grey */
+    transition: all 0.2s;  /* Smooths the hover effect */
+    cursor: pointer;
+}
+
+.clickable-box:hover {
+    background-color: #f3f4f6;
+    transform: translateY(-2px); /* Formula: Lifts box on hover */
+}
+
+/* --- 7. BUTTON FORMULAS --- */
+.button-row { display: flex; gap: 10px; width: 100%; }
+
+.btn {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    color: white;
+    transition: opacity 0.2s;
+}
+
+.btn-buy  { background-color: #16a34a; }
+.btn-sell { background-color: #dc2626; }
+.btn:hover { opacity: 0.8; }
+
+/* --- 8. THE RIGHT CORNER GROUP --- */
 .zone-vertical {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Formula: Stack V-boxes vertically */
     gap: 10px;
     width: 200px; 
 }
 
-/* --- 5. SEPARATORS & VISUALS --- */
+/* --- 9. SEPARATORS & UI DETAILS --- */
 .faint-divider {
     border: 0; height: 1px; margin: 15px 0;
     background: linear-gradient(to right, transparent, #e5e7eb, transparent);
@@ -91,86 +115,10 @@ body {
     background: linear-gradient(to bottom, transparent, #e5e7eb, transparent);
 }
 
-/* Squares for Bias */
-.sq { width: 10px; height: 10px; display: inline-block; margin: 0 4px; vertical-align: middle; border-radius: 2px; }
+/* Status Squares & Meters */
+.sq { width: 10px; height: 10px; display: inline-block; margin: 0 4px; border-radius: 2px; }
 .sq.green { background: #16a34a; }
-.sq.red { background: #dc2626; }
-.sq.grey { background: #d1d5db; }
+.sq.red   { background: #dc2626; }
 
-/* Meter visuals */
-.meter-line { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; }
 .meter { width: 70px; height: 8px; background: #f3f4f6; border-radius: 10px; overflow: hidden; }
-.meter-fill { height: 100%; background: #16a34a; transition: width 0.4s ease; }
-
-/* Nifty Header UI */
-.nifty-title { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
-.nifty-price { font-size: 24px; font-weight: 700; }
-.sphere { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-
-.secondary-row {
-    display: flex;          /* Formula: Pushes items side-by-side */
-    gap: 10px;              /* Formula: Creates equal breathing room between boxes */
-    width: 100%;            /* Formula: Ensures it spans the full screen width */
-}
-
-.secondary-row .box {
-    flex: 1;                /* Formula: Forces every box to be the EXACT same width */
-}
-/* FORMULA: THE BUTTON CONTAINER
-   We use flex here to keep them side-by-side inside the vertical group.
-*/
-.button-row {
-    display: flex;
-    gap: 10px;
-    width: 100%;
-}
-
-/* FORMULA: THE BUTTON BASE
-   'text-decoration: none' removes the underline from the link (<a> tag).
-   'flex: 1' makes both buttons the same width.
-*/
-.btn {
-    flex: 1;
-    padding: 12px;
-    text-align: center;
-    border-radius: 8px;
-    font-weight: 700;
-    text-decoration: none; 
-    font-size: 14px;
-    transition: opacity 0.2s;
-}
-
-.btn:hover {
-    opacity: 0.8; /* Subtle fade effect when hovering */
-}
-
-/* THE COLOR FORMULAS */
-.btn-buy {
-    background-color: #16a34a; /* Green */
-    color: white;
-}
-
-.btn-sell {
-    background-color: #dc2626; /* Red */
-    color: white;
-}
-/* FORMULA: THE CLICKABLE BOX
-   'text-decoration: none' removes the link underline.
-   'color: inherit' ensures the text stays the same color as the rest of the dashboard.
-*/
-.clickable-box {
-    text-decoration: none; 
-    color: inherit; 
-    transition: transform 0.1s, background-color 0.2s;
-    cursor: pointer; /* Shows the 'hand' icon when hovering */
-}
-
-/* Formula for the 'Click' feel */
-.clickable-box:hover {
-    background-color: #f3f4f6; /* Subtle grey highlight */
-    transform: translateY(-2px); /* Lifts the box slightly up */
-}
-
-.clickable-box:active {
-    transform: translateY(0); /* Pushes it back down when clicked */
-}
+.meter-fill { height: 100%; background: #16a34a; }
