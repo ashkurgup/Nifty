@@ -6,11 +6,13 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
+        /* CSS RESET & LAYOUT FIXES */
         body {
             background-color: #f8fafc;
             margin: 0;
             padding: 20px;
             font-family: 'Lato', sans-serif;
+            box-sizing: border-box;
         }
 
         .page-wrapper {
@@ -18,7 +20,7 @@
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
         }
 
         .dashboard-line, .secondary-row {
@@ -36,6 +38,7 @@
             transition: all 0.2s ease;
         }
 
+        /* Utility Styles */
         .sq { width: 8px; height: 8px; display: inline-block; border-radius: 50%; margin: 0 4px; }
         .green { background: #16a34a; }
         .red { background: #dc2626; }
@@ -43,6 +46,11 @@
         
         .meter { width: 100%; height: 8px; background: #f1f5f9; border-radius: 10px; overflow: hidden; }
         .meter-fill { height: 100%; transition: width 0.5s ease; }
+
+        /* Ticker Spacing Fix */
+        .ticker-container span {
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -75,22 +83,18 @@
                 <div style="font-size: 13px; font-weight: 600;">Structural Bias → 4H <span id="bias4H" class="sq"></span> / 1H <span id="bias1H" class="sq"></span> / 15M <span id="bias15M" class="sq"></span> → <span id="biasMessage" style="font-weight:700;">--</span></div>
             </div>
             
-            <div class="box" style="flex: 1; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
-                <div style="flex: 0 0 70px;">
-                    <div class="meter"><div id="globalMeterFill" class="meter-fill"></div></div>
-                </div>
-                <div style="flex: 0 0 20px; font-weight: 800; font-size: 14px; text-align: center;" id="globalMeterValue">--</div>
+            <div class="box" style="flex: 1; padding: 0 15px; display: flex; align-items: center; gap: 12px;">
+                <div style="flex: 0 0 60px;"><div class="meter"><div id="globalMeterFill" class="meter-fill"></div></div></div>
+                <div id="globalMeterValue" style="flex: 0 0 20px; font-weight: 800; font-size: 13px; text-align: center;">--</div>
                 <div style="color: #e2e8f0;">|</div>
-                <div id="globalMarkets" style="flex: 1; display: flex; align-items: center; justify-content: space-around; overflow: hidden;"></div>
+                <div id="globalMarkets" class="ticker-container" style="flex: 1; display: flex; align-items: center; justify-content: space-around; overflow: hidden; font-size: 11px;"></div>
             </div>
 
-            <div class="box" style="flex: 1; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
-                <div style="flex: 0 0 70px;">
-                    <div class="meter"><div id="breadthFill" class="meter-fill"></div></div>
-                </div>
-                <div style="flex: 0 0 20px; font-weight: 800; font-size: 14px; text-align: center;" id="breadthMeterValue">--</div>
+            <div class="box" style="flex: 1; padding: 0 15px; display: flex; align-items: center; gap: 12px;">
+                <div style="flex: 0 0 60px;"><div class="meter"><div id="breadthFill" class="meter-fill"></div></div></div>
+                <div id="breadthMeterValue" style="flex: 0 0 20px; font-weight: 800; font-size: 13px; text-align: center;">--</div>
                 <div style="color: #e2e8f0;">|</div>
-                <div id="breadthSectors" style="flex: 1; display: flex; align-items: center; justify-content: space-around; overflow: hidden;"></div>
+                <div id="breadthSectors" class="ticker-container" style="flex: 1; display: flex; align-items: center; justify-content: space-around; overflow: hidden; font-size: 11px;"></div>
             </div>
         </div>
 
@@ -112,9 +116,7 @@
             </div>
         </div>
 
-    </div> 
-
-    <div class="secondary-row">
+    </div> <div class="secondary-row">
         <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Metric 1</div>
         <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Metric 2</div>
         <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Metric 3</div>
@@ -122,8 +124,6 @@
         <div class="box" style="flex: 1; padding: 15px; text-align: center; font-weight: 800;">Metric 5</div>
     </div>
 
-</div> 
-
-<script src="app.js"></script>
+</div> <script src="app.js"></script>
 </body>
 </html>
