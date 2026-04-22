@@ -131,3 +131,25 @@ body {
 .secondary-row .box {
     flex: 1;                /* THE FORMULA: Forces every box to be the exact same width */
 }
+/* THE CONTAINER: This forces everything into one horizontal line */
+.bottom-metric-row {
+    display: flex;
+    align-items: stretch; /* This makes the buttons the same height as the box */
+    gap: 10px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* THE WIDE BOX: Give it more 'flex shares' */
+.bottom-metric-row .clickable-box {
+    flex: 4; /* Takes up 4 parts of the space */
+}
+
+/* THE BUTTONS: Give them fewer 'flex shares' */
+.bottom-metric-row .btn {
+    flex: 1; /* Takes up 1 part of the space each */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap; /* Prevents text from breaking into two lines */
+}
