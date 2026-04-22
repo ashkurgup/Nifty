@@ -46,7 +46,7 @@ function renderGlobal(d) {
             <span style="color:${colorFor(v.change_30m)}; margin-left: 5px;">
                 ${v.change_30m >= 0 ? '+' : ''}${v.change_30m}%
             </span>
-        </span>`).join('<span style="color:#e5e7eb; margin-right: 20px;">|</span>');
+        </span>`).join('<span style="color:#e5e7eb; margin-right: 10px;">|</span>');
 }
 
 /* --- 4. RENDER BREADTH METER (No Squares) --- */
@@ -63,7 +63,7 @@ function renderBreadth(d) {
             <span style="color:${colorFor(p)}; margin-left: 5px;">
                 ${p >= 0 ? '+' : ''}${p}%
             </span>
-        </span>`).join('<span style="color:#e5e7eb; margin-right: 20px;">|</span>');
+        </span>`).join('<span style="color:#e5e7eb; margin-right: 10px;">|</span>');
 }
 
 /* --- 5. RENDER STRUCTURAL BIAS --- */
