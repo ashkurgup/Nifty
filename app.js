@@ -39,13 +39,10 @@ function renderGlobal(d) {
     document.getElementById("globalMeterValue").innerText = Math.round(d.meter);
 
     document.getElementById("globalMarkets").innerHTML = Object.entries(d.indices).map(([k, v]) => `
-        <span style="display: flex; align-items: center; font-weight: 800; font-size: 13px; margin-right: 8px; white-space: nowrap;">
+        <span style="display: flex; align-items: center; font-weight: 800; font-size: 12px; white-space: nowrap;">
             <span class="sq ${v.status === 'OPEN' ? 'green' : 'grey'}" style="width:7px; height:7px; margin-right:4px; border-radius:50%;"></span> 
-            ${k} 
-            <span style="color:${colorFor(v.change_30m)}; margin-left: 4px;">
-                ${v.change_30m >= 0 ? '+' : ''}${v.change_30m}%
-            </span>
-        </span>`).join('<span style="color:#e5e7eb; margin-right: 8px;">|</span>');
+            ${k} <span style="color:${colorFor(v.change_30m)}; margin-left: 4px;">${v.change_30m >= 0 ? '+' : ''}${v.change_30m}%</span>
+        </span>`).join('<span style="color:#f1f5f9; font-size:10px;">|</span>');
 }
 
 function renderBreadth(d) {
@@ -56,12 +53,9 @@ function renderBreadth(d) {
     document.getElementById("breadthMeterValue").innerText = Math.round(d.meter);
 
     document.getElementById("breadthSectors").innerHTML = Object.entries(d.sectors).map(([s, p]) => `
-        <span style="display: flex; align-items: center; font-weight: 800; font-size: 13px; margin-right: 8px; white-space: nowrap;">
-            ${s} 
-            <span style="color:${colorFor(p)}; margin-left: 4px;">
-                ${p >= 0 ? '+' : ''}${p}%
-            </span>
-        </span>`).join('<span style="color:#e5e7eb; margin-right: 8px;">|</span>');
+        <span style="display: flex; align-items: center; font-weight: 800; font-size: 12px; white-space: nowrap;">
+            ${s} <span style="color:${colorFor(p)}; margin-left: 4px;">${p >= 0 ? '+' : ''}${p}%</span>
+        </span>`).join('<span style="color:#f1f5f9; font-size:10px;">|</span>');
 }
 
 /* --- 5. RENDER STRUCTURAL BIAS --- */
