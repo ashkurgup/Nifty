@@ -28,9 +28,6 @@ function renderNifty(d) {
     document.getElementById("niftyUpdated").innerText = `Live • ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
 }
 
-const colorFor = (v) => v > 0 ? "#16a34a" : v < 0 ? "#dc2626" : "#374151";
-const meterCtx = (v) => v >= 7 ? "green" : v <= 4 ? "red" : ""; 
-
 function renderGlobal(d) {
     if (!d) return;
     const fill = document.getElementById("globalMeterFill");
