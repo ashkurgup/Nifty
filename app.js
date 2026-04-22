@@ -181,3 +181,23 @@ setInterval(run, 300000);
 
 // Initial load
 run();
+/* --- SESSION TIMER LOGIC --- */
+function startSessionTimer() {
+    const timerEl = document.getElementById("sessionTimer");
+    
+    function updateClock() {
+        const now = new Date();
+        const hrs = String(now.getHours()).padStart(2, '0');
+        const mins = String(now.getMinutes()).padStart(2, '0');
+        const secs = String(now.getSeconds()).padStart(2, '0');
+        
+        // Displays time in HH:MM:SS format
+        timerEl.innerText = `${hrs}:${mins}:${secs}`;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock(); // Initial call to avoid 1-second delay
+}
+
+// Call this function when the script loads
+startSessionTimer();
