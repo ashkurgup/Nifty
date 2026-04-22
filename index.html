@@ -9,60 +9,48 @@
 <body>
 
 <div class="dashboard-line">
-<div class="box box-nifty" style="padding: 15px; min-height: 160px;">
-    <div style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
-        
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-size: 16px; font-weight: 900; color: #111827;">NIFTY 50</span>
-            
-            <span id="marketStatus" style="font-size: 10px; font-weight: 800; color: #16a34a; letter-spacing: 0.5px;">
-                ● MARKET OPEN
-            </span>
-        </div>
 
-        <div style="margin: 10px 0;">
-            <div id="niftyPrice" style="font-size: 28px; font-weight: 900; color: #111827; line-height: 1;">--</div>
-            <div id="niftyChange" style="font-size: 13px; font-weight: 700; color: #16a34a; margin-top: 4px;">--</div>
-        </div>
-
-        <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 5px 0;">
-
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <div style="font-size: 8px; color: #9ca3af; font-weight: 800; text-transform: uppercase;">Low</div>
-                <div id="niftyLow" style="font-size: 11px; font-weight: 700; color: #374151;">--</div>
+    <div class="box box-nifty" style="padding: 15px; min-height: 160px;">
+        <div style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 16px; font-weight: 900; color: #111827;">NIFTY 50</span>
+                <span id="marketStatus" style="font-size: 10px; font-weight: 800; color: #16a34a; letter-spacing: 0.5px;">● MARKET OPEN</span>
             </div>
-            <div style="text-align: right;">
-                <div style="font-size: 8px; color: #9ca3af; font-weight: 800; text-transform: uppercase;">High</div>
-                <div id="niftyHigh" style="font-size: 11px; font-weight: 700; color: #374151;">--</div>
+            <div style="margin: 10px 0;">
+                <div id="niftyPrice" style="font-size: 28px; font-weight: 900; color: #111827; line-height: 1;">--</div>
+                <div id="niftyChange" style="font-size: 13px; font-weight: 700; color: #16a34a; margin-top: 4px;">--</div>
             </div>
+            <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 5px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <div style="font-size: 8px; color: #9ca3af; font-weight: 800; text-transform: uppercase;">Low</div>
+                    <div id="niftyLow" style="font-size: 11px; font-weight: 700; color: #374151;">--</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 8px; color: #9ca3af; font-weight: 800; text-transform: uppercase;">High</div>
+                    <div id="niftyHigh" style="font-size: 11px; font-weight: 700; color: #374151;">--</div>
+                </div>
+            </div>
+            <div id="niftyUpdated" style="font-size: 9px; color: #cbd5e1; margin-top: 8px; font-style: italic;">--</div>
         </div>
-
-        <div id="niftyUpdated" style="font-size: 9px; color: #cbd5e1; margin-top: 8px; font-style: italic;">--</div>
     </div>
-</div>
-</div>
-
     <div class="center-rows">
         <div class="box">
-            <div class="bias-line">
-                Structural Bias → 4H <span id="bias4H" class="sq"></span> / 1H <span id="bias1H" class="sq"></span> / 15M <span id="bias15M" class="sq"></span> → <span id="biasMessage"></span>
-            </div>
+            <div class="bias-line">Structural Bias → 4H <span id="bias4H" class="sq"></span> / 1H <span id="bias1H" class="sq"></span> / 15M <span id="bias15M" class="sq"></span> → <span id="biasMessage">--</span></div>
         </div>
         <div class="box">
             <div class="meter-line">
                 <div class="meter"><div id="globalMeterFill" class="meter-fill"></div></div> 
-                <span id="globalMeterValue">--</span> | <span id="globalMarkets"></span>
+                <span id="globalMeterValue">--</span> | <span id="globalMarkets">Global Markets</span>
             </div>
         </div>
         <div class="box">
             <div class="meter-line">
                 <div class="meter"><div id="breadthFill" class="meter-fill"></div></div> 
-                <span id="breadthMeterValue">--</span> | <span id="breadthSectors"></span>
+                <span id="breadthMeterValue">--</span> | <span id="breadthSectors">Nifty Breadth</span>
             </div>
         </div>
     </div>
-
     <div class="box box-side">
         <div class="side-title">STRATEGY</div>
         <div class="side-val">Active</div>
@@ -73,8 +61,7 @@
         <div id="wealthVal" class="side-val">--%</div>
         <div class="small">Debt-Free Goal</div>
     </div>
-</div>
-
+    </div>
 <hr class="faint-divider">
 
 <div class="secondary-row">
@@ -84,13 +71,11 @@
     <div class="box">Metric 4</div>
     <div class="box">Metric 5</div>
 </div>
-
 <hr class="faint-divider">
 
 <div class="third-row">
     <div class="box">Market Overview & Deep Analytics</div>
 </div>
-
 <hr class="faint-divider">
 
 <div class="main-layout-wrapper">
@@ -102,18 +87,15 @@
             <div class="box">H-Box 3</div>
             <div class="box">H-Box 4</div>
         </div>
-
-    <div class="bottom-metric-row">
-    <a href="next-page.html" class="box clickable-box">
-        <div style="font-weight: 800;">LEFT SIDE WIDE METRIC</div>
-        <div class="small">Deep Dive →</div>
-    </a>
-
-    <a href="buy-logs.html" class="btn btn-buy">Buy Log</a>
-
-    <a href="sell-logs.html" class="btn btn-sell">Sell Log</a>
-</div>
-    </div>
+        <div class="bottom-metric-row">
+            <a href="next-page.html" class="box clickable-box" style="flex: 4;">
+                <div style="font-weight: 800;">LEFT SIDE WIDE METRIC</div>
+                <div class="small">Deep Dive →</div>
+            </a>
+            <a href="buy-logs.html" class="btn btn-buy" style="flex: 1;">Buy Log</a>
+            <a href="sell-logs.html" class="btn btn-sell" style="flex: 1;">Sell Log</a>
+        </div>
+        </div>
 
     <div class="vertical-separator"></div>
 
@@ -122,8 +104,7 @@
         <div class="box">V-Box 2</div>
         <div class="box">V-Box 3</div>
     </div>
-</div>
-
+    </div>
 <hr class="faint-divider">
 
 <script src="app.js"></script>
