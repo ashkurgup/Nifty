@@ -24,29 +24,25 @@ function renderNifty(d) {
     if(d.high) document.getElementById("niftyHigh").innerText = d.high.toFixed(2);
     if(d.low) document.getElementById("niftyLow").innerText = d.low.toFixed(2);
 
- /* --- Inside renderNifty(d) --- */
+    // FOOTER: Logic for actual Data Fetch Time (Italic & Faint)
+    if (d.updated_ts) {
+        const fetchTime = new Date(d.updated_ts * 1000).toLocaleTimeString([], {
+            hour: '2-digit', 
+            minute: '2-digit'
+        });
 
-// 4. FOOTER: Logic for actual Data Fetch Time
-if (d.updated_ts) {
-    // Convert the Unix timestamp (seconds) to a readable JS time
-    const fetchTime = new Date(d.updated_ts * 1000).toLocaleTimeString([], {
-        hour: '2-digit', 
-        minute: '2-digit'
-    });
-
-    const updatedEl = document.getElementById("niftyUpdated");
-    if (updatedEl) {
-        updatedEl.innerText = `Last Updated: ${fetchTime}`;
-        
-        // STYLING: Italic and faint
-        updatedEl.style.fontStyle = "italic";   // Makes it italic
-        updatedEl.style.color = "#9ca3af";       // A lighter, "faint" grey
-        updatedEl.style.fontWeight = "400";      // Removes the bold weight
-        updatedEl.style.fontSize = "10px";       // Keeps it small and subtle
+        const updatedEl = document.getElementById("niftyUpdated");
+        if (updatedEl) {
+            updatedEl.innerText = `Last Updated: ${fetchTime}`;
+            updatedEl.style.fontStyle = "italic";   
+            updatedEl.style.color = "#9ca3af";      // Faint grey
+            updatedEl.style.fontWeight = "400";     // Thin weight
+            updatedEl.style.fontSize = "10px";      
+        }
     }
 }
 
-/* --- 3. RENDER GLOBAL METER (Nikkei, DowF, etc.) --- */
+/* --- 3. RENDER GLOBAL METER --- */
 function renderGlobal(d) {
     if (!d) return;
     const fill = document.getElementById("globalMeterFill");
@@ -54,7 +50,6 @@ function renderGlobal(d) {
     fill.style.width = (d.meter * 10) + "%";
     document.getElementById("globalMeterValue").innerText = Math.round(d.meter);
 
-    // BOLD & SPACED format
     document.getElementById("globalMarkets").innerHTML = Object.entries(d.indices).map(([k, v]) => `
         <span style="display: flex; align-items: center; font-weight: 800; font-size: 13px; margin-right: 20px; white-space: nowrap;">
             <span class="sq ${v.status === 'OPEN' ? 'green' : 'grey'}" style="width:7px; height:7px; margin-right:6px;"></span> 
@@ -65,7 +60,7 @@ function renderGlobal(d) {
         </span>`).join('<span style="color:#e5e7eb; margin-right: 20px;">|</span>');
 }
 
-/* --- 4. RENDER BREADTH METER (BNK, IT, MET, etc.) --- */
+/* --- 4. RENDER BREADTH METER --- */
 function renderBreadth(d) {
     if (!d) return;
     const fill = document.getElementById("breadthFill");
@@ -73,7 +68,6 @@ function renderBreadth(d) {
     fill.style.width = (d.meter * 10) + "%";
     document.getElementById("breadthMeterValue").innerText = Math.round(d.meter);
 
-    // MATCHES GLOBAL FORMAT: Bold and Spaced
     document.getElementById("breadthSectors").innerHTML = Object.entries(d.sectors).map(([s, p]) => `
         <span style="display: flex; align-items: center; font-weight: 800; font-size: 13px; margin-right: 20px; white-space: nowrap;">
             <span class="sq green" style="width:7px; height:7px; margin-right:6px;"></span> 
@@ -97,7 +91,7 @@ function renderBias(d) {
 /* --- 6. RENDER STRATEGY BOX --- */
 function renderStrategy(d) {
     if (!d) return;
-    const stratBox = document.querySelector(".box-side:nth-child(4)"); // Updated to match 4th box in top line
+    const stratBox = document.querySelector(".box-side:nth-child(4)"); 
     if(!stratBox) return;
     stratBox.innerHTML = `
         <div class="side-title">STRATEGY</div>
@@ -112,7 +106,6 @@ function renderStrategy(d) {
 /* --- 7. LOAD CONTROLLER --- */
 const load = (p, fn) => fetch(`data/${p}.json?t=${Date.now()}`).then(r => r.json()).then(fn).catch(() => {});
 
-// Execute all data loads
 load("nifty", renderNifty); 
 load("global_meter", renderGlobal);
 load("nifty_breadth", renderBreadth); 
