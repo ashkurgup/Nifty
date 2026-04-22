@@ -35,14 +35,31 @@ function renderGlobal(d) {
     fill.style.width = (d.meter * 10) + "%";
     document.getElementById("globalMeterValue").innerText = Math.round(d.meter);
 
-document.getElementById("globalMarkets").innerHTML = Object.entries(d.indices).map(([k, v]) => `
-    <span style="display: flex; align-items: center; font-weight: 800; font-size: 13px; margin-right: 20px; white-space: nowrap;">
-        <span class="sq ${v.status === 'OPEN' ? 'green' : 'grey'}" style="width:7px; height:7px; margin-right:6px;"></span> 
-        ${k} 
-        <span style="color:${colorFor(v.change_30m)}; margin-left: 5px;">
-            ${v.change_30m >= 0 ? '+' : ''}${v.change_30m}%
-        </span>
-    </span>`).join('<span style="color:#e5e7eb; margin-right: 20px;">|</span>');
+    document.getElementById("globalMarkets").innerHTML = Object.entries(d.indices).map(([k, v]) => `
+        <span style="display: flex; align-items: center; font-weight: 800; font-size: 13px; margin-right: 20px; white-space: nowrap;">
+            <span class="sq ${v.status === 'OPEN' ? 'green' : 'grey'}" style="width:7px; height:7px; margin-right:6px;"></span> 
+            ${k} 
+            <span style="color:${colorFor(v.change_30m)}; margin-left: 5px;">
+                ${v.change_30m >= 0 ? '+' : ''}${v.change_30m}%
+            </span>
+        </span>`).join('<span style="color:#e5e7eb; margin-right: 20px;">|</span>');
+}
+
+function renderBreadth(d) {
+    if (!d) return;
+    const fill = document.getElementById("breadthFill");
+    fill.className = `meter-fill ${meterCtx(d.meter)}`;
+    fill.style.width = (d.meter * 10) + "%";
+    document.getElementById("breadthMeterValue").innerText = Math.round(d.meter);
+
+    document.getElementById("breadthSectors").innerHTML = Object.entries(d.sectors).map(([s, p]) => `
+        <span style="display: flex; align-items: center; font-weight: 800; font-size: 13px; margin-right: 20px; white-space: nowrap;">
+            <span class="sq green" style="width:7px; height:7px; margin-right:6px;"></span> 
+            ${s} 
+            <span style="color:${colorFor(p)}; margin-left: 5px;">
+                ${p >= 0 ? '+' : ''}${p}%
+            </span>
+        </span>`).join('<span style="color:#e5e7eb; margin-right: 20px;">|</span>');
 }
 
 function renderBreadth(d) {
