@@ -122,3 +122,12 @@ body {
 
 .meter { width: 70px; height: 8px; background: #f3f4f6; border-radius: 10px; overflow: hidden; }
 .meter-fill { height: 100%; background: #16a34a; }
+.secondary-row {
+    display: flex;          /* THE FORMULA: Switches from vertical stack to horizontal row */
+    gap: 10px;              /* THE FORMULA: Creates even spacing between the boxes */
+    width: 100%;            /* THE FORMULA: Ensures the row stretches across the screen */
+}
+
+.secondary-row .box {
+    flex: 1;                /* THE FORMULA: Forces every box to be the exact same width */
+}
