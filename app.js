@@ -22,7 +22,6 @@ const isStale = (ts) => {
 const applyStaleEffect = (isStaleData) => {
     const container = document.getElementById("dashboardContainer");
     if (!container) return;
-
     container.style.opacity = isStaleData ? "0.6" : "1";
 };
 
@@ -75,15 +74,18 @@ function renderBreadth(d) {
         document.getElementById("breadthMeterValue").innerText = Math.round(d.meter);
     }
 
-    if (d.sectors) {
+    if (d.sectors && Object.keys(d.sectors).length > 0) {
         document.getElementById("breadthSectors").innerHTML =
             Object.entries(d.sectors).map(([s, p]) => `
                 <span style="font-weight: 800; font-size: 11px;">
                     ${s} <span style="color:${colorDir(p)};">
-                        ${p > 0 ? '+' : ''}${isValid(p) ? p : '--'}%
+                        ${p > 0 ? '+' : ''}${(isValid(p) && p !== 0) ? p : '--'}%
                     </span>
                 </span>
             `).join('');
+    } else {
+        document.getElementById("breadthSectors").innerHTML =
+            `<span style="font-size:11px; color:#9ca3af;">No data</span>`;
     }
 }
 
@@ -103,7 +105,7 @@ function renderGlobal(d) {
         document.getElementById("globalMeterValue").innerText = Math.round(d.meter);
     }
 
-    if (d.indices) {
+    if (d.indices && Object.keys(d.indices).length > 0) {
         document.getElementById("globalMarkets").innerHTML =
             Object.entries(d.indices).map(([k, v]) => `
                 <span style="display:flex;align-items:center;font-weight:800;font-size:11px;">
@@ -111,10 +113,13 @@ function renderGlobal(d) {
                           style="width:6px;height:6px;"></span>
                     ${k}
                     <span style="color:${colorDir(v.change_30m)}; margin-left:4px;">
-                        ${isValid(v.change_30m) ? v.change_30m : '--'}%
+                        ${(isValid(v.change_30m) && v.change_30m !== 0) ? v.change_30m : '--'}%
                     </span>
                 </span>
             `).join('');
+    } else {
+        document.getElementById("globalMarkets").innerHTML =
+            `<span style="font-size:11px; color:#9ca3af;">No data</span>`;
     }
 }
 
@@ -134,8 +139,12 @@ function renderBias(d) {
     document.getElementById("bias15M").className =
         `sq ${map[d.bias["15M"]] || "grey"}`;
 
-    if (d.message)
-        document.getElementById("biasMessage").innerText = d.message;
+    if (d.message) {
+        const msgEl = document.getElementById("biasMessage");
+        msgEl.innerText = d.message;
+        msgEl.style.fontStyle = "italic";
+        msgEl.style.color = "#6b7280";
+    }
 }
 
 // ---------------- SAFE LOADER ---------------- //
@@ -167,7 +176,7 @@ const run = () => {
     load("bias", "nifty_bias", renderBias);
 };
 
-// 🔁 Sync with backend candle cycle (5 min)
+// 🔁 Sync with backend (5 min candles)
 setInterval(run, 300000);
 
 // Initial load
